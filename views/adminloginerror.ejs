@@ -1,0 +1,15 @@
+<%- include('partials/header'); -%>
+<form action="/adminlogin" method="post">
+    <div class="aligncolumn">
+        <label>Email</label>
+        <input type="email" required="true" name="username">
+    </div>
+    <div class="aligncolumn">
+        <label>Password</label>
+        <input type="password" required="true" name="password">
+    </div>
+    <p><span>Invalid username password</span></p>
+    <button type="submit">LOGIN</button>
+    <p>Don't have an account? <a href="/adminregister">Sign up</a></p>
+</form>
+<%- include('partials/footer'); -%>

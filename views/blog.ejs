@@ -1,0 +1,15 @@
+<%- include('partials/header'); -%>
+<div class="blogtitle">
+    <h2><span>B</span>log</h2>
+</div>
+<% for(var i=0; i<postuser.length; i++) { %>
+    <div class="blogcard">
+        <div class="blogti">
+            <h3><%=postuser[i].title%></h3>
+            <label><%=postuser[i].timestamp%></label>
+        </div>
+        <p><%=postuser[i].content.substring(0, 400) + "..."%><a href="/<%=postuser[i].title%>">Read more</a></p>
+    </div>
+<% } %>
+
+<%- include('partials/footer'); -%>

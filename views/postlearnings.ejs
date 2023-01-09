@@ -1,0 +1,15 @@
+<%- include('partials/admin'); -%>
+<div class="compose">
+    <h2><span>Post</span>Learnings</h2>
+</div>
+<form action="/postlearnings" method="post">
+    <div class="form-group">
+        <label>Learnings title :</label>
+        <input class="form-control pushi" type="text" name="learningsTitle">
+        <label>Learnings description :</label>
+        <textarea class="form-control" name="learningsBody" rows="5" cols="30"></textarea>
+    </div>
+    <p class="note"><i><span>Note: </span>This is an admin page, only an admin is allowed to make changes to this site.</i></p>
+    <button class="btn btn-primary postbutton" type="submit">UPDATE</button>
+</form>
+<%- include('partials/footer'); -%>

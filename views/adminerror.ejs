@@ -1,0 +1,19 @@
+<%- include('partials/header'); -%>
+<form action="/adminregister" method="post">
+    <div class="aligncolumn">
+        <label>ADMIN ID</label>
+        <input type="text" required="true" name="adminid">
+    </div>
+    <div class="aligncolumn">
+        <label>Email</label>
+        <input type="email" required="true" name="username">
+    </div>
+    <div class="aligncolumn">
+        <label>Password</label>
+        <input type="password" required="true" name="password">
+    </div>
+    <p><span>Invalid username password adminid</span></p>
+    <button type="submit">REGISTER</button>
+    <p>Already have an account?<a href="/adminlogin">Sign in</a></p>
+</form>
+<%- include('partials/footer'); -%>

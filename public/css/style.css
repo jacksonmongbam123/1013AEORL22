@@ -1,0 +1,312 @@
+.container-fluid{
+    padding: 2% 5%;
+}
+span{
+    color: red;
+}
+.homeimage img{
+    width: 90%;
+    margin-top: 10%;
+}
+.navbar-brand{
+    font-size: 1.3rem;
+}
+.navbar{
+    padding: 0 0 2rem;
+}
+.navbar-item{
+    padding: 0 8px;
+}
+.nav-link{
+    font-size: 1rem;
+    font-weight: bold;
+}
+.download-button{
+    margin: 5% 3% 5% 0;
+}
+.head h1{
+    margin-top: 20px;
+    font-family: sans-serif;
+}
+#about{
+    padding: 7% 14%;
+    font-family: sans-serif;
+}
+.hawert{
+    margin: 10% auto 0 auto;
+}
+.hawert p{
+    line-height: 2;
+}
+
+.hawert button{
+    padding: 2%;
+    background: #fff;
+    font-size: 15px;
+}
+
+#features{
+    padding: 7% 15%;
+}
+.feature-box{
+    text-align: center;
+    padding: 5%;
+}
+.feature-box i{
+    font-size: 300%;
+}
+.feature-box:hover{
+    background-color: #EFEFEF;
+}
+#slider{
+    text-align: center;
+    background-color: #EFEFEF;
+}
+#slider h1{
+    margin-top: 0;
+}
+.image{
+    height: 300px;
+    width: auto;
+    margin-top: 7%;
+}
+.carousel-item{
+    padding: 7% 14%;
+}
+.image1{
+    height: 300px;
+    width: auto;
+    margin-top: 7%;
+}
+.image2{
+    height: 300px;
+    width: auto;
+    margin-top: 7%;
+}
+.image3{
+    height: 300px;
+    width: auto;
+    margin-top: 7%;
+}
+
+        /* blog */
+
+.blogtitle{
+    margin-bottom: 40px;
+}
+
+.blogtitle h2{
+    font-size: 30px;
+}
+
+
+.blogcard{
+    margin: 0 0 30px 0;
+    padding: 10px 20px 10px 10px;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+}
+
+.blogcard h3{
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.blogcard p{
+    font-family: sans-serif;
+    text-align: justify;
+    font-size: 17px;
+}
+.blogti{
+    display: flex;
+}
+
+.blogti label{
+    margin: 0 0 0 auto;
+}
+
+
+         /* COMPOSE POST */
+.compose{
+    margin-bottom: 40px;
+}
+
+.postbutton{
+    margin-top: 20px;
+}
+.pushi{
+    margin-bottom: 20px;
+}
+.note{
+    font-size: 13px;
+}
+
+            /* LEARNING */
+
+
+
+.learning-box{
+    padding: 5%;
+}
+
+.learning-box button:hover{
+    background: #fff;
+    color: #000;
+}
+
+.learning-box button{
+    padding: 2px 5px 2px 5px;
+    background: #000;
+    font-size: 15px;
+    color: #fff;   
+}
+
+.learning-box h3{
+    text-align: center;
+}
+
+.learning-box p{
+    text-align: justify;
+}
+
+.learning-box:hover{
+    background-color: #EFEFEF;
+}
+
+.success{
+    background-color: lime;
+    padding: 2% 2% 3px 2%;
+    border-radius: 4%;
+}
+.success p{
+    text-align: center;
+}
+
+
+/* footer */
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.footer{
+    width: 100%;
+    background: #fff;
+    display: block;
+}
+.inner-footer{
+    display: flex;
+    width: 95%;
+    margin: auto;
+    padding: 50px 10px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    justify-content: center;
+}
+.footer-item{
+    width: 25%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+}
+.footer-item img{
+    padding: 10px 0;
+    width: 60%;
+}
+.footer-item p{
+    color: #000;
+    font-size: 14px;
+    text-align: justify;
+    line-height: 22px;
+}
+.footer-item h2{
+    margin: 10px 0;
+    color: red;
+    font-size: 16px;
+    font-weight: lighter;
+    text-transform: uppercase;
+}
+.border{
+    height: 2px;
+    width: 40px;
+    background: #ff9800;
+}
+.border ul{
+    color: #000;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+
+}
+.footer-item ul a{
+    list-style: none;
+    text-decoration: none;
+    outline: none;
+    color: #000;
+    transition: 0.3s;
+}
+.footer-item ul a:hover{
+    color: #ff9800;
+}
+.footer-item ul li{
+    margin: 10px auto 10px -30px;
+    height: 25px;
+    list-style: none;
+}
+.footer-item ul li i{
+    line-height: 1.5;
+    font-size: 14px;
+    margin-right: 20px;
+    color: #000;
+    font-weight: lighter;
+    font-family: sans-serif;
+}
+.social{
+    width: 100%;
+    color: #fff;
+    text-align: center;
+
+}
+.social a{
+    text-decoration: none;
+}
+.social i{
+    height: 40px;
+    width: 40px;
+    margin: 20px 5px;
+    padding: 10px;
+    color: #000;
+    border-radius: 50%;
+    border: 1px solid grey;
+    transition: 0.3s;
+}
+.social i:hover{
+    background: grey;
+
+}
+.footer-bottom{
+    padding: 8px;
+    background: #3d545f;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+}
+
+.maintenance{
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 100px;
+}
+
+@media screen and (max-width: 1085px){
+    .footer-item{
+        width: 50%;
+    }
+}
+@media screen and (max-width: 600px){
+    .footer-item{
+        width: 100%;
+    }
+}
+

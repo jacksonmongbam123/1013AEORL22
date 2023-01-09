@@ -1,0 +1,14 @@
+<%- include('partials/header'); -%>
+<div class="blogtitle">
+    <h2><span>Lear</span>nings</h2>
+</div>
+<% for(var i=0; i<learn.length; i++) { %>
+<div class="row learngap">
+    <div class="learning-box col-lg-12">
+        <h3><%=learn[i].title%></h3>
+        <p><%=learn[i].content.substring(0, 400) + "..."%></p>
+        <a><button>Know more</button></a>
+    </div>
+</div>
+<% } %>
+<%- include('partials/footer'); -%>

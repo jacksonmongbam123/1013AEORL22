@@ -1,0 +1,93 @@
+<%- include('partials/header'); -%>
+<div class="row">
+    <div class="col-lg-6 head">
+        <% for(var i=0; i<homepage.length; i++) { %>
+          <h1><%=homepage[i].title%></h1>
+        <% }; %>
+        <p>A <span>Pro</span>grammer</p>
+        <a href="/maintenance"><button type="button" class="btn btn-dark btn-lg download-button">Book</button></a>
+        <a><button type="button" class="btn btn-outline-dark btn-lg download-button">Explore more</button></a>
+    </div>
+    <div class="col-lg-6 homeimage">
+        <img src="img/mountain.png">
+    </div>
+</div>
+</div>
+</section>
+<section id="about">
+<div class="row">
+    <div class="col-lg-6 homeimage">
+        <img src="img/about.png">
+    </div>
+    <div class="col-lg-6 hawert">
+        <h2>About this site</h2>
+          <% for(var i=0; i<homepage.length; i++) { %>
+            <p><%=homepage[i].about.substring(0, 300) + "..."%></p>
+          <% }; %>
+          <a href="/about"><button>Read more</button></a>
+    </div>
+</div>
+</section>
+<section id="features">
+<div class="row">
+<div class="feature-box col-lg-4">
+    <i class="fa-sharp fa-solid fa-crop-simple"></i>
+    <h1>Design</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, atque!</p>
+</div>
+<div class="feature-box col-lg-4">
+    <i class="fa-solid fa-code"></i>
+    <h1>Development</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, atque!</p>
+</div>
+<div class="feature-box col-lg-4">
+    <i class="fa-brands fa-aws"></i>
+    <h1>Hosting</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, atque!</p>
+</div>
+<div class="feature-box col-lg-4">
+    <i class="fa-solid fa-server"></i>
+    <h1>Server</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, atque!</p>
+</div>
+<div class="feature-box col-lg-4">
+    <i class="fa-solid fa-people-roof"></i>
+    <h1>Management</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, atque!</p>
+</div>
+<div class="feature-box col-lg-4">
+    <i class="fa-solid fa-network-wired"></i>
+    <h1>Network operations</h1>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, atque!</p>
+</div>
+</div>
+</section>
+<section id="slider">
+<div id="ideaslider" class="carousel slide" data-bs-ride="false">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <h1>Have an idea?</h1>
+        <img class="image" src="img/concept.png" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <h1>Have a meet!</h1>
+        <img class="image1" src="img/meeting.png" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <h1>Make it a reality</h1>
+        <img class="image3" src="img/app.png" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <h1>Technology we use</h1>
+        <img class="image2" src="img/technology.png" class="d-block w-100" alt="...">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#ideaslider" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#ideaslider" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+      <%- include('partials/footer'); -%>

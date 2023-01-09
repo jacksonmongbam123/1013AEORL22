@@ -1,0 +1,18 @@
+<%- include('partials/header'); -%>
+<div class="blogtitle">
+    <h2><span>Con</span>tact</h2>
+</div>
+<form action="/contact" method="post">
+    <div class="form-group">
+        <label>Name</label>
+        <input class="form-control pushi" type="text" name="contactName">
+        <label>E-mail</label>
+        <input class="form-control pushi" type="email" name="contactMail">
+        <label>Phone</label>
+        <input class="form-control pushi" type="number" name="contactNumber">
+        <label>Message</label>
+        <textarea class="form-control" name="contactMessage" rows="5" cols="30"></textarea>
+    </div>
+    <button class="btn btn-primary postbutton" type="submit">SUBMIT</button>
+</form>
+<%- include('partials/footer'); -%>

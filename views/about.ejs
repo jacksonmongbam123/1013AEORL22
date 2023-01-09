@@ -1,0 +1,13 @@
+<%- include('partials/header'); -%>
+<div class="blogtitle">
+    <h2>Ab<span>out</span></h2>
+</div>
+<% for(var i=0; i<homepage.length; i++) { %>
+    <div class="row learngap">
+        <div class="learning-box col-lg-12">
+            <p><%=homepage[i].about%></p>
+        </div>
+    </div>
+<% }; %>
+
+<%- include('partials/footer'); -%>

@@ -1,0 +1,17 @@
+<%- include('partials/admin'); -%>
+<div class="blogtitle">
+    <h2><span>contact</span>Details</h2>
+</div>
+<% for(var i=0; i<contactDetails.length; i++) { %>
+    <div class="blogcard">
+        <div class="blogti">
+            <h3><%=contactDetails[i].name%></h3>
+            <label><%=contactDetails[i].time + " " + contactDetails[i].hour + " : " + contactDetails[i].minute%></label>
+        </div>
+        <p></a><%=contactDetails[i].number%></a></p>
+        <p></a><%=contactDetails[i].mail%></a></p>
+        <p></a><%=contactDetails[i].message%></a></p>
+    </div>
+<% }; %>
+
+<%- include('partials/footer'); -%>
