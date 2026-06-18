@@ -1,14 +1,29 @@
 <%- include('partials/header'); -%>
-<div class="blogtitle">
-    <h2><span>Lear</span>nings</h2>
-</div>
-<% for(var i=0; i<learn.length; i++) { %>
-<div class="row learngap">
-    <div class="learning-box col-lg-12">
-        <h3><%=learn[i].title%></h3>
-        <p><%=learn[i].content.substring(0, 400) + "..."%></p>
-        <a><button>Know more</button></a>
+
+<div class="page-content">
+    <div class="blogtitle">
+        <h2><span>Lear</span>nings</h2>
+        <p style="color: var(--text-muted);">Notes, lessons, and things I have discovered.</p>
     </div>
+
+    <% if(learn.length === 0) { %>
+        <div class="about-card text-center py-5">
+            <i class="fa-solid fa-book-open" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
+            <p>No learnings posted yet. Check back soon!</p>
+        </div>
+    <% } %>
+
+    <% for(var i=0; i<learn.length; i++) { %>
+        <div class="row learngap">
+            <div class="col-12">
+                <div class="learning-box">
+                    <h3><%=learn[i].title%></h3>
+                    <p><%=learn[i].content.substring(0, 400) + "..."%></p>
+                    <a class="btn-know">Know more</a>
+                </div>
+            </div>
+        </div>
+    <% } %>
 </div>
-<% } %>
+
 <%- include('partials/footer'); -%>
