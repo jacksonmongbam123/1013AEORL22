@@ -1,5 +1,27 @@
 <%- include('partials/admin'); -%>
-<div class="success">
-    <p><strong>Updated Successfully</strong></p>
+
+<div class="success-wrap">
+    <div style="text-align:center; max-width:480px; width:100%;">
+        <div style="background:#EFF6FF; border:1.5px solid #93C5FD; border-radius:var(--radius); padding:clamp(2rem,5vw,3rem) clamp(1.5rem,4vw,2.5rem);">
+            <i class="fa-solid fa-circle-check" style="font-size:clamp(2.5rem,6vw,3.5rem); color:var(--primary); margin-bottom:1rem; display:block;"></i>
+            <h2 style="color:var(--primary); margin-bottom:0.75rem;">Updated Successfully!</h2>
+            <p style="color:var(--text-muted); font-size:clamp(0.9rem,1.5vw,1rem); margin-bottom:1.75rem;">
+                Your changes have been saved and are now live on the site.
+            </p>
+            <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+                <a href="/loggedin" style="text-decoration:none;">
+                    <button type="button" class="btn-auth" style="width:auto; padding:0.6rem 1.5rem; display:inline-block;">
+                        Admin Panel
+                    </button>
+                </a>
+                <a href="/" style="text-decoration:none;">
+                    <button type="button" class="btn-auth" style="width:auto; padding:0.6rem 1.5rem; background:#1E293B; display:inline-block;">
+                        View Site
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
+
 <%- include('partials/footer'); -%>
