@@ -1,19 +1,29 @@
 <%- include('partials/header'); -%>
-<form action="/adminregister" method="post">
-    <div class="aligncolumn">
-        <label>ADMIN ID</label>
-        <input type="text" required="true" name="adminid">
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.6rem;">
+            <i class="fa-solid fa-circle-exclamation" style="color:#DC2626; font-size:1rem;"></i>
+            <span style="color:#DC2626; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;">Invalid Admin ID, email, or password. Please try again.</span>
+        </div>
+        <h2>Admin <span>Register</span></h2>
+        <form action="/adminregister" method="post" style="margin-top:1.25rem;">
+            <div class="form-group">
+                <label>Admin ID</label>
+                <input type="text" name="adminid" placeholder="Enter admin ID" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="username" placeholder="admin@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create a password" required>
+            </div>
+            <button type="submit" class="btn-auth">Register</button>
+            <p class="auth-link">Already have an account? <a href="/adminlogin">Sign in</a></p>
+        </form>
     </div>
-    <div class="aligncolumn">
-        <label>Email</label>
-        <input type="email" required="true" name="username">
-    </div>
-    <div class="aligncolumn">
-        <label>Password</label>
-        <input type="password" required="true" name="password">
-    </div>
-    <p><span>Invalid username password adminid</span></p>
-    <button type="submit">REGISTER</button>
-    <p>Already have an account?<a href="/adminlogin">Sign in</a></p>
-</form>
+</div>
+
 <%- include('partials/footer'); -%>
