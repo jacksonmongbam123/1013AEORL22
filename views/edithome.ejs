@@ -1,15 +1,23 @@
 <%- include('partials/admin'); -%>
-<div class="compose">
-    <h2><span>Update</span>Home</h2>
-</div>
-<form action="/edithome" method="post">
-    <div class="form-group">
-        <label>Home title :</label>
-        <input class="form-control pushi" type="text" name="homeTitle">
-        <label>About :</label>
-        <textarea class="form-control" name="aboutBody" rows="5" cols="30"></textarea>
+
+<div class="page-content">
+    <div class="compose">
+        <h2><span>Update</span> Home</h2>
     </div>
-    <p class="note"><i><span>Note: </span>This is an admin page, only an admin is allowed to make changes to this site.</i></p>
-    <button class="btn btn-primary postbutton" type="submit">UPDATE</button>
-</form>
+    <div class="admin-form-card">
+        <form action="/edithome" method="post">
+            <div class="mb-3">
+                <label class="form-label">Home Title</label>
+                <input class="form-control pushi" type="text" name="homeTitle" placeholder="Enter home page title">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">About Description</label>
+                <textarea class="form-control" name="aboutBody" rows="6" placeholder="Write the about section content here..."></textarea>
+            </div>
+            <p class="note"><i><span>Note:</span> This is an admin page — only admins can make changes.</i></p>
+            <button class="btn btn-primary postbutton" type="submit">Update</button>
+        </form>
+    </div>
+</div>
+
 <%- include('partials/footer'); -%>
