@@ -496,24 +496,41 @@ span { color: var(--primary); }
 }
 
 .auth-card .btn-auth {
-    width: 100%;
-    padding: 0.7rem;
+    width: auto;
+    display: block;
+    margin: 1.25rem auto 0;
+    padding: clamp(0.45rem, 1.2vw, 0.6rem) clamp(1.5rem, 4vw, 2.5rem);
     background: var(--primary);
     color: var(--white);
     border: none;
     border-radius: 8px;
-    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    font-size: clamp(0.82rem, 1.3vw, 0.92rem);
     font-weight: 700;
     letter-spacing: 0.5px;
     cursor: pointer;
-    margin-top: 1.25rem;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .auth-card .btn-auth:hover {
     background: #3a6ce0;
     transform: translateY(-1px);
 }
+
+.auth-btn-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+.auth-btn-row a { text-decoration: none; }
+
+.auth-btn-row .btn-auth { margin-top: 0; }
+
+.btn-auth--login { background: var(--text); }
+
+.btn-auth--login:hover { background: #2d3f57; }
 
 .auth-card .auth-link {
     text-align: center;
