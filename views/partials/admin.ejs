@@ -4,10 +4,7 @@
         <i class="fa-solid fa-shield-halved"></i>
         <span>Admin</span> Panel
     </a>
-    <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-    <div class="admin-nav-links" id="adminNavLinks">
+    <div class="admin-nav-links">
         <a href="/edithome"><i class="fa-solid fa-house-pen"></i> Update Home</a>
         <a href="/postlearnings"><i class="fa-solid fa-lightbulb"></i> Post Learnings</a>
         <a href="/compose"><i class="fa-solid fa-pen-to-square"></i> Publish Blog</a>
@@ -15,7 +12,12 @@
     </div>
 </nav>
 <script>
-    document.getElementById('adminMenuToggle').addEventListener('click', function () {
-        document.getElementById('adminNavLinks').classList.toggle('open');
-    });
+    (function () {
+        var path = window.location.pathname;
+        document.querySelectorAll('.admin-nav-links a').forEach(function (link) {
+            if (new URL(link.href).pathname === path) {
+                link.classList.add('active');
+            }
+        });
+    })();
 </script>
