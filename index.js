@@ -181,7 +181,9 @@ app.get("/adminloginerror", function(req, res){
 })
 
 app.get("/adminlogin", function(req, res){
-    res.render("adminlogin");
+    const loginError = req.session.loginError || false;
+    req.session.loginError = null;
+    res.render("adminlogin", { loginError: loginError });
 })
 
 app.get("/loggedin", function(req, res){
@@ -305,21 +307,20 @@ app.post("/adminregister", function(req, res){
 })
 
 app.post("/adminlogin", function(req, res){
-    const admin = new Admin({
-        username: req.body.username,
-        password: req.body.password
-    });
-    req.login(admin, function(err){
-        if(err){
-            console.log(err);
-            res.redirect("/adminloginerror");
-        }else{
-            passport.authenticate("local")(req, res, function(){
-                req.session.flash = "Logged in successfully.";
-                res.redirect("/loggedin");
-            });;
+    passport.authenticate("local", function(err, user, info){
+        if(err || !user){
+            req.session.loginError = true;
+            return res.redirect("/adminlogin");
         }
-    });
+        req.login(user, function(err){
+            if(err){
+                req.session.loginError = true;
+                return res.redirect("/adminlogin");
+            }
+            req.session.flash = "Logged in successfully.";
+            res.redirect("/loggedin");
+        });
+    })(req, res);
 })
 
 app.listen(process.env.PORT || 3000, function(){
