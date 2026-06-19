@@ -1,10 +1,21 @@
 <%- include('header'); -%>
-<div class="admin-bar">
-    <a class="admin-brand" href="/loggedin"><span>Ad</span>min Panel</a>
-    <div class="admin-links">
-        <a href="/edithome">Update Home</a>
-        <a href="/postlearnings">Post Learnings</a>
-        <a href="/compose">Publish Blog</a>
-        <a href="/getcontact">Get Contacts</a>
+<nav class="admin-navbar">
+    <a class="admin-brand" href="/loggedin">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Admin</span> Panel
+    </a>
+    <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="admin-nav-links" id="adminNavLinks">
+        <a href="/edithome"><i class="fa-solid fa-house-pen"></i> Update Home</a>
+        <a href="/postlearnings"><i class="fa-solid fa-lightbulb"></i> Post Learnings</a>
+        <a href="/compose"><i class="fa-solid fa-pen-to-square"></i> Publish Blog</a>
+        <a href="/getcontact"><i class="fa-solid fa-envelope"></i> Get Contacts</a>
     </div>
-</div>
+</nav>
+<script>
+    document.getElementById('adminMenuToggle').addEventListener('click', function () {
+        document.getElementById('adminNavLinks').classList.toggle('open');
+    });
+</script>
