@@ -551,23 +551,24 @@ span { color: var(--primary); }
    ADMIN NAVBAR (enhanced)
    ========================================= */
 .admin-navbar {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #1e3a5f 100%);
-    border-bottom: 2.5px solid var(--accent);
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
     padding: 0 5%;
     display: flex;
     align-items: center;
     gap: 1.5rem;
     min-height: 54px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(79,126,247,0.07);
     position: sticky;
     top: 0;
     z-index: 999;
+    flex-wrap: wrap;
 }
 
 .admin-navbar .admin-brand {
     font-size: clamp(1rem, 1.9vw, 1.15rem);
     font-weight: 800;
-    color: var(--white);
+    color: var(--text);
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -576,8 +577,8 @@ span { color: var(--primary); }
     letter-spacing: -0.3px;
 }
 
-.admin-navbar .admin-brand i { color: var(--accent); font-size: 1.05rem; }
-.admin-navbar .admin-brand span { color: var(--accent); }
+.admin-navbar .admin-brand i { color: var(--primary); font-size: 1.05rem; }
+.admin-navbar .admin-brand span { color: var(--primary); }
 
 .admin-nav-links {
     display: flex;
@@ -593,11 +594,11 @@ span { color: var(--primary); }
     gap: 0.4rem;
     font-size: clamp(0.78rem, 1.25vw, 0.86rem);
     font-weight: 600;
-    color: rgba(255,255,255,0.78);
+    color: var(--text-muted);
     text-decoration: none;
-    padding: 0.38rem 0.85rem;
+    padding: 0.38rem 0.9rem;
     border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid transparent;
     transition: var(--transition);
     white-space: nowrap;
 }
@@ -605,27 +606,18 @@ span { color: var(--primary); }
 .admin-nav-links a i { font-size: 0.78rem; }
 
 .admin-nav-links a:hover {
-    color: var(--white);
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 2px 14px rgba(249,115,22,0.4);
-    transform: translateY(-1px);
+    color: var(--primary);
+    background: var(--primary-light);
+    border-color: var(--primary);
 }
 
-.admin-menu-toggle {
-    display: none;
-    background: none;
-    border: 1px solid rgba(255,255,255,0.2);
+.admin-nav-links a.active {
     color: var(--white);
-    padding: 0.38rem 0.7rem;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-left: auto;
-    font-size: 1rem;
-    transition: var(--transition);
+    background: var(--primary);
+    border-color: var(--primary);
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(79,126,247,0.25);
 }
-
-.admin-menu-toggle:hover { background: rgba(255,255,255,0.1); }
 
 /* =========================================
    COMPOSE / EDIT FORMS
@@ -920,23 +912,9 @@ span { color: var(--primary); }
 }
 
 @media screen and (max-width: 768px) {
-    .admin-navbar { padding: 0.5rem 5%; flex-wrap: wrap; gap: 0; }
-    .admin-menu-toggle { display: block; }
-    .admin-nav-links {
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.3rem;
-        padding: 0.5rem 0 0.75rem;
-        margin-left: 0;
-    }
-    .admin-nav-links.open { display: flex; }
-    .admin-nav-links a {
-        border-radius: 8px;
-        justify-content: flex-start;
-        padding: 0.55rem 1rem;
-    }
+    .admin-navbar { padding: 0.5rem 5%; gap: 0.5rem; }
+    .admin-nav-links { margin-left: 0; gap: 0.3rem; }
+    .admin-nav-links a { padding: 0.35rem 0.7rem; }
     .auth-card { padding: 1.5rem 1.25rem; }
     .contact-card { padding: 1.5rem 1.25rem; }
     .admin-form-card { padding: 1.5rem 1.25rem; }
