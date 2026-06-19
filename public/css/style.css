@@ -266,6 +266,16 @@ span { color: var(--primary); }
 }
 
 /* =========================================
+   SHARED CARDS GRID — 3 columns desktop
+   ========================================= */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* =========================================
    BLOG
    ========================================= */
 .blogtitle {
@@ -283,9 +293,10 @@ span { color: var(--primary); }
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1.5rem;
-    margin-bottom: 1.25rem;
     box-shadow: var(--card-shadow);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .blogcard:hover {
@@ -302,9 +313,11 @@ span { color: var(--primary); }
 
 .blogcard p {
     font-size: clamp(0.875rem, 1.5vw, 0.98rem);
-    line-height: 1.75;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
     margin-bottom: 0;
-    text-align: justify;
+    text-align: left;
+    color: var(--text-muted);
 }
 
 .blogcard p a {
@@ -342,9 +355,10 @@ span { color: var(--primary); }
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1.75rem;
-    margin-bottom: 1.25rem;
     box-shadow: var(--card-shadow);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .learning-box:hover {
@@ -361,9 +375,12 @@ span { color: var(--primary); }
 }
 
 .learning-box p {
-    text-align: justify;
+    text-align: left;
     font-size: clamp(0.875rem, 1.5vw, 0.98rem);
+    line-height: 1.85;
+    letter-spacing: 0.01em;
     margin-bottom: 1rem;
+    flex-grow: 1;
 }
 
 .learning-box .btn-know {
@@ -378,13 +395,13 @@ span { color: var(--primary); }
     cursor: pointer;
     text-decoration: none;
     transition: var(--transition);
+    align-self: flex-start;
+    margin-top: auto;
 }
 
 .learning-box .btn-know:hover {
     background: #3a6ce0;
 }
-
-.learngap { margin-bottom: 0; }
 
 /* =========================================
    CONTACT FORM
@@ -909,6 +926,7 @@ span { color: var(--primary); }
     .homeimage img { margin-top: 3%; width: 80%; }
     #about { padding: 6% 5%; }
     #features { padding: 5% 5%; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media screen and (max-width: 768px) {
@@ -931,6 +949,7 @@ span { color: var(--primary); }
     #features { padding: 6% 4%; }
     .blogti { flex-direction: column; }
     .inner-footer { padding: 2rem 10px 1.5rem; }
+    .cards-grid { grid-template-columns: 1fr; }
 }
 
 @media screen and (max-width: 400px) {
