@@ -94,32 +94,112 @@ const ctime = {
 }; 
 const currentTime = time.toDateString("en-US", ctime);
 
+// ── SEO: inject siteUrl into every response ──
+app.use(function(req, res, next){
+    res.locals.siteUrl = req.protocol + "://" + req.get("host");
+    next();
+});
+
+// ── robots.txt ──
+app.get("/robots.txt", function(req, res){
+    const siteUrl = req.protocol + "://" + req.get("host");
+    res.type("text/plain");
+    res.send([
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /admin",
+        "Disallow: /adminlogin",
+        "Disallow: /adminregister",
+        "Disallow: /loggedin",
+        "Disallow: /compose",
+        "Disallow: /postlearnings",
+        "Disallow: /edithome",
+        "Disallow: /getcontact",
+        "Sitemap: " + siteUrl + "/sitemap.xml"
+    ].join("\n"));
+});
+
+// ── sitemap.xml ──
+app.get("/sitemap.xml", function(req, res){
+    const siteUrl = req.protocol + "://" + req.get("host");
+    blog.find({}, function(err, posts){
+        const todayISO = new Date().toISOString().split("T")[0];
+        const staticPages = [
+            { url: "/", priority: "1.0" },
+            { url: "/blog", priority: "0.9" },
+            { url: "/learnings", priority: "0.8" },
+            { url: "/about", priority: "0.7" },
+            { url: "/contact", priority: "0.6" }
+        ];
+        let urls = staticPages.map(function(p){
+            return "<url><loc>" + siteUrl + p.url + "</loc><lastmod>" + todayISO + "</lastmod><priority>" + p.priority + "</priority></url>";
+        });
+        if(!err && posts){
+            posts.forEach(function(post){
+                urls.push("<url><loc>" + siteUrl + "/" + encodeURIComponent(post.title) + "</loc><lastmod>" + todayISO + "</lastmod><priority>0.7</priority></url>");
+            });
+        }
+        res.type("application/xml");
+        res.send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + urls.join("") + "</urlset>");
+    });
+});
+
 app.get("/", function(req, res){
+    const siteUrl = req.protocol + "://" + req.get("host");
     Home.find({}, function(err, foundHome){
-        res.render("index", {homepage: foundHome});
+        res.render("index", {
+            homepage: foundHome,
+            pageTitle: "Jackson Mongbam — Developer & Programmer",
+            pageDesc: "Personal blog and portfolio of Jackson Mongbam — a programmer and developer sharing thoughts, tutorials, and learnings.",
+            pageUrl: siteUrl
+        });
     });
 })
 
 app.get("/learnings", function(req, res){
+    const siteUrl = req.protocol + "://" + req.get("host");
     Learning.find().sort('-date').find(function(err, foundLearning){
-        res.render("learnings", {learn: foundLearning});
+        res.render("learnings", {
+            learn: foundLearning,
+            pageTitle: "Learnings | Jackson Mongbam",
+            pageDesc: "Notes, lessons, and things Jackson Mongbam has discovered in programming and development.",
+            pageUrl: siteUrl + "/learnings"
+        });
     });
 })
 
 app.get("/blog", function(req, res){
+    const siteUrl = req.protocol + "://" + req.get("host");
     blog.find().sort('-date').find(function(err, foundBlog){
-            res.render("blog", {postuser: foundBlog});
+        res.render("blog", {
+            postuser: foundBlog,
+            pageTitle: "Blog | Jackson Mongbam",
+            pageDesc: "Read Jackson Mongbam's blog — thoughts, tutorials, and stories on programming and development.",
+            pageUrl: siteUrl + "/blog",
+            ogType: "blog"
+        });
     });
 })
 
 app.get("/about", function(req, res){
+    const siteUrl = req.protocol + "://" + req.get("host");
     Home.find({}, function(err, foundHome){
-        res.render("about", {homepage: foundHome});
+        res.render("about", {
+            homepage: foundHome,
+            pageTitle: "About | Jackson Mongbam",
+            pageDesc: "Learn about Jackson Mongbam — a programmer and developer with skills in Node.js, MongoDB, Express, and more.",
+            pageUrl: siteUrl + "/about"
+        });
     });
 })
 
 app.get("/contact", function(req, res){
-    res.render("contact");
+    const siteUrl = req.protocol + "://" + req.get("host");
+    res.render("contact", {
+        pageTitle: "Contact | Jackson Mongbam",
+        pageDesc: "Get in touch with Jackson Mongbam. Send a message for collaboration, questions, or just to say hello.",
+        pageUrl: siteUrl + "/contact"
+    });
 })
 
 app.get("/edithome", function(req, res){
@@ -195,6 +275,7 @@ app.get("/loggedin", function(req, res){
         res.redirect("/adminlogin");
     }
 })
+
 app.get("/updated", function(req, res){
     if(req.isAuthenticated()){
         res.render("updated");
@@ -204,13 +285,22 @@ app.get("/updated", function(req, res){
 })
 
 app.get("/:customPost", function(req, res){
-    const newPost = _.lowerCase(decodeURIComponent(req.params.customPost));
+    const siteUrl = req.protocol + "://" + req.get("host");
+    const rawTitle = decodeURIComponent(req.params.customPost);
+    const newPost = _.lowerCase(rawTitle);
     blog.find({}, function(err, foundPost){
         if(!err){
             foundPost.forEach(function(post){
                 const storedPost = _.lowerCase(post.title);
                 if(newPost === storedPost){
-                    res.render("blogpost", {postTitle: post.title, postContent: post.content});
+                    res.render("blogpost", {
+                        postTitle: post.title,
+                        postContent: post.content,
+                        pageTitle: post.title + " | Jackson Mongbam",
+                        pageDesc: post.content.substring(0, 155).replace(/\n/g, " "),
+                        pageUrl: siteUrl + "/" + encodeURIComponent(post.title),
+                        ogType: "article"
+                    });
                 }
             });
         }
