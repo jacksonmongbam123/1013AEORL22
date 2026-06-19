@@ -4,11 +4,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ── Primary SEO ── -->
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Jackson Mongbam — Developer & Programmer' %></title>
+    <meta name="description" content="<%= typeof pageDesc !== 'undefined' ? pageDesc : 'Personal blog and portfolio of Jackson Mongbam — a programmer and developer sharing thoughts, tutorials, and learnings.' %>">
+    <meta name="author" content="Jackson Mongbam">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<%= typeof pageUrl !== 'undefined' ? pageUrl : siteUrl %>">
+
+    <!-- ── Open Graph ── -->
+    <meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'website' %>">
+    <meta property="og:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle : 'Jackson Mongbam — Developer & Programmer' %>">
+    <meta property="og:description" content="<%= typeof pageDesc !== 'undefined' ? pageDesc : 'Personal blog and portfolio of Jackson Mongbam — a programmer and developer sharing thoughts, tutorials, and learnings.' %>">
+    <meta property="og:url" content="<%= typeof pageUrl !== 'undefined' ? pageUrl : siteUrl %>">
+    <meta property="og:site_name" content="Jackson Mongbam">
+    <meta property="og:image" content="<%= siteUrl %>/img/about.png">
+    <meta property="og:locale" content="en_US">
+
+    <!-- ── Twitter Card ── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= typeof pageTitle !== 'undefined' ? pageTitle : 'Jackson Mongbam — Developer & Programmer' %>">
+    <meta name="twitter:description" content="<%= typeof pageDesc !== 'undefined' ? pageDesc : 'Personal blog and portfolio of Jackson Mongbam — a programmer and developer sharing thoughts, tutorials, and learnings.' %>">
+    <meta name="twitter:image" content="<%= siteUrl %>/img/about.png">
+
+    <!-- ── JSON-LD: Person (all pages) ── -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Jackson Mongbam",
+        "url": "<%= siteUrl %>",
+        "description": "Programmer and developer sharing thoughts, tutorials, and learnings.",
+        "knowsAbout": ["Web Development", "Node.js", "JavaScript", "MongoDB", "Express.js"]
+    }
+    </script>
+    <% if (typeof postTitle !== 'undefined') { %>
+    <!-- ── JSON-LD: BlogPosting (individual post pages) ── -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "<%= postTitle.replace(/\\/g, '\\\\').replace(/"/g, '\\"') %>",
+        "author": { "@type": "Person", "name": "Jackson Mongbam" },
+        "publisher": { "@type": "Person", "name": "Jackson Mongbam" },
+        "url": "<%= typeof pageUrl !== 'undefined' ? pageUrl : siteUrl %>"
+    }
+    </script>
+    <% } %>
+
+    <!-- ── Stylesheets & Scripts ── -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
-    <title>Jackson Mongbam</title>
 </head>
 <body>
 <section id="title">
