@@ -7,12 +7,14 @@
             <h2>Admin <span>Panel</span></h2>
             <p style="color:var(--text-muted); font-size:clamp(0.83rem,1.3vw,0.9rem); margin-top:0.25rem;">Choose an option to continue</p>
         </div>
-        <a href="/adminregister" style="text-decoration:none;">
-            <button type="button" class="btn-auth" style="margin-bottom:0.75rem;">Register</button>
-        </a>
-        <a href="/adminlogin" style="text-decoration:none;">
-            <button type="button" class="btn-auth" style="background:#1E293B;">Login</button>
-        </a>
+        <div class="auth-btn-row">
+            <a href="/adminregister">
+                <button type="button" class="btn-auth">Register</button>
+            </a>
+            <a href="/adminlogin">
+                <button type="button" class="btn-auth btn-auth--login">Login</button>
+            </a>
+        </div>
     </div>
 </div>
 
