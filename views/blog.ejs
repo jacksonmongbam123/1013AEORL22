@@ -6,6 +6,24 @@
         <p style="color: var(--text-muted);">Thoughts, tutorials, and stories.</p>
     </div>
 
+    <% if(postuser.length > 0) { %>
+    <div class="search-bar-wrap">
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+                type="text"
+                id="blogSearch"
+                class="search-input"
+                placeholder="Search posts by title..."
+                autocomplete="off"
+            />
+            <button class="search-clear" id="blogClear" aria-label="Clear search">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+    <% } %>
+
     <% if(postuser.length === 0) { %>
         <div class="about-card text-center py-5">
             <i class="fa-solid fa-newspaper" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
@@ -13,9 +31,9 @@
         </div>
     <% } %>
 
-    <div class="cards-grid">
+    <div class="cards-grid" id="blogGrid">
         <% for(var i=0; i<postuser.length; i++) { %>
-            <div class="blogcard">
+            <div class="blogcard" data-title="<%=postuser[i].title.toLowerCase()%>">
                 <div class="blogti">
                     <h3><%=postuser[i].title%></h3>
                     <label><%=postuser[i].timestamp%></label>
@@ -26,6 +44,42 @@
             </div>
         <% } %>
     </div>
+
+    <div class="search-empty" id="blogEmpty" style="display:none;">
+        <i class="fa-solid fa-face-frown-open"></i>
+        <p>No posts match your search.</p>
+    </div>
 </div>
+
+<script>
+(function () {
+    const input   = document.getElementById('blogSearch');
+    const clear   = document.getElementById('blogClear');
+    const grid    = document.getElementById('blogGrid');
+    const empty   = document.getElementById('blogEmpty');
+    if (!input) return;
+
+    function filter() {
+        const q = input.value.trim().toLowerCase();
+        const cards = grid.querySelectorAll('.blogcard');
+        let visible = 0;
+        cards.forEach(function (card) {
+            const title = card.dataset.title || '';
+            const match = !q || title.includes(q);
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        clear.style.display = q ? 'flex' : 'none';
+        empty.style.display = visible === 0 ? 'flex' : 'none';
+    }
+
+    input.addEventListener('input', filter);
+    clear.addEventListener('click', function () {
+        input.value = '';
+        filter();
+        input.focus();
+    });
+})();
+</script>
 
 <%- include('partials/footer'); -%>
