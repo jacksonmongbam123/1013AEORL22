@@ -528,9 +528,9 @@ span { color: var(--primary); }
 
 .auth-btn-row .btn-auth { margin-top: 0; }
 
-.btn-auth--login { background: var(--accent); }
+.btn-auth--login { background: #111827; }
 
-.btn-auth--login:hover { background: #e06010; }
+.btn-auth--login:hover { background: #000000; }
 
 .auth-card .auth-link {
     text-align: center;
