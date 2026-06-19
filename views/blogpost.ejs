@@ -1,9 +1,68 @@
 <%- include('partials/header'); -%>
-    <div class="row learngap">
-        <div class="learning-box col-lg-12">
-            <h2><%=postTitle%></h2>
-            <p><%=postContent%></p>
+
+<div class="page-content">
+    <div class="blogpost-layout">
+
+        <!-- Card 1: Blog Content -->
+        <div class="blogpost-main">
+            <div class="blogpost-header">
+                <a href="/blog" class="blogpost-back">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Blog
+                </a>
+                <h1 class="blogpost-title"><%=postTitle%></h1>
+            </div>
+            <div class="blogpost-body">
+                <p><%=postContent%></p>
+            </div>
         </div>
+
+        <!-- Card 2: Quick Links -->
+        <aside class="blogpost-sidebar">
+            <div class="quicklinks-card">
+                <h4 class="quicklinks-title">
+                    <i class="fa-solid fa-bolt"></i> Quick Links
+                </h4>
+                <ul class="quicklinks-list">
+                    <li>
+                        <a href="/blog">
+                            <i class="fa-solid fa-newspaper"></i>
+                            <span>All Posts</span>
+                            <i class="fa-solid fa-chevron-right arrow"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/learnings">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>Learnings</span>
+                            <i class="fa-solid fa-chevron-right arrow"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/about">
+                            <i class="fa-solid fa-user"></i>
+                            <span>About</span>
+                            <i class="fa-solid fa-chevron-right arrow"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/contact">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>Contact</span>
+                            <i class="fa-solid fa-chevron-right arrow"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Home</span>
+                            <i class="fa-solid fa-chevron-right arrow"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
     </div>
+</div>
 
 <%- include('partials/footer'); -%>
