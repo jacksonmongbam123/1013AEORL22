@@ -1,5 +1,22 @@
 <%- include('partials/admin'); -%>
 
+<% if (flash) { %>
+<div class="flash-alert" id="flashAlert">
+    <span class="flash-icon">✓</span>
+    <%= flash %>
+    <button class="flash-close" onclick="document.getElementById('flashAlert').remove()" aria-label="Dismiss">×</button>
+</div>
+<script>
+    setTimeout(function() {
+        var el = document.getElementById('flashAlert');
+        if (el) {
+            el.classList.add('flash-hide');
+            setTimeout(function() { if (el) el.remove(); }, 400);
+        }
+    }, 3500);
+</script>
+<% } %>
+
 <div class="page-content">
     <div class="compose">
         <h2><span>Update</span> Home</h2>
