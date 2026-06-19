@@ -204,7 +204,7 @@ app.get("/updated", function(req, res){
 })
 
 app.get("/:customPost", function(req, res){
-    const newPost = _.lowerCase(req.params.customPost);
+    const newPost = _.lowerCase(decodeURIComponent(req.params.customPost));
     blog.find({}, function(err, foundPost){
         if(!err){
             foundPost.forEach(function(post){
