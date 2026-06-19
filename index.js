@@ -186,7 +186,9 @@ app.get("/adminlogin", function(req, res){
 
 app.get("/loggedin", function(req, res){
     if(req.isAuthenticated()){
-        res.render("loggedin");
+        const flash = req.session.flash || null;
+        req.session.flash = null;
+        res.render("loggedin", { flash: flash });
     }else{
         res.redirect("/adminlogin");
     }
@@ -292,6 +294,7 @@ app.post("/adminregister", function(req, res){
                 res.redirect("/adminerror");
             }else{
                 passport.authenticate("local")(req, res, function(){
+                    req.session.flash = "Registered and logged in successfully.";
                     res.redirect("/loggedin");
                 });
             }
@@ -312,6 +315,7 @@ app.post("/adminlogin", function(req, res){
             res.redirect("/adminloginerror");
         }else{
             passport.authenticate("local")(req, res, function(){
+                req.session.flash = "Logged in successfully.";
                 res.redirect("/loggedin");
             });;
         }
