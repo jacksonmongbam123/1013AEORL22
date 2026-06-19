@@ -548,49 +548,84 @@ span { color: var(--primary); }
 .auth-card .auth-link a:hover { text-decoration: underline; }
 
 /* =========================================
-   ADMIN NAVBAR
+   ADMIN NAVBAR (enhanced)
    ========================================= */
-.admin-bar {
-    background: var(--text);
-    padding: 0.6rem 5%;
+.admin-navbar {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #1e3a5f 100%);
+    border-bottom: 2.5px solid var(--accent);
+    padding: 0 5%;
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    flex-wrap: wrap;
+    min-height: 54px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 999;
 }
 
-.admin-bar .admin-brand {
-    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
-    font-weight: 700;
+.admin-navbar .admin-brand {
+    font-size: clamp(1rem, 1.9vw, 1.15rem);
+    font-weight: 800;
     color: var(--white);
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    letter-spacing: -0.3px;
 }
 
-.admin-bar .admin-brand span { color: var(--accent); }
+.admin-navbar .admin-brand i { color: var(--accent); font-size: 1.05rem; }
+.admin-navbar .admin-brand span { color: var(--accent); }
 
-.admin-bar .admin-links {
+.admin-nav-links {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.35rem;
     flex-wrap: wrap;
     margin-left: auto;
 }
 
-.admin-bar .admin-links a {
-    font-size: clamp(0.8rem, 1.3vw, 0.88rem);
+.admin-nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: clamp(0.78rem, 1.25vw, 0.86rem);
     font-weight: 600;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.78);
     text-decoration: none;
-    padding: 0.3rem 0.75rem;
-    border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.38rem 0.85rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.admin-nav-links a i { font-size: 0.78rem; }
+
+.admin-nav-links a:hover {
+    color: var(--white);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 2px 14px rgba(249,115,22,0.4);
+    transform: translateY(-1px);
+}
+
+.admin-menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    padding: 0.38rem 0.7rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: auto;
+    font-size: 1rem;
     transition: var(--transition);
 }
 
-.admin-bar .admin-links a:hover {
-    color: var(--white);
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.3);
-}
+.admin-menu-toggle:hover { background: rgba(255,255,255,0.1); }
 
 /* =========================================
    COMPOSE / EDIT FORMS
@@ -885,8 +920,23 @@ span { color: var(--primary); }
 }
 
 @media screen and (max-width: 768px) {
-    .admin-bar { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-    .admin-bar .admin-links { margin-left: 0; }
+    .admin-navbar { padding: 0.5rem 5%; flex-wrap: wrap; gap: 0; }
+    .admin-menu-toggle { display: block; }
+    .admin-nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.3rem;
+        padding: 0.5rem 0 0.75rem;
+        margin-left: 0;
+    }
+    .admin-nav-links.open { display: flex; }
+    .admin-nav-links a {
+        border-radius: 8px;
+        justify-content: flex-start;
+        padding: 0.55rem 1rem;
+    }
     .auth-card { padding: 1.5rem 1.25rem; }
     .contact-card { padding: 1.5rem 1.25rem; }
     .admin-form-card { padding: 1.5rem 1.25rem; }
