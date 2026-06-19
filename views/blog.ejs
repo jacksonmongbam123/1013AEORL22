@@ -52,7 +52,7 @@
                     <label><%=postuser[i].timestamp%></label>
                 </div>
                 <p><%=postuser[i].content.substring(0, 400) + "..."%>
-                    <a href="/<%=postuser[i].title%>"> Read more</a>
+                    <a href="/<%=encodeURIComponent(postuser[i].title)%>"> Read more</a>
                 </p>
             </div>
         <% } %>
