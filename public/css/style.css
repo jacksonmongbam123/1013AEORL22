@@ -825,7 +825,187 @@ span { color: var(--primary); }
 .about-card p {
     font-size: clamp(0.9rem, 1.5vw, 1rem);
     line-height: 1.85;
-    text-align: justify;
+    text-align: left;
+}
+
+/* About — Hero */
+.about-hero {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: clamp(2rem, 5vw, 3.5rem);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.about-hero-text {
+    flex: 1 1 300px;
+}
+
+.about-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.about-hero-text h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.about-bio {
+    font-size: clamp(0.9rem, 1.5vw, 1.02rem);
+    line-height: 1.85;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.about-hero-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.btn-about-primary {
+    display: inline-block;
+    padding: 0.55rem 1.4rem;
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 8px;
+    font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-about-primary:hover {
+    background: #3a6ce0;
+    transform: translateY(-1px);
+    color: var(--white);
+}
+
+.btn-about-outline {
+    display: inline-block;
+    padding: 0.55rem 1.4rem;
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-about-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.about-hero-img {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.about-hero-img img {
+    width: clamp(160px, 22vw, 260px);
+    border-radius: var(--radius);
+    filter: drop-shadow(0 8px 24px rgba(79,126,247,0.13));
+}
+
+/* About — Section */
+.about-section {
+    margin-bottom: 2.5rem;
+}
+
+.about-section-title {
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    color: var(--text);
+    margin-bottom: 0.4rem;
+}
+
+.about-section-sub {
+    color: var(--text-muted);
+    font-size: clamp(0.875rem, 1.4vw, 0.98rem);
+    margin-bottom: 1.75rem;
+    text-align: left;
+}
+
+/* Skills grid */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.skill-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.25rem;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    text-align: center;
+}
+
+.skill-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 20px rgba(79,126,247,0.12);
+    transform: translateY(-3px);
+}
+
+.skill-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.skill-icon i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.skill-card h4 {
+    color: var(--text);
+    font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.skill-card p {
+    font-size: clamp(0.8rem, 1.3vw, 0.88rem);
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+    text-align: left;
+}
+
+@media screen and (max-width: 992px) {
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-hero { gap: 2rem; }
+}
+
+@media screen and (max-width: 600px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .about-hero-img { display: none; }
+    .about-hero-links { flex-direction: column; }
 }
 
 /* =========================================
