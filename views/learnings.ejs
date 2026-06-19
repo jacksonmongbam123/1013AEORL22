@@ -6,6 +6,24 @@
         <p style="color: var(--text-muted);">Notes, lessons, and things I have discovered.</p>
     </div>
 
+    <% if(learn.length > 0) { %>
+    <div class="search-bar-wrap">
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+                type="text"
+                id="learnSearch"
+                class="search-input"
+                placeholder="Search learnings by title..."
+                autocomplete="off"
+            />
+            <button class="search-clear" id="learnClear" aria-label="Clear search">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+    <% } %>
+
     <% if(learn.length === 0) { %>
         <div class="about-card text-center py-5">
             <i class="fa-solid fa-book-open" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
@@ -13,15 +31,51 @@
         </div>
     <% } %>
 
-    <div class="cards-grid">
+    <div class="cards-grid" id="learnGrid">
         <% for(var i=0; i<learn.length; i++) { %>
-            <div class="learning-box">
+            <div class="learning-box" data-title="<%=learn[i].title.toLowerCase()%>">
                 <h3><%=learn[i].title%></h3>
                 <p><%=learn[i].content.substring(0, 400) + "..."%></p>
                 <a class="btn-know">Know more</a>
             </div>
         <% } %>
     </div>
+
+    <div class="search-empty" id="learnEmpty" style="display:none;">
+        <i class="fa-solid fa-face-frown-open"></i>
+        <p>No learnings match your search.</p>
+    </div>
 </div>
+
+<script>
+(function () {
+    const input   = document.getElementById('learnSearch');
+    const clear   = document.getElementById('learnClear');
+    const grid    = document.getElementById('learnGrid');
+    const empty   = document.getElementById('learnEmpty');
+    if (!input) return;
+
+    function filter() {
+        const q = input.value.trim().toLowerCase();
+        const cards = grid.querySelectorAll('.learning-box');
+        let visible = 0;
+        cards.forEach(function (card) {
+            const title = card.dataset.title || '';
+            const match = !q || title.includes(q);
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        clear.style.display = q ? 'flex' : 'none';
+        empty.style.display = visible === 0 ? 'flex' : 'none';
+    }
+
+    input.addEventListener('input', filter);
+    clear.addEventListener('click', function () {
+        input.value = '';
+        filter();
+        input.focus();
+    });
+})();
+</script>
 
 <%- include('partials/footer'); -%>
