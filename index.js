@@ -10,13 +10,17 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static("public"));
-app.use(session({ secret: "jackson mongbam", resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.SESSION_SECRET || "jackson mongbam", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-const confirmpassword = "1013AEORL22";
+const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 
-mongoose.connect("mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority");
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
+mongoose.connect(MONGODB_URI).catch(function(err) {
+    console.error("MongoDB connection error:", err.message);
+    process.exit(1);
+});
 
 // ── Schemas ──────────────────────────────────────────────────────────────────
 
