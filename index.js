@@ -306,20 +306,34 @@ app.post("/admin-homecards/delete/:id", isAuth, async function(req, res) {
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
-app.post("/adminregister", function(req, res) {
+app.post("/adminregister", async function(req, res) {
     if (req.body.adminid !== confirmpassword) return res.redirect("/adminerror");
-    Admin.register({username:req.body.username}, req.body.password, function(err) {
-        if (err) return res.redirect("/adminerror");
-        passport.authenticate("local")(req, res, function() { req.session.flash="Registered and logged in successfully."; res.redirect("/loggedin"); });
-    });
+    try {
+        const user = await Admin.register({ username: req.body.username }, req.body.password);
+        req.login(user, function(err) {
+            if (err) return res.redirect("/adminerror");
+            req.session.flash = "Registered and logged in successfully.";
+            res.redirect("/loggedin");
+        });
+    } catch (err) {
+        console.error(err);
+        res.redirect("/adminerror");
+    }
 });
 
 app.post("/adminlogin", function(req, res) {
-    passport.authenticate("local", function(err, user) {
-        if (err || !user) { req.session.loginError=true; return res.redirect("/adminlogin"); }
+    passport.authenticate("local", function(err, user, info) {
+        if (err || !user) {
+            req.session.loginError = true;
+            return res.redirect("/adminlogin");
+        }
         req.login(user, function(err) {
-            if (err) { req.session.loginError=true; return res.redirect("/adminlogin"); }
-            req.session.flash="Logged in successfully."; res.redirect("/loggedin");
+            if (err) {
+                req.session.loginError = true;
+                return res.redirect("/adminlogin");
+            }
+            req.session.flash = "Logged in successfully.";
+            res.redirect("/loggedin");
         });
     })(req, res);
 });
