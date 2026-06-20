@@ -1,0 +1,43 @@
+<%- include('partials/header'); -%>
+
+<section class="page-content">
+    <div class="blogtitle">
+        <h2>Open <span>Positions</span></h2>
+        <p style="color:var(--text-muted);">Join our team. Browse available roles below.</p>
+    </div>
+
+    <% if (careers.length === 0) { %>
+    <div class="about-card text-center py-5">
+        <i class="fa-solid fa-briefcase" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
+        <p>No open positions at the moment. Check back soon!</p>
+    </div>
+    <% } %>
+
+    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+    <% for(var i=0; i<careers.length; i++) { %>
+    <div class="blogcard" style="position:relative;">
+        <div class="blogti">
+            <span style="background:var(--primary-light); color:var(--primary); padding:0.2rem 0.8rem; border-radius:20px; font-size:0.82rem; font-weight:700;">
+                <%= careers[i].type %>
+            </span>
+            <% if (careers[i].deadline) { %>
+            <span style="color:var(--text-muted); font-size:0.82rem;">
+                <i class="fa-solid fa-clock" style="margin-right:4px;"></i>Deadline: <%= careers[i].deadline %>
+            </span>
+            <% } %>
+        </div>
+        <h3 style="color:var(--text); font-size:clamp(1.1rem,2.5vw,1.3rem); margin-bottom:0.5rem;"><%= careers[i].title %></h3>
+        <% if (careers[i].location) { %>
+        <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:0.5rem;">
+            <i class="fa-solid fa-location-dot" style="color:var(--primary); margin-right:5px;"></i><%= careers[i].location %>
+            <% if (careers[i].salary) { %> &nbsp;&bull;&nbsp; <i class="fa-solid fa-money-bill-wave" style="color:var(--primary); margin-right:5px;"></i><%= careers[i].salary %><% } %>
+        </p>
+        <% } %>
+        <p style="white-space:pre-wrap;"><%= careers[i].description %></p>
+        <a href="/contact" class="btn-know" style="margin-top:0.75rem; display:inline-block;">Apply Now</a>
+    </div>
+    <% } %>
+    </div>
+</section>
+
+<%- include('partials/footer'); -%>

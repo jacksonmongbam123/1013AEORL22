@@ -1,0 +1,69 @@
+<%- include('partials/admin'); -%>
+
+<div class="page-content">
+    <div class="compose">
+        <h2><span><%= career ? 'Edit' : 'Add' %></span> Career</h2>
+    </div>
+    <div class="admin-form-card">
+        <form action="<%= action %>" method="post">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label class="form-label">Job Title</label>
+                        <input class="form-control" type="text" name="careerTitle" placeholder="e.g. Frontend Developer" value="<%= career ? career.title : '' %>" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select class="form-control" name="careerType">
+                            <% ['Full-Time','Part-Time','Internship','Contract'].forEach(function(t){ %>
+                            <option value="<%= t %>" <%= career && career.type === t ? 'selected' : '' %>><%= t %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input class="form-control" type="text" name="careerLocation" placeholder="e.g. Remote / Nagaland" value="<%= career ? career.location : '' %>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Salary / Stipend</label>
+                        <input class="form-control" type="text" name="careerSalary" placeholder="e.g. ₹30,000/mo" value="<%= career ? career.salary : '' %>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Application Deadline</label>
+                        <input class="form-control" type="text" name="careerDeadline" placeholder="e.g. 31 July 2025" value="<%= career ? career.deadline : '' %>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3" style="padding-top:0.5rem;">
+                        <label class="form-label">&nbsp;</label>
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.75rem;">
+                            <input type="checkbox" name="careerActive" id="careerActive" style="width:18px; height:18px;" <%= !career || career.active ? 'checked' : '' %>>
+                            <label for="careerActive" style="margin:0; font-weight:600; cursor:pointer;">Show as Active (visible on public page)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label class="form-label">Job Description</label>
+                        <textarea class="form-control" name="careerDescription" rows="7" placeholder="Describe the role, responsibilities, and requirements..."><%= career ? career.description : '' %></textarea>
+                    </div>
+                </div>
+            </div>
+            <p class="note"><i><span>Note:</span> Inactive listings won't appear on the public Careers page.</i></p>
+            <div style="display:flex; gap:0.75rem; align-items:center;">
+                <button class="btn btn-primary postbutton" type="submit"><%= career ? 'Update' : 'Add Career' %></button>
+                <a href="/admin-careers" style="color:var(--text-muted); font-size:0.88rem; text-decoration:none;">← Back to list</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>
