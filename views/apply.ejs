@@ -1,0 +1,41 @@
+<%- include('partials/header'); -%>
+
+<div class="page-content">
+    <div class="blogtitle">
+        <h2>Apply for <span><%= career.title %></span></h2>
+        <p style="color: var(--text-muted); font-size: clamp(0.875rem,1.5vw,1rem);">
+            <i class="fa-solid fa-map-pin" style="color: var(--primary); margin-right: 5px;"></i><%= career.location %> 
+            <% if (career.type) { %> &nbsp;&bull;&nbsp; <i class="fa-solid fa-briefcase" style="color: var(--primary); margin-right: 5px;"></i><%= career.type %><% } %>
+            <% if (career.salary) { %> &nbsp;&bull;&nbsp; <i class="fa-solid fa-money-bill-wave" style="color: var(--primary); margin-right: 5px;"></i><%= career.salary %><% } %>
+        </p>
+    </div>
+
+    <div class="contact-card">
+        <form action="/careers/apply/<%= career._id %>" method="post">
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input class="form-control" type="text" name="candidateName" placeholder="Your full name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">E-mail Address</label>
+                <input class="form-control" type="email" name="candidateEmail" placeholder="you@example.com" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input class="form-control" type="tel" name="candidatePhone" placeholder="Your phone number" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Qualifications / Cover Letter</label>
+                <textarea class="form-control" name="candidateMessage" rows="6" placeholder="Briefly introduce yourself, outline your experience, or share your portfolio link..." required></textarea>
+            </div>
+            <button class="btn btn-primary postbutton w-100" type="submit">Submit Application</button>
+            <div class="text-center mt-3">
+                <a href="/careers" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Careers
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>

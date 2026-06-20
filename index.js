@@ -75,6 +75,17 @@ const homeCardSchema = new mongoose.Schema({
 });
 const HomeCard = mongoose.model("homecard", homeCardSchema);
 
+const candidateSchema = new mongoose.Schema({
+    role: String,
+    careerId: { type: mongoose.Schema.Types.ObjectId, ref: 'career' },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: String,
+    message: String,
+    createdAt: { type: Date, default: Date.now }
+});
+const Candidate = mongoose.model("candidate", candidateSchema);
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const today = new Date();
@@ -134,6 +145,39 @@ app.get("/careers", async function(req, res) {
     const su = req.protocol + "://" + req.get("host");
     const careers = await Career.find({active:true}).sort({createdAt:-1});
     res.render("careers", { careers, pageTitle:"Careers | Jackson Mongbam", pageDesc:"Open positions.", pageUrl:su+"/careers" });
+});
+
+app.get("/careers/apply/:id", async function(req, res) {
+    const su = req.protocol + "://" + req.get("host");
+    try {
+        const career = await Career.findById(req.params.id);
+        if (!career) return res.redirect("/careers");
+        res.render("apply", { career, pageTitle:"Apply for " + career.title + " | Jackson Mongbam", pageDesc:"Submit your application.", pageUrl:su+"/careers/apply/"+req.params.id });
+    } catch(err) {
+        console.error("Error loading application form:", err);
+        res.redirect("/careers");
+    }
+});
+
+app.post("/careers/apply/:id", async function(req, res) {
+    try {
+        const career = await Career.findById(req.params.id);
+        if (!career) return res.redirect("/careers");
+        
+        const candidate = new Candidate({
+            role: career.title,
+            careerId: career._id,
+            name: req.body.candidateName,
+            email: req.body.candidateEmail,
+            phone: req.body.candidatePhone,
+            message: req.body.candidateMessage
+        });
+        await candidate.save();
+        res.redirect("/success");
+    } catch(err) {
+        console.error("Error submitting application:", err);
+        res.redirect("/careers");
+    }
 });
 
 app.get("/terms", async function(req, res) {
@@ -276,6 +320,21 @@ app.post("/admin-books/status/:id", isAuth, async function(req, res) {
 app.post("/admin-books/delete/:id", isAuth, async function(req, res) {
     await Book.findByIdAndDelete(req.params.id);
     res.redirect("/admin-books");
+});
+
+// ── Admin — Candidate Applications ────────────────────────────────────────────
+
+app.get("/admin-candidates", isAuth, async function(req, res) {
+    const candidates = await Candidate.find({}).sort({createdAt:-1});
+    res.render("admin-candidates", { candidates });
+});
+app.post("/admin-candidates/delete/:id", isAuth, async function(req, res) {
+    try {
+        await Candidate.findByIdAndDelete(req.params.id);
+    } catch(err) {
+        console.error("Error deleting candidate application:", err);
+    }
+    res.redirect("/admin-candidates");
 });
 
 // ── Admin — Home Cards CRUD ───────────────────────────────────────────────────

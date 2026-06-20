@@ -1,0 +1,117 @@
+<%- include('partials/admin'); -%>
+
+<div class="page-content">
+    <div class="admin-list-header mb-4">
+        <div>
+            <h2><i class="fa-solid fa-users me-2 text-primary"></i> <span>Candidate</span> Applications</h2>
+            <p class="text-muted">Review job applications submitted through the careers portal.</p>
+        </div>
+    </div>
+
+    <% if (candidates.length === 0) { %>
+    <div class="about-card text-center py-5">
+        <i class="fa-solid fa-folder-open" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
+        <p>No candidate applications yet.</p>
+    </div>
+    <% } else { %>
+    
+    <div class="admin-list-stack" style="display:flex; flex-direction:column; gap:1.5rem;">
+        <% for(var i=0; i<candidates.length; i++) { %>
+        <div class="contact-entry border rounded shadow-sm bg-white p-4" style="background:#fff; border-radius:var(--radius); padding:1.5rem; border:1px solid #eef2f6;">
+            
+            <!-- Header Section -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
+                <div>
+                    <h3 style="margin:0; font-size:1.25rem; color:var(--text);"><%= candidates[i].name %></h3>
+                    <span style="font-size:0.85rem; color:var(--primary); font-weight:600; background:var(--primary-light); padding:0.15rem 0.6rem; border-radius:12px; display:inline-block; margin-top:0.25rem;">
+                        <i class="fa-solid fa-briefcase"></i> Applied for: <%= candidates[i].role %>
+                    </span>
+                </div>
+                <span class="meta text-muted" style="font-size:0.85rem; margin-top:0.25rem;">
+                    <i class="fa-regular fa-clock"></i> <%= candidates[i].createdAt ? new Date(candidates[i].createdAt).toLocaleDateString("en-US", { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) : 'Unknown' %>
+                </span>
+            </div>
+
+            <!-- Candidate Metadata Group -->
+            <div style="display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1rem;">
+                <p style="margin:0; font-size:0.9rem;">
+                    <i class="fa-solid fa-envelope" style="color:var(--primary); margin-right:8px; width:16px;"></i>
+                    <a href="mailto:<%= candidates[i].email %>" class="text-decoration-none text-primary" style="font-weight:500;">
+                        <%= candidates[i].email %>
+                    </a>
+                </p>
+                <% if (candidates[i].phone) { %>
+                <p style="margin:0; font-size:0.9rem;">
+                    <i class="fa-solid fa-phone" style="color:var(--primary); margin-right:8px; width:16px;"></i>
+                    <a href="tel:<%= candidates[i].phone %>" class="text-decoration-none text-primary">
+                        <%= candidates[i].phone %>
+                    </a>
+                </p>
+                <% } %>
+            </div>
+
+            <!-- Motivation Message -->
+            <% if (candidates[i].message) { %>
+            <div class="msg mt-3" style="background:#fafafa; border-radius:8px; padding:1rem; border-left:3.5px solid var(--primary); margin-bottom:1rem;">
+                <label style="font-weight:700; font-size:0.85rem; color:var(--text); text-transform:uppercase; display:block; margin-bottom:0.4rem;">
+                    <i class="fa-solid fa-align-left m-1 me-1 text-primary"></i> Qualifications & Cover Letter:
+                </label>
+                <p style="white-space:pre-wrap; margin:0; line-height:1.5; font-size:0.92rem; color:#4a5568;"><%= candidates[i].message %></p>
+            </div>
+            <% } %>
+
+            <!-- Standard Actions Box -->
+            <div id="action-box-<%= candidates[i]._id %>" class="d-flex align-items-center justify-content-end mt-3">
+                <button type="button" class="btn btn-outline-danger btn-sm d-inline-flex align-items-center gap-2" 
+                        onclick="toggleDeleteState('<%= candidates[i]._id %>', true)"
+                        style="color:#dc2626; background:#fff; border:1px solid #fca5a5; padding:0.4rem 1rem; border-radius:6px; font-size:0.85rem; cursor:pointer;">
+                    <i class="fa-solid fa-trash-can"></i> Delete Application
+                </button>
+            </div>
+
+            <!-- Styled 'Are You Sure' Yes/No Confirmation Area -->
+            <div id="delete-box-<%= candidates[i]._id %>" style="display:none; background:#fff5f5; border:1px solid #feb2b2; padding:1.25rem; border-radius:8px; margin-top:1rem;">
+                <p style="color:#9b2c2c; margin-bottom:0.75rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i>
+                    Are you sure you want to delete <%= candidates[i].name %>'s application?
+                </p>
+                <div style="display:flex; gap:0.75rem;">
+                    <form action="/admin-candidates/delete/<%= candidates[i]._id %>" method="post" style="margin:0;">
+                        <button type="submit" class="btn btn-danger btn-sm" 
+                                style="background:#e53e3e; color:#fff; border:none; padding:0.4rem 1.25rem; border-radius:6px; font-weight:600; font-size:0.85rem; cursor:pointer;">
+                            <i class="fa-solid fa-check me-1"></i> Yes, Delete
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-secondary btn-sm" 
+                            onclick="toggleDeleteState('<%= candidates[i]._id %>', false)"
+                            style="background:#edf2f7; color:#4a5568; border:1px solid #cbd5e0; padding:0.4rem 1.25rem; border-radius:6px; font-weight:600; font-size:0.85rem; cursor:pointer;">
+                        <i class="fa-solid fa-xmark me-1"></i> No, Cancel
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <% } %>
+    </div>
+    <% } %>
+</div>
+
+<script>
+    /**
+     * Toggles visibility between standard actions and deletion confirmations.
+     */
+    function toggleDeleteState(id, isConfirming) {
+        var actionBox = document.getElementById('action-box-' + id);
+        var deleteBox = document.getElementById('delete-box-' + id);
+        
+        if (isConfirming) {
+            actionBox.style.display = 'none';
+            deleteBox.style.display = 'block';
+        } else {
+            actionBox.style.display = 'flex';
+            deleteBox.style.display = 'none';
+        }
+    }
+</script>
+
+<%- include('partials/footer'); -%>
