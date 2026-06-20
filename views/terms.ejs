@@ -1,0 +1,31 @@
+<%- include('partials/header'); -%>
+
+<section class="page-content">
+    <div class="blogtitle">
+        <h2>Terms of <span>Use</span></h2>
+        <p style="color:var(--text-muted);">Please read these terms carefully before using this site.</p>
+    </div>
+
+    <% if (termsList.length === 0) { %>
+    <div class="about-card text-center py-5">
+        <i class="fa-solid fa-file-contract" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
+        <p>Terms of use content coming soon.</p>
+    </div>
+    <% } %>
+
+    <div style="display:flex; flex-direction:column; gap:1.25rem; max-width:800px;">
+    <% for(var i=0; i<termsList.length; i++) { %>
+    <div class="blogcard">
+        <h3 style="color:var(--text); font-size:clamp(1.05rem,2.5vw,1.25rem); margin-bottom:0.75rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;"><%= termsList[i].title %></h3>
+        <p style="white-space:pre-wrap; color:var(--text-muted); line-height:1.85;"><%= termsList[i].content %></p>
+        <% if (termsList[i].lastUpdated) { %>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.75rem; margin-bottom:0;">
+            <i class="fa-regular fa-clock" style="margin-right:4px;"></i>Last updated: <%= new Date(termsList[i].lastUpdated).toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) %>
+        </p>
+        <% } %>
+    </div>
+    <% } %>
+    </div>
+</section>
+
+<%- include('partials/footer'); -%>

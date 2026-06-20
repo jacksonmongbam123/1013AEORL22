@@ -1,0 +1,47 @@
+<%- include('partials/admin'); -%>
+
+<div class="page-content">
+    <div class="compose">
+        <h2><span><%= card ? 'Edit' : 'Add' %></span> Home Card</h2>
+    </div>
+    <div class="admin-form-card">
+        <form action="<%= action %>" method="post">
+            <div class="mb-3">
+                <label class="form-label">Card Title</label>
+                <input class="form-control pushi" type="text" name="cardTitle" placeholder="e.g. Design, Development, Research" value="<%= card ? card.title : '' %>" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="cardDescription" rows="4" placeholder="Brief description shown on the card..."><%= card ? card.description : '' %></textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label class="form-label">Font Awesome Icon Class</label>
+                        <input class="form-control" type="text" name="cardIcon" placeholder="e.g. fa-solid fa-code" value="<%= card ? card.icon : 'fa-solid fa-star' %>">
+                        <p class="note" style="margin-top:0.4rem;"><i>Find icons at <a href="https://fontawesome.com/icons" target="_blank" style="color:var(--primary);">fontawesome.com/icons</a> — copy the class name.</i></p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label">Display Order</label>
+                        <input class="form-control" type="number" name="cardOrder" placeholder="0" value="<%= card ? card.order : 0 %>">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <input type="checkbox" name="cardActive" id="cardActive" style="width:18px; height:18px;" <%= !card || card.active ? 'checked' : '' %>>
+                    <label for="cardActive" style="margin:0; font-weight:600; cursor:pointer;">Show on home page (active)</label>
+                </div>
+            </div>
+            <p class="note"><i><span>Note:</span> Hidden cards won't appear on the public home page.</i></p>
+            <div style="display:flex; gap:0.75rem; align-items:center;">
+                <button class="btn btn-primary postbutton" type="submit"><%= card ? 'Update Card' : 'Add Card' %></button>
+                <a href="/admin-homecards" style="color:var(--text-muted); font-size:0.88rem; text-decoration:none;">← Back to list</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>
