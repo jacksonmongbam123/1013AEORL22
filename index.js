@@ -4,7 +4,29 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+const fs = require("fs");
+const path = require("path");
+const multer = require("multer");
 const app = express();
+
+// Configure multer storage for Candidate CV uploads
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        const uploadDir = "./public/uploads";
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function(req, file, cb) {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
@@ -82,6 +104,22 @@ const candidateSchema = new mongoose.Schema({
     email: { type: String, required: true },
     phone: String,
     message: String,
+    
+    // Detailed Academic/Biographical background
+    address: String,
+    class10Percent: String,
+    class12Percent: String,
+    bachelorDegree: String,
+    bachelorCollege: String,
+    bachelorPercent: String,
+    pgDegree: String,
+    pgCollege: String,
+    pgPercent: String,
+    
+    // File upload CV path & attributes
+    cvPath: String,
+    cvOriginalName: String,
+    
     createdAt: { type: Date, default: Date.now }
 });
 const Candidate = mongoose.model("candidate", candidateSchema);
@@ -159,7 +197,7 @@ app.get("/careers/apply/:id", async function(req, res) {
     }
 });
 
-app.post("/careers/apply/:id", async function(req, res) {
+app.post("/careers/apply/:id", upload.single("candidateCV"), async function(req, res) {
     try {
         const career = await Career.findById(req.params.id);
         if (!career) return res.redirect("/careers");
@@ -170,7 +208,22 @@ app.post("/careers/apply/:id", async function(req, res) {
             name: req.body.candidateName,
             email: req.body.candidateEmail,
             phone: req.body.candidatePhone,
-            message: req.body.candidateMessage
+            message: req.body.candidateMessage,
+            
+            // Biographical & Academics
+            address: req.body.candidateAddress,
+            class10Percent: req.body.candidateClass10,
+            class12Percent: req.body.candidateClass12,
+            bachelorDegree: req.body.candidateBachelorDegree,
+            bachelorCollege: req.body.candidateBachelorCollege,
+            bachelorPercent: req.body.candidateBachelorPercent,
+            pgDegree: req.body.candidatePgDegree,
+            pgCollege: req.body.candidatePgCollege,
+            pgPercent: req.body.candidatePgPercent,
+            
+            // CV credentials reference
+            cvPath: req.file ? "/uploads/" + req.file.filename : null,
+            cvOriginalName: req.file ? req.file.originalname : null
         });
         await candidate.save();
         res.redirect("/success");
@@ -330,6 +383,14 @@ app.get("/admin-candidates", isAuth, async function(req, res) {
 });
 app.post("/admin-candidates/delete/:id", isAuth, async function(req, res) {
     try {
+        const candidate = await Candidate.findById(req.params.id);
+        if (candidate && candidate.cvPath) {
+            const absoluteCvPath = path.join(__dirname || ".", "public", candidate.cvPath);
+            if (fs.existsSync(absoluteCvPath)) {
+                fs.unlinkSync(absoluteCvPath);
+                console.log("Deleted candidate database resume file:", absoluteCvPath);
+            }
+        }
         await Candidate.findByIdAndDelete(req.params.id);
     } catch(err) {
         console.error("Error deleting candidate application:", err);

@@ -1,115 +1,371 @@
 <%- include('partials/admin'); -%>
 
-<div class="page-content">
+<div class="page-content" style="max-width: 1400px; margin: 0 auto; padding: 1.5rem;">
+    <!-- Head info -->
     <div class="admin-list-header mb-4">
         <div>
-            <h2><i class="fa-solid fa-users me-2 text-primary"></i> <span>Candidate</span> Applications</h2>
-            <p class="text-muted">Review job applications submitted through the careers portal.</p>
+            <h2><i class="fa-solid fa-users me-2 text-primary"></i> <span>Candidate</span> Recruitment Desk</h2>
+            <p class="text-muted">Interactive suite to select, review, and manage candidate academic profiles & resumes.</p>
         </div>
     </div>
 
     <% if (candidates.length === 0) { %>
-    <div class="about-card text-center py-5">
-        <i class="fa-solid fa-folder-open" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
-        <p>No candidate applications yet.</p>
+    <div class="about-card text-center py-5 shadow-sm rounded-3 bg-white" style="border: 1px solid rgba(0,0,0,0.05); border-radius: 12px; background: #fff;">
+        <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h4 style="font-weight: 700; color: var(--text);">No applications received yet</h4>
+        <p class="text-muted">When candidates apply for active careers, they will populate here.</p>
+        <a href="/admin-careers" class="btn btn-primary mt-3 btn-sm" style="border-radius: 6px;"><i class="fa-solid fa-plus me-1"></i> Manage Job Postings</a>
     </div>
     <% } else { %>
     
-    <div class="admin-list-stack" style="display:flex; flex-direction:column; gap:1.5rem;">
-        <% for(var i=0; i<candidates.length; i++) { %>
-        <div class="contact-entry border rounded shadow-sm bg-white p-4" style="background:#fff; border-radius:var(--radius); padding:1.5rem; border:1px solid #eef2f6;">
-            
-            <!-- Header Section -->
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; border-bottom:1px solid #f1f5f9; padding-bottom:0.75rem;">
-                <div>
-                    <h3 style="margin:0; font-size:1.25rem; color:var(--text);"><%= candidates[i].name %></h3>
-                    <span style="font-size:0.85rem; color:var(--primary); font-weight:600; background:var(--primary-light); padding:0.15rem 0.6rem; border-radius:12px; display:inline-block; margin-top:0.25rem;">
-                        <i class="fa-solid fa-briefcase"></i> Applied for: <%= candidates[i].role %>
-                    </span>
+    <!-- Split Layout -->
+    <div class="row g-4">
+        
+        <!-- COLUMN 1: LEFT CANDIDATE SIDEBAR LIST (40% width on desktop) -->
+        <div class="col-lg-5 col-md-6">
+            <div class="card shadow-sm border-0 bg-white" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center py-3" style="border-radius: 12px 12px 0 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <span class="fw-bold text-dark m-0"><i class="fa-solid fa-list me-2 text-primary"></i>Applications (<%= candidates.length %>)</span>
+                    <span class="badge bg-primary rounded-pill"><%= candidates.length %> Total</span>
                 </div>
-                <span class="meta text-muted" style="font-size:0.85rem; margin-top:0.25rem;">
-                    <i class="fa-regular fa-clock"></i> <%= candidates[i].createdAt ? new Date(candidates[i].createdAt).toLocaleDateString("en-US", { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) : 'Unknown' %>
-                </span>
-            </div>
-
-            <!-- Candidate Metadata Group -->
-            <div style="display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1rem;">
-                <p style="margin:0; font-size:0.9rem;">
-                    <i class="fa-solid fa-envelope" style="color:var(--primary); margin-right:8px; width:16px;"></i>
-                    <a href="mailto:<%= candidates[i].email %>" class="text-decoration-none text-primary" style="font-weight:500;">
-                        <%= candidates[i].email %>
-                    </a>
-                </p>
-                <% if (candidates[i].phone) { %>
-                <p style="margin:0; font-size:0.9rem;">
-                    <i class="fa-solid fa-phone" style="color:var(--primary); margin-right:8px; width:16px;"></i>
-                    <a href="tel:<%= candidates[i].phone %>" class="text-decoration-none text-primary">
-                        <%= candidates[i].phone %>
-                    </a>
-                </p>
-                <% } %>
-            </div>
-
-            <!-- Motivation Message -->
-            <% if (candidates[i].message) { %>
-            <div class="msg mt-3" style="background:#fafafa; border-radius:8px; padding:1rem; border-left:3.5px solid var(--primary); margin-bottom:1rem;">
-                <label style="font-weight:700; font-size:0.85rem; color:var(--text); text-transform:uppercase; display:block; margin-bottom:0.4rem;">
-                    <i class="fa-solid fa-align-left m-1 me-1 text-primary"></i> Qualifications & Cover Letter:
-                </label>
-                <p style="white-space:pre-wrap; margin:0; line-height:1.5; font-size:0.92rem; color:#4a5568;"><%= candidates[i].message %></p>
-            </div>
-            <% } %>
-
-            <!-- Standard Actions Box -->
-            <div id="action-box-<%= candidates[i]._id %>" class="d-flex align-items-center justify-content-end mt-3">
-                <button type="button" class="btn btn-outline-danger btn-sm d-inline-flex align-items-center gap-2" 
-                        onclick="toggleDeleteState('<%= candidates[i]._id %>', true)"
-                        style="color:#dc2626; background:#fff; border:1px solid #fca5a5; padding:0.4rem 1rem; border-radius:6px; font-size:0.85rem; cursor:pointer;">
-                    <i class="fa-solid fa-trash-can"></i> Delete Application
-                </button>
-            </div>
-
-            <!-- Styled 'Are You Sure' Yes/No Confirmation Area -->
-            <div id="delete-box-<%= candidates[i]._id %>" style="display:none; background:#fff5f5; border:1px solid #feb2b2; padding:1.25rem; border-radius:8px; margin-top:1rem;">
-                <p style="color:#9b2c2c; margin-bottom:0.75rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i>
-                    Are you sure you want to delete <%= candidates[i].name %>'s application?
-                </p>
-                <div style="display:flex; gap:0.75rem;">
-                    <form action="/admin-candidates/delete/<%= candidates[i]._id %>" method="post" style="margin:0;">
-                        <button type="submit" class="btn btn-danger btn-sm" 
-                                style="background:#e53e3e; color:#fff; border:none; padding:0.4rem 1.25rem; border-radius:6px; font-weight:600; font-size:0.85rem; cursor:pointer;">
-                            <i class="fa-solid fa-check me-1"></i> Yes, Delete
+                
+                <!-- Scrollable list container -->
+                <div class="list-group list-group-flush" style="max-height: 650px; overflow-y: auto; border-radius: 0 0 12px 12px;">
+                    <% for(var i = 0; i < candidates.length; i++) { %>
+                        <button type="button" 
+                                id="candidate-btn-<%= candidates[i]._id %>"
+                                class="list-group-item list-group-item-action p-3 text-start border-bottom position-relative candidate-list-item <%= i === 0 ? 'active-selection' : '' %>"
+                                onclick="selectCandidate('<%= candidates[i]._id %>')"
+                                style="transition: all 0.2s ease; border-left: 4px solid transparent;">
+                            
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="mb-1 text-truncate fw-bold candidate-item-name" style="font-size: 1.05rem; max-width: 70%;"><%= candidates[i].name %></h5>
+                                <small class="text-muted text-nowrap" style="font-size: 0.78rem;">
+                                    <%= candidates[i].createdAt ? new Date(candidates[i].createdAt).toLocaleDateString("en-US", { month: 'short', day: 'numeric' }) : 'Unknown' %>
+                                </small>
+                            </div>
+                            
+                            <p class="mb-1 text-primary fw-semibold" style="font-size: 0.88rem;">
+                                <i class="fa-solid fa-briefcase me-1" style="font-size: 0.8rem;"></i> <%= candidates[i].role %>
+                            </p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="text-muted text-truncate" style="font-size: 0.8rem; max-width: 70%;">
+                                    <i class="fa-solid fa-envelope me-1" style="font-size: 0.75rem;"></i> <%= candidates[i].email %>
+                                </span>
+                                <% if (candidates[i].cvPath) { %>
+                                    <span class="badge bg-success-light text-success rounded-pill px-2 py-1" style="font-size: 0.72rem; font-weight: 600;">
+                                        <i class="fa-solid fa-paperclip me-1"></i> CV Included
+                                    </span>
+                                <% } %>
+                            </div>
                         </button>
-                    </form>
-                    <button type="button" class="btn btn-secondary btn-sm" 
-                            onclick="toggleDeleteState('<%= candidates[i]._id %>', false)"
-                            style="background:#edf2f7; color:#4a5568; border:1px solid #cbd5e0; padding:0.4rem 1.25rem; border-radius:6px; font-weight:600; font-size:0.85rem; cursor:pointer;">
-                        <i class="fa-solid fa-xmark me-1"></i> No, Cancel
-                    </button>
+                    <% } %>
                 </div>
             </div>
-
         </div>
-        <% } %>
+
+        <!-- COLUMN 2: RIGHT DETAIL PANE (60% width on desktop) -->
+        <div class="col-lg-7 col-md-6">
+            <div class="card shadow-sm border-0 bg-white sticky-md-top" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); top: 1.5rem; z-index: 10;">
+                
+                <!-- This is dynamically replaced by JavaScript or shown/hidden based on active state -->
+                <div class="card-body p-4 md:p-5" id="details-root">
+                    
+                    <% for(var i = 0; i < candidates.length; i++) { %>
+                        <div class="candidate-detail-block" id="candidate-detail-<%= candidates[i]._id %>" style="display: <%= i === 0 ? 'block' : 'none' %>;">
+                            
+                            <!-- Master Header Info -->
+                            <div class="d-flex justify-content-between align-items-start mb-4 pb-3 border-bottom flex-wrap gap-2">
+                                <div>
+                                    <h3 class="fw-bold text-dark mb-1 d-flex align-items-center flex-wrap gap-2">
+                                        <%= candidates[i].name %>
+                                    </h3>
+                                    <p class="mb-0 text-muted" style="font-size:0.9rem;">
+                                        <i class="fa-regular fa-clock me-1"></i> Applied on: 
+                                        <strong><%= candidates[i].createdAt ? new Date(candidates[i].createdAt).toLocaleString("en-US", { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Unknown' %></strong>
+                                    </p>
+                                </div>
+                                <div>
+                                    <span class="badge bg-primary text-white px-3 py-2 fs-7 fw-semibold" style="font-size:0.88rem; border-radius: 20px;">
+                                        <i class="fa-solid fa-briefcase me-1"></i> Role: <%= candidates[i].role %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- 1. Contact & Communications Block -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100" style="border: 1px solid rgba(0,0,0,0.04);">
+                                        <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.75rem; tracking: 0.5px;">Email ID</small>
+                                        <a href="mailto:Shared" class="text-primary fw-semibold text-decoration-none" style="font-size: 0.95rem;">
+                                            <i class="fa-solid fa-envelope me-1"></i> <%= candidates[i].email %>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100" style="border: 1px solid rgba(0,0,0,0.04);">
+                                        <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.75rem;">Phone Number</small>
+                                        <a href="tel:<%= candidates[i].phone %>" class="text-primary fw-semibold text-decoration-none" style="font-size: 0.95rem;">
+                                            <i class="fa-solid fa-phone me-1"></i> <%= candidates[i].phone || 'Not Shared' %>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="p-3 bg-light rounded-3" style="border: 1px solid rgba(0,0,0,0.04);">
+                                        <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.75rem;">Residential Address</small>
+                                        <p class="text-dark mb-0" style="font-size: 0.95rem; white-space: pre-wrap;"><%= candidates[i].address || 'Not Shared' %></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Academic Summary Card -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold mb-3 text-secondary d-flex align-items-center" style="font-size: 1.1rem;">
+                                    <i class="fa-solid fa-graduation-cap me-2 text-primary"></i> Academic Profile
+                                </h5>
+                                
+                                <div class="card border mb-3 rounded-3" style="border-radius: 8px;">
+                                    <div class="card-body p-3">
+                                        <div class="row g-3">
+                                            <!-- Class 10 -->
+                                            <div class="col-md-6 border-end-md">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="p-2 bg-light rounded-3 me-3" style="font-size: 1.25rem;">🏫</div>
+                                                    <div>
+                                                        <small class="text-muted d-block" style="font-size: 0.78rem;">Class 10th Score</small>
+                                                        <strong class="text-dark" style="font-size: 1.05rem;"><%= candidates[i].class10Percent || 'Not Specifed' %></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Class 12 -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="p-2 bg-light rounded-3 me-3" style="font-size: 1.25rem;">🎓</div>
+                                                    <div>
+                                                        <small class="text-muted d-block" style="font-size: 0.78rem;">Class 12th Score</small>
+                                                        <strong class="text-dark" style="font-size: 1.05rem;"><%= candidates[i].class12Percent || 'Not Specifed' %></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bachelor's Level -->
+                                <div class="card border mb-3 rounded-3" style="border-radius: 8px;">
+                                    <div class="card-header bg-white py-2" style="border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                                        <span class="badge bg-indigo-light text-indigo fw-bold" style="font-size: 0.75rem;">Undergraduate Degree</span>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold text-dark mb-1"><%= candidates[i].bachelorDegree || 'Not Shared' %></h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85rem;"><i class="fa-solid fa-building-columns me-1"></i> <%= candidates[i].bachelorCollege || 'Not Shared' %></p>
+                                        <div class="d-inline-block bg-light px-2.5 py-1 rounded-2" style="font-size: 0.85rem;">
+                                            Score / Aggregate: <strong class="text-dark"><%= candidates[i].bachelorPercent || 'N/A' %></strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Master's / Postgraduate Level (If provided) -->
+                                <% if (candidates[i].pgDegree) { %>
+                                <div class="card border mb-3 rounded-3" style="border-radius: 8px;">
+                                    <div class="card-header bg-white py-2" style="border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                                        <span class="badge bg-purple-light text-purple fw-bold" style="font-size: 0.75rem;">Post-Graduation Degree</span>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold text-dark mb-1"><%= candidates[i].pgDegree %></h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85rem;"><i class="fa-solid fa-building-columns me-1"></i> <%= candidates[i].pgCollege || 'N/A' %></p>
+                                        <div class="d-inline-block bg-light px-2.5 py-1 rounded-2" style="font-size: 0.85rem;">
+                                            Score / Aggregate: <strong class="text-dark"><%= candidates[i].pgPercent || 'N/A' %></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                            </div>
+
+                            <!-- 3. Qualifications Brief / CV Resume Row -->
+                            <div class="mb-4">
+                                <h5 class="fw-bold mb-3 text-secondary d-flex align-items-center" style="font-size: 1.1rem;">
+                                    <i class="fa-solid fa-file-pdf me-2 text-primary"></i> Resume / CV & Cover Letter
+                                </h5>
+
+                                <% if (candidates[i].cvPath) { %>
+                                <div class="d-flex align-items-center p-3 rounded-3 mb-3 bg-success-light" style="border: 1px solid rgba(25,135,84,0.15);">
+                                    <div class="fs-2 text-success me-3">
+                                        <i class="fa-regular fa-file-pdf"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <span class="fw-bold text-success d-block" style="font-size:0.9rem;">Cover Statement Attachment</span>
+                                        <small class="text-muted text-truncate d-block" style="font-size: 0.8rem;"><%= candidates[i].cvOriginalName || 'candidate_resume.pdf' %></small>
+                                    </div>
+                                    <div>
+                                        <a href="<%= candidates[i].cvPath %>" target="_blank" class="btn btn-success btn-sm px-3 rounded-pill fw-semibold" style="font-size: 0.82rem;">
+                                            <i class="fa-solid fa-arrow-down-to-bracket me-1"></i> Retrieve CV
+                                        </a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <div class="p-3 bg-light rounded-3 text-center border dashed text-muted mb-3" style="border-style: dashed !important;">
+                                    <i class="fa-solid fa-file-excel me-1"></i> No file attachment found for this candidate.
+                                </div>
+                                <% } %>
+
+                                <div class="bg-light p-3 rounded-3" style="border-left: 4px solid var(--primary);">
+                                    <strong class="text-dark d-block mb-1" style="font-size:0.88rem;">Candidate Pitch:</strong>
+                                    <p class="mb-0 text-muted" style="white-space: pre-wrap; font-size: 0.9rem; line-height: 1.5;"><%= candidates[i].message %></p>
+                                </div>
+                            </div>
+
+                            <!-- 4. YES/NO Delete verification flow -->
+                            <div class="pt-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div>
+                                    <span class="text-muted" style="font-size:0.85rem;"><i class="fa-solid fa-shield-halved me-1"></i> Admin Operations</span>
+                                </div>
+                                
+                                <div id="actions-panel-<%= candidates[i]._id %>">
+                                    <button type="button" class="btn btn-outline-danger btn-sm px-3 rounded-pill" onclick="triggerCandidateDelete('<%= candidates[i]._id %>', true)">
+                                        <i class="fa-solid fa-trash-can me-1"></i> Delete Application
+                                    </button>
+                                </div>
+
+                                <!-- Deletion Box (Initially hidden) -->
+                                <div id="confirm-panel-<%= candidates[i]._id %>" class="w-100 mt-2 p-3 rounded-3 bg-danger-light" style="display: none; border: 1px solid rgba(220,53,69,0.15);">
+                                    <div class="d-flex align-items-start gap-2 mb-2">
+                                        <i class="fa-solid fa-triangle-exclamation text-danger mt-1"></i>
+                                        <p class="text-danger mb-0 fw-semibold" style="font-size: 0.9rem;">
+                                            Are you absolutely sure you want to delete <%= candidates[i].name %>? This action is permanent.
+                                        </p>
+                                    </div>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <form action="/admin-candidates/delete/<%= candidates[i]._id %>" method="post" class="m-0">
+                                            <button type="submit" class="btn btn-danger btn-sm px-3 fw-bold" style="border-radius: 6px;">
+                                                <i class="fa-solid fa-check me-1"></i> Yes, Delete
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary btn-sm px-3 fw-semibold" style="border-radius: 6px;" onclick="triggerCandidateDelete('<%= candidates[i]._id %>', false)">
+                                            <i class="fa-solid fa-xmark me-1"></i> No, Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    <% } %>
+
+                </div>
+            </div>
+        </div>
+
     </div>
     <% } %>
 </div>
 
+<style>
+    /* Styling adjustments specifically for candidates list and custom badges */
+    .candidate-list-item {
+        background-color: #fff;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+        cursor: pointer;
+    }
+    .candidate-list-item:hover {
+        background-color: #f8fafc !important;
+    }
+    .active-selection {
+        background-color: #f1f5f9 !important;
+        border-left: 4px solid var(--primary) !important;
+        border-right: none;
+    }
+    .active-selection .candidate-item-name {
+        color: var(--primary) !important;
+    }
+    .bg-indigo-light {
+        background-color: #e0e7ff;
+        color: #4f46e5;
+    }
+    .text-indigo {
+        color: #4f46e5;
+    }
+    .bg-purple-light {
+        background-color: #f3e8ff;
+        color: #7c3aed;
+    }
+    .text-purple {
+        color: #7c3aed;
+    }
+    .bg-success-light {
+        background-color: #f0fdf4;
+        color: #166534;
+    }
+    .bg-danger-light {
+        background-color: #fef2f2;
+        color: #991b1b;
+    }
+    .text-success {
+        color: #166534;
+    }
+    .border-end-md {
+        border-right: 1px solid rgba(0,0,0,0.08);
+    }
+    @media (max-width: 767.98px) {
+        .border-end-md {
+            border-right: none;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            padding-bottom: 1rem;
+        }
+    }
+</style>
+
 <script>
     /**
-     * Toggles visibility between standard actions and deletion confirmations.
+     * Swaps the active selection highlights on left pane, 
+     * and shows the respective right detail candidate block.
      */
-    function toggleDeleteState(id, isConfirming) {
-        var actionBox = document.getElementById('action-box-' + id);
-        var deleteBox = document.getElementById('delete-box-' + id);
+    function selectCandidate(id) {
+        // 1. Remove active-selection class from all buttons
+        var buttons = document.getElementsByClassName('candidate-list-item');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('active-selection');
+        }
         
-        if (isConfirming) {
-            actionBox.style.display = 'none';
-            deleteBox.style.display = 'block';
-        } else {
-            actionBox.style.display = 'flex';
-            deleteBox.style.display = 'none';
+        // 2. Add active-selection to clicked item
+        var activeBtn = document.getElementById('candidate-btn-' + id);
+        if (activeBtn) {
+            activeBtn.classList.add('active-selection');
+        }
+        
+        // 3. Hide all Candidate Detail blocks
+        var details = document.getElementsByClassName('candidate-detail-block');
+        for (var j = 0; j < details.length; j++) {
+            details[j].style.display = 'none';
+            
+            // Auto reset delete confirming states inside the blocks
+            var blockId = details[j].id.replace('candidate-detail-', '');
+            triggerCandidateDelete(blockId, false);
+        }
+        
+        // 4. Show selected Candidate Detail block
+        var selectedDetail = document.getElementById('candidate-detail-' + id);
+        if (selectedDetail) {
+            selectedDetail.style.display = 'block';
+        }
+    }
+
+    /**
+     * Toggle the Admin Deletion validation banner on the selected candidate.
+     */
+    function triggerCandidateDelete(id, isConfirming) {
+        var actionsPanel = document.getElementById('actions-panel-' + id);
+        var confirmPanel = document.getElementById('confirm-panel-' + id);
+        
+        if (actionsPanel && confirmPanel) {
+            if (isConfirming) {
+                actionsPanel.style.display = 'none';
+                confirmPanel.style.display = 'block';
+            } else {
+                actionsPanel.style.display = 'block';
+                confirmPanel.style.display = 'none';
+            }
         }
     }
 </script>

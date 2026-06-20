@@ -1,39 +1,138 @@
 <%- include('partials/header'); -%>
 
 <div class="page-content">
-    <div class="blogtitle">
+    <div class="blogtitle text-center mb-5">
         <h2>Apply for <span><%= career.title %></span></h2>
-        <p style="color: var(--text-muted); font-size: clamp(0.875rem,1.5vw,1rem);">
+        <p style="color: var(--text-muted); font-size: clamp(0.9rem, 1.5vw, 1.1rem); margin-top: 0.5rem;">
             <i class="fa-solid fa-map-pin" style="color: var(--primary); margin-right: 5px;"></i><%= career.location %> 
             <% if (career.type) { %> &nbsp;&bull;&nbsp; <i class="fa-solid fa-briefcase" style="color: var(--primary); margin-right: 5px;"></i><%= career.type %><% } %>
             <% if (career.salary) { %> &nbsp;&bull;&nbsp; <i class="fa-solid fa-money-bill-wave" style="color: var(--primary); margin-right: 5px;"></i><%= career.salary %><% } %>
         </p>
     </div>
 
-    <div class="contact-card">
-        <form action="/careers/apply/<%= career._id %>" method="post">
-            <div class="mb-3">
-                <label class="form-label">Full Name</label>
-                <input class="form-control" type="text" name="candidateName" placeholder="Your full name" required>
+    <div class="container" style="max-width: 800px; margin: 0 auto;">
+        <form action="/careers/apply/<%= career._id %>" method="post" enctype="multipart/form-data" class="shadow-sm p-4 md:p-5 rounded-4 bg-white" style="border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; background: #fff;">
+            
+            <!-- 1. PERSONAL INFORMATION -->
+            <div class="form-section mb-4 pb-4 border-bottom">
+                <h4 class="text-primary mb-3" style="font-size: 1.2rem; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 10px;">
+                    <i class="fa-solid fa-user me-2"></i>Personal Details
+                </h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" style="font-weight: 600;">Full Name <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="candidateName" placeholder="Your full name" required style="border-radius: 8px;">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" style="font-weight: 600;">E-mail Address <span class="text-danger">*</span></label>
+                        <input class="form-control" type="email" name="candidateEmail" placeholder="you@example.com" required style="border-radius: 8px;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Phone Number <span class="text-danger">*</span></label>
+                    <input class="form-control" type="tel" name="candidatePhone" placeholder="Your phone number" required style="border-radius: 8px;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Current Address <span class="text-danger">*</span></label>
+                    <textarea class="form-control" name="candidateAddress" rows="2" placeholder="Street layout, Apt, City, Zip" required style="border-radius: 8px;"></textarea>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">E-mail Address</label>
-                <input class="form-control" type="email" name="candidateEmail" placeholder="you@example.com" required>
+
+            <!-- 2. HIGH SCHOOL DETAILS -->
+            <div class="form-section mb-4 pb-4 border-bottom">
+                <h4 class="text-primary mb-3" style="font-size: 1.2rem; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 10px;">
+                    <i class="fa-solid fa-school me-2"></i>Schooling Academic Record
+                </h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" style="font-weight: 600;">Class 10th Percentage / GPA <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="candidateClass10" placeholder="e.g. 92% or 9.5 CGPA" required style="border-radius: 8px;">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" style="font-weight: 600;">Class 12th Percentage / GPA <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="candidateClass12" placeholder="e.g. 89% or 9.0 CGPA" required style="border-radius: 8px;">
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Phone Number</label>
-                <input class="form-control" type="tel" name="candidatePhone" placeholder="Your phone number" required>
+
+            <!-- 3. UNDERGRADUATE DEGREES -->
+            <div class="form-section mb-4 pb-4 border-bottom">
+                <h4 class="text-primary mb-3" style="font-size: 1.2rem; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 10px;">
+                    <i class="fa-solid fa-graduation-cap me-2"></i>Bachelor's Degree Details
+                </h4>
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Bachelor's Degree / Course <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" name="candidateBachelorDegree" placeholder="e.g. B.Tech Computer Science, B.Sc Mathematics" required style="border-radius: 8px;">
+                </div>
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label" style="font-weight: 600;">University / College Name <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="candidateBachelorCollege" placeholder="e.g. Boston University" required style="border-radius: 8px;">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" style="font-weight: 600;">Aggregate % / CGPA <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="candidateBachelorPercent" placeholder="e.g. 85%" required style="border-radius: 8px;">
+                    </div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Qualifications / Cover Letter</label>
-                <textarea class="form-control" name="candidateMessage" rows="6" placeholder="Briefly introduce yourself, outline your experience, or share your portfolio link..." required></textarea>
+
+            <!-- 4. POSTGRADUATE DEGREES (OPTIONAL) -->
+            <div class="form-section mb-4 pb-4 border-bottom">
+                <h4 class="text-primary mb-3" style="font-size: 1.2rem; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 10px;">
+                    <i class="fa-solid fa-scroll me-2"></i>Post-Graduation Details <span class="text-muted" style="font-size: 0.85rem; font-weight: normal;">(Optional)</span>
+                </h4>
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Post Graduate Degree / Course</label>
+                    <input class="form-control" type="text" name="candidatePgDegree" placeholder="e.g. M.Tech, MBA, M.Sc" style="border-radius: 8px;">
+                </div>
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label" style="font-weight: 600;">University / College Name</label>
+                        <input class="form-control" type="text" name="candidatePgCollege" placeholder="e.g. Stanford University" style="border-radius: 8px;">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" style="font-weight: 600;">Aggregate % / CGPA</label>
+                        <input class="form-control" type="text" name="candidatePgPercent" placeholder="e.g. 9.1 CGPA" style="border-radius: 8px;">
+                    </div>
+                </div>
             </div>
-            <button class="btn btn-primary postbutton w-100" type="submit">Submit Application</button>
-            <div class="text-center mt-3">
-                <a href="/careers" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
-                    <i class="fa-solid fa-arrow-left"></i> Back to Careers
+
+            <!-- 5. UPLOAD CV & MOTIVATION -->
+            <div class="form-section mb-4">
+                <h4 class="text-primary mb-3" style="font-size: 1.2rem; font-weight: 700; border-left: 4px solid var(--primary); padding-left: 10px;">
+                    <i class="fa-solid fa-file-arrow-up me-2"></i>CV Upload & Cover Letter
+                </h4>
+                
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Upload CV / Resume <span class="text-danger">*</span></label>
+                    <div class="input-group" style="border-radius: 8px; overflow: hidden;">
+                        <input type="file" class="form-control" name="candidateCV" accept=".pdf,.doc,.docx" required style="border-radius: 8px 0 0 8px;">
+                        <span class="input-group-text bg-light text-muted" style="border-radius: 0 8px 8px 0;">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </span>
+                    </div>
+                    <div class="form-text text-muted" style="font-size: 0.8rem;">Accepted formats: PDF, DOC, DOCX. Max size: 10MB.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Qualifications / Cover Letter <span class="text-danger">*</span></label>
+                    <textarea class="form-control" name="candidateMessage" rows="5" placeholder="Highlight why you are an amazing fit for this role..." required style="border-radius: 8px;"></textarea>
+                </div>
+            </div>
+
+            <!-- SUBMIT ACTION -->
+            <div class="pt-2">
+                <button class="btn btn-primary postbutton w-100 py-3" type="submit" style="font-weight: 700; font-size: 1.1rem; border-radius: 8px;">
+                    <i class="fa-solid fa-paper-plane me-2"></i>Submit Application
+                </button>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/careers" style="color: var(--text-muted); text-decoration: none; font-size: 0.95rem;">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Careers
                 </a>
             </div>
+
         </form>
     </div>
 </div>
