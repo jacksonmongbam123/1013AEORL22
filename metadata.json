@@ -1,0 +1,6 @@
+{
+  "name": "Jackson Mongbam Portfolio & Blog",
+  "description": "Jackson Mongbam's professional portfolio, tech blog, careers list, and appointment booking application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

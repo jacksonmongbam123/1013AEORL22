@@ -1,0 +1,86 @@
+<%- include('partials/admin'); -%>
+
+<div class="page-content">
+    <div class="compose">
+        <h2><i class="fa-solid fa-briefcase me-2 text-primary"></i> <span><%= career ? 'Edit' : 'Add' %></span> Career</h2>
+        <p class="text-muted">Manage available job positions. You can publish, hide, or update role details on this form.</p>
+    </div>
+    <div class="admin-form-card border rounded shadow-sm bg-white p-4">
+        <form action="<%= action %>" method="post">
+            <div class="row">
+                <div class="col-md-8 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-pen-nib text-primary"></i> Job Title
+                    </label>
+                    <input class="form-control" type="text" name="careerTitle" placeholder="e.g. Frontend Developer" value="<%= career ? career.title : '' %>" required>
+                    <small class="text-muted d-block mt-1">Use a clear professional title for the position.</small>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-business-time text-primary"></i> Type
+                    </label>
+                    <select class="form-control form-select" name="careerType">
+                        <% ['Full-Time','Part-Time','Internship','Contract'].forEach(function(t){ %>
+                        <option value="<%= t %>" <%= career && career.type === t ? 'selected' : '' %>><%= t %></option>
+                        <% }) %>
+                    </select>
+                    <small class="text-muted d-block mt-1">Choose job engagement type.</small>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">
+                        <i class="fa-solid :fa-location-dot fa-map-pin text-primary"></i> Location
+                    </label>
+                    <input class="form-control" type="text" name="careerLocation" placeholder="e.g. Remote / Nagaland" value="<%= career ? career.location : '' %>">
+                    <small class="text-muted d-block mt-1">Specify remote availability or office location.</small>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-money-bill-wave text-primary"></i> Salary / Stipend
+                    </label>
+                    <input class="form-control" type="text" name="careerSalary" placeholder="e.g. ₹30,000/mo" value="<%= career ? career.salary : '' %>">
+                    <small class="text-muted d-block mt-1">Provide salary details or compensation range.</small>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-calendar-alt text-primary"></i> Application Deadline
+                    </label>
+                    <input class="form-control" type="text" name="careerDeadline" placeholder="e.g. 31 July 2025" value="<%= career ? career.deadline : '' %>">
+                    <small class="text-muted d-block mt-1">Input date or specify continuous hiring.</small>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">&nbsp;</label>
+                    <div class="admin-checkbox-row d-inline-flex align-items-center gap-2 mt-1">
+                        <input type="checkbox" name="careerActive" id="careerActive" <%= !career || career.active ? 'checked' : '' %>>
+                        <label for="careerActive" class="user-select-none">Show as Active (visible on public page)</label>
+                    </div>
+                    <small class="text-muted d-block mt-1">Control instant visibility on careers page.</small>
+                </div>
+                <div class="col-12 mb-4">
+                    <label class="form-label d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-primary"></i> Job Description
+                    </label>
+                    <textarea class="form-control" name="careerDescription" rows="7" placeholder="Describe the role, responsibilities, and requirements..." required><%= career ? career.description : '' %></textarea>
+                    <small class="text-muted d-block mt-1">Write clearly, outlining expectations, responsibilities, and target skills.</small>
+                </div>
+            </div>
+            <div class="note mb-4 p-3 bg-light border-start border-primary border-3 rounded">
+                <p class="mb-0 text-muted">
+                    <i class="fa-solid fa-circle-info me-1 text-primary"></i> 
+                    <strong>Note:</strong> Public users view active positions at 
+                    <a href="/careers" target="_blank" class="text-decoration-none">/careers</a>. Ensure details are correct before saving.
+                </p>
+            </div>
+            <div class="admin-form-actions d-flex align-items-center gap-3">
+                <button class="btn btn-primary d-inline-flex align-items-center gap-2" type="submit">
+                    <i class="fa-solid <%= career ? 'fa-check' : 'fa-plus' %>"></i>
+                    <%= career ? 'Update' : 'Add Career' %>
+                </button>
+                <a href="/admin-careers" class="admin-back-link text-decoration-none d-inline-flex align-items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Back to list
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>
