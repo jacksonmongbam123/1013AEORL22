@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style>
+      .bg { fill: #36a3f7; }
+      .header { fill: #2d5482; }
+      .dot-green { fill: #5df7cc; }
+      .dot-orange { fill: #fca54d; }
+      .white-stroke { stroke: #ffffff; stroke-width: 28; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    </style>
+  </defs>
+  <!-- Background Card with rounded corners -->
+  <rect width="512" height="512" rx="100" class="bg" />
+  
+  <!-- Header Bar -->
+  <path d="M 0 100 A 100 100 0 0 1 100 0 L 412 0 A 100 100 0 0 1 512 100 L 512 135 L 0 135 Z" class="header" />
+  
+  <!-- 3 Window dots -->
+  <circle cx="95" cy="68" r="14" class="dot-green" />
+  <circle cx="145" cy="68" r="14" class="dot-green" />
+  <circle cx="195" cy="68" r="14" class="dot-orange" />
+  
+  <!-- Left Bracket < -->
+  <path d="M 125 282 L 65 342 L 125 402" class="white-stroke" />
+  
+  <!-- Right Bracket > -->
+  <path d="M 375 282 L 435 342 L 375 402" class="white-stroke" />
+  
+  <!-- Code Body Content: <j/m> -->
+  <!-- 'j' body + dot -->
+  <circle cx="180" cy="225" r="14" fill="#ffffff" />
+  <path d="M 180 270 L 180 380 Q 180 415 145 415" class="white-stroke" />
+  
+  <!-- '/' Slash -->
+  <path d="M 260 215 L 204 440" class="white-stroke" />
+  
+  <!-- 'm' Double bounce with cubic Bezier curves for perfect rounding -->
+  <path d="M 270 310 C 270 270, 310 270, 310 310 C 310 270, 350 270, 350 310 M 270 295 L 270 410 M 310 295 L 310 410 M 350 295 L 350 410" class="white-stroke" />
+</svg>
