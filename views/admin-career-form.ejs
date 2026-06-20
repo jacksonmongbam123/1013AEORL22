@@ -44,9 +44,9 @@
                 <div class="col-md-6">
                     <div class="mb-3" style="padding-top:0.5rem;">
                         <label class="form-label">&nbsp;</label>
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.75rem;">
-                            <input type="checkbox" name="careerActive" id="careerActive" style="width:18px; height:18px;" <%= !career || career.active ? 'checked' : '' %>>
-                            <label for="careerActive" style="margin:0; font-weight:600; cursor:pointer;">Show as Active (visible on public page)</label>
+                        <div class="admin-checkbox-row" style="margin-top:0.75rem;">
+                            <input type="checkbox" name="careerActive" id="careerActive" <%= !career || career.active ? 'checked' : '' %>>
+                            <label for="careerActive">Show as Active (visible on public page)</label>
                         </div>
                     </div>
                 </div>
@@ -58,9 +58,9 @@
                 </div>
             </div>
             <p class="note"><i><span>Note:</span> Inactive listings won't appear on the public Careers page.</i></p>
-            <div style="display:flex; gap:0.75rem; align-items:center;">
-                <button class="btn btn-primary postbutton" type="submit"><%= career ? 'Update' : 'Add Career' %></button>
-                <a href="/admin-careers" style="color:var(--text-muted); font-size:0.88rem; text-decoration:none;">← Back to list</a>
+            <div class="admin-form-actions">
+                <button class="btn btn-primary" type="submit"><%= career ? 'Update' : 'Add Career' %></button>
+                <a href="/admin-careers" class="admin-back-link">← Back to list</a>
             </div>
         </form>
     </div>

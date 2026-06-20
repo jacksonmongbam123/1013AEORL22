@@ -1,10 +1,10 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content">
-    <div class="blogtitle" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div class="admin-list-header">
         <div>
             <h2><span>Manage</span> Home Cards</h2>
-            <p style="color:var(--text-muted); margin:0;">Feature cards displayed on the home page.</p>
+            <p>Feature cards displayed on the home page.</p>
         </div>
         <a href="/admin-homecards/add" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none;">
             <i class="fa-solid fa-plus"></i> Add Card
@@ -12,8 +12,8 @@
     </div>
 
     <% if (homecards.length === 0) { %>
-    <div class="about-card text-center py-5">
-        <i class="fa-solid fa-rectangle-list" style="font-size:2.5rem; color:var(--text-muted); margin-bottom:1rem;"></i>
+    <div class="admin-empty-state">
+        <i class="fa-solid fa-rectangle-list"></i>
         <p>No home cards yet. <a href="/admin-homecards/add" style="color:var(--primary); font-weight:600;">Add one</a></p>
     </div>
     <% } %>
@@ -21,20 +21,20 @@
     <div class="cards-grid">
     <% for(var i=0; i<homecards.length; i++) { %>
     <div class="feature-box" style="position:relative;">
-        <div style="position:absolute; top:0.75rem; right:0.75rem; display:flex; gap:0.4rem;">
-            <span style="background:<%= homecards[i].active ? '#dcfce7' : '#fee2e2' %>; color:<%= homecards[i].active ? '#166534' : '#991b1b' %>; padding:0.1rem 0.55rem; border-radius:20px; font-size:0.72rem; font-weight:700;">
+        <div class="feature-box-badges">
+            <span class="admin-badge <%= homecards[i].active ? 'admin-badge--success' : 'admin-badge--danger' %>">
                 <%= homecards[i].active ? 'Active' : 'Hidden' %>
             </span>
         </div>
         <i class="<%= homecards[i].icon %>"></i>
         <h3><%= homecards[i].title %></h3>
         <p><%= homecards[i].description %></p>
-        <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
-            <a href="/admin-homecards/edit/<%= homecards[i]._id %>" style="background:var(--primary-light); color:var(--primary); border:1px solid var(--primary); font-weight:600; font-size:0.78rem; padding:0.25rem 0.7rem; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;">
+        <div class="feature-box-actions">
+            <a href="/admin-homecards/edit/<%= homecards[i]._id %>" class="btn-admin-edit">
                 <i class="fa-solid fa-pen"></i> Edit
             </a>
             <form action="/admin-homecards/delete/<%= homecards[i]._id %>" method="post" onsubmit="return confirm('Delete this card?')">
-                <button type="submit" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; font-weight:600; font-size:0.78rem; padding:0.25rem 0.7rem; border-radius:6px; display:inline-flex; align-items:center; gap:0.3rem; cursor:pointer;">
+                <button type="submit" class="btn-admin-delete">
                     <i class="fa-solid fa-trash"></i> Delete
                 </button>
             </form>

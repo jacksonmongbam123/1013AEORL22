@@ -30,15 +30,15 @@
                 </div>
             </div>
             <div class="mb-3">
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <input type="checkbox" name="cardActive" id="cardActive" style="width:18px; height:18px;" <%= !card || card.active ? 'checked' : '' %>>
-                    <label for="cardActive" style="margin:0; font-weight:600; cursor:pointer;">Show on home page (active)</label>
+                <div class="admin-checkbox-row">
+                    <input type="checkbox" name="cardActive" id="cardActive" <%= !card || card.active ? 'checked' : '' %>>
+                    <label for="cardActive">Show on home page (active)</label>
                 </div>
             </div>
             <p class="note"><i><span>Note:</span> Hidden cards won't appear on the public home page.</i></p>
-            <div style="display:flex; gap:0.75rem; align-items:center;">
-                <button class="btn btn-primary postbutton" type="submit"><%= card ? 'Update Card' : 'Add Card' %></button>
-                <a href="/admin-homecards" style="color:var(--text-muted); font-size:0.88rem; text-decoration:none;">← Back to list</a>
+            <div class="admin-form-actions">
+                <button class="btn btn-primary" type="submit"><%= card ? 'Update Card' : 'Add Card' %></button>
+                <a href="/admin-homecards" class="admin-back-link">← Back to list</a>
             </div>
         </form>
     </div>
