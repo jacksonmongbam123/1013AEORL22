@@ -17,10 +17,9 @@ app.use(passport.session());
 const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
-mongoose.connect(MONGODB_URI).catch(function(err) {
-    console.error("MongoDB connection error:", err.message);
-    process.exit(1);
-});
+mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
+    .then(function() { console.log("MongoDB connected"); })
+    .catch(function(err) { console.error("MongoDB connection error:", err.message); });
 
 // ── Schemas ──────────────────────────────────────────────────────────────────
 
