@@ -2,22 +2,40 @@
 
 <div class="page-content">
     <div class="compose">
-        <h2><span><%= terms ? 'Edit' : 'Add' %></span> Terms Section</h2>
+        <h2><i class="fa-solid fa-file-contract me-2 text-primary"></i> <span><%= terms ? 'Edit' : 'Add' %></span> Terms Section</h2>
+        <p class="text-muted">Create or modify a terms of use section. Each section appears as a separate block on the public terms page.</p>
     </div>
-    <div class="admin-form-card">
+    <div class="admin-form-card border rounded shadow-sm bg-white p-4">
         <form action="<%= action %>" method="post">
-            <div class="mb-3">
-                <label class="form-label">Section Title</label>
-                <input class="form-control pushi" type="text" name="termsTitle" placeholder="e.g. Intellectual Property, User Conduct..." value="<%= terms ? terms.title : '' %>" required>
+            <div class="mb-4">
+                <label class="form-label d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-heading text-primary"></i> Section Title
+                </label>
+                <input class="form-control" type="text" name="termsTitle" placeholder="e.g. Intellectual Property, User Conduct..." value="<%= terms ? terms.title : '' %>" required>
+                <small class="text-muted d-block mt-1">Specify a clear and descriptive name for this legal section.</small>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Section Content</label>
+            <div class="mb-4">
+                <label class="form-label d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-align-left text-primary"></i> Section Content
+                </label>
                 <textarea class="form-control" name="termsContent" rows="10" placeholder="Write the terms content for this section..." required><%= terms ? terms.content : '' %></textarea>
+                <small class="text-muted d-block mt-1">Use paragraphs to split long terms of use text. Standard text wrapping is handled automatically.</small>
             </div>
-            <p class="note"><i><span>Note:</span> Each section appears as a separate block on the public Terms of Use page.</i></p>
-            <div class="admin-form-actions">
-                <button class="btn btn-primary" type="submit"><%= terms ? 'Update Section' : 'Add Section' %></button>
-                <a href="/admin-terms" class="admin-back-link">← Back to list</a>
+            <div class="note mb-4 p-3 bg-light border-start border-primary border-3 rounded">
+                <p class="mb-0 text-muted">
+                    <i class="fa-solid fa-circle-info me-1 text-primary"></i> 
+                    <strong>Note:</strong> Public users will immediately see these additions or updates on the terms page at 
+                    <a href="/terms" target="_blank" class="text-decoration-none">/terms</a>.
+                </p>
+            </div>
+            <div class="admin-form-actions d-flex align-items-center gap-3">
+                <button class="btn btn-primary d-inline-flex align-items-center gap-2" type="submit">
+                    <i class="fa-solid <%= terms ? 'fa-check' : 'fa-plus' %>"></i>
+                    <%= terms ? 'Update Section' : 'Add Section' %>
+                </button>
+                <a href="/admin-terms" class="admin-back-link text-decoration-none d-inline-flex align-items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Back to list
+                </a>
             </div>
         </form>
     </div>
