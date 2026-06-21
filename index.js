@@ -316,6 +316,11 @@ app.get("/getcontact", isAuth, async function(req, res) {
     res.render("getcontact", { contactDetails });
 });
 
+app.post("/getcontact/delete/:id", isAuth, async function(req, res) {
+    await Contact.findByIdAndDelete(req.params.id);
+    res.redirect("/getcontact");
+});
+
 app.post("/contact", async function(req, res) {
     const t = new Date();
     await new Contact({ name:req.body.contactName, mail:req.body.contactMail, number:req.body.contactNumber, message:req.body.contactMessage, time:t.toDateString(), date:new Date(), hour:t.getHours(), minute:t.getMinutes() }).save();
