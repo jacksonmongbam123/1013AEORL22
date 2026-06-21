@@ -12,9 +12,24 @@
         <a href="/compose"><i class="fa-solid fa-pen-to-square"></i> Publish Blog</a>
         <a href="/admin-careers"><i class="fa-solid fa-briefcase"></i> Careers</a>
         <a href="/admin-terms"><i class="fa-solid fa-file-contract"></i> Terms of Use</a>
-        <a href="/admin-books"><i class="fa-solid fa-calendar-check"></i> Bookings</a>
-        <a href="/admin-candidates"><i class="fa-solid fa-users"></i> Candidates</a>
-        <a href="/getcontact"><i class="fa-solid fa-envelope"></i> Get Contacts</a>
+        <a href="/admin-books">
+            <i class="fa-solid fa-calendar-check"></i> Bookings
+            <% if (adminBadges && adminBadges.pendingBookings > 0) { %>
+                <span class="admin-nav-badge"><%= adminBadges.pendingBookings %></span>
+            <% } %>
+        </a>
+        <a href="/admin-candidates">
+            <i class="fa-solid fa-users"></i> Candidates
+            <% if (adminBadges && adminBadges.pendingCandidates > 0) { %>
+                <span class="admin-nav-badge"><%= adminBadges.pendingCandidates %></span>
+            <% } %>
+        </a>
+        <a href="/getcontact">
+            <i class="fa-solid fa-envelope"></i> Get Contacts
+            <% if (adminBadges && adminBadges.contactMessages > 0) { %>
+                <span class="admin-nav-badge"><%= adminBadges.contactMessages %></span>
+            <% } %>
+        </a>
     </div>
     <a href="/logout" class="admin-nav-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
 </nav>

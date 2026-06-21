@@ -46,6 +46,25 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Attach badge counts to every authenticated admin request
+app.use(async function(req, res, next) {
+    if (req.isAuthenticated() && req.session && req.session.adminToken) {
+        try {
+            const [pendingBookings, contactMessages, pendingCandidates] = await Promise.all([
+                Book.countDocuments({ status: "Pending" }),
+                Contact.countDocuments(),
+                Candidate.countDocuments()
+            ]);
+            res.locals.adminBadges = { pendingBookings, contactMessages, pendingCandidates };
+        } catch(e) {
+            res.locals.adminBadges = { pendingBookings: 0, contactMessages: 0, pendingCandidates: 0 };
+        }
+    } else {
+        res.locals.adminBadges = null;
+    }
+    next();
+});
+
 const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
