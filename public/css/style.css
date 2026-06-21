@@ -1735,31 +1735,6 @@ span { color: var(--primary); }
     margin-top: 1.25rem;
 }
 
-/* =========================================
-   ADMIN NAVBAR — LOGOUT BUTTON
-   ========================================= */
-.admin-nav-logout {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: clamp(0.78rem, 1.25vw, 0.86rem);
-    font-weight: 600;
-    text-decoration: none;
-    padding: 0.38rem 0.9rem;
-    border-radius: 20px;
-    white-space: nowrap;
-    transition: var(--transition);
-    flex-shrink: 0;
-    color: #991b1b;
-    background: #fee2e2;
-    border: 1px solid #fca5a5;
-}
-
-.admin-nav-logout:hover {
-    color: var(--white);
-    background: #991b1b;
-    border-color: #991b1b;
-}
 
 /* =========================================
    ADMIN OVERVIEW PAGE
@@ -2019,4 +1994,94 @@ span { color: var(--primary); }
 @keyframes badgePop {
     from { transform: scale(0); opacity: 0; }
     to   { transform: scale(1); opacity: 1; }
+}
+
+/* =========================================
+   CONTACTS — UNREAD STATE
+   ========================================= */
+.contact-entry--unread {
+    border-left: 3px solid var(--primary);
+    padding-left: 0.75rem;
+    background: var(--primary-light);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.contact-unread-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.btn-mark-read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    padding: 0.28rem 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.btn-mark-read:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-mark-all-read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    border: 1.5px solid var(--primary);
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.btn-mark-all-read:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+/* =========================================
+   ADMIN NAVBAR — LOGOUT (small, right)
+   ========================================= */
+.admin-nav-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: var(--transition);
+    flex-shrink: 0;
+    color: #991b1b;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    margin-left: auto;
+}
+
+.admin-nav-logout:hover {
+    color: var(--white);
+    background: #991b1b;
+    border-color: #991b1b;
 }

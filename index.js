@@ -52,7 +52,7 @@ app.use(async function(req, res, next) {
         try {
             const [pendingBookings, contactMessages, pendingCandidates] = await Promise.all([
                 Book.countDocuments({ status: "Pending" }),
-                Contact.countDocuments(),
+                Contact.countDocuments({ read: false }),
                 Candidate.countDocuments()
             ]);
             res.locals.adminBadges = { pendingBookings, contactMessages, pendingCandidates };
@@ -92,7 +92,8 @@ const Learning = mongoose.model("learning", learningSchema);
 
 const contactSchema = new mongoose.Schema({
     name: String, mail: String, number: { type: Number, required: true },
-    message: String, time: String, date: String, hour: String, minute: String
+    message: String, time: String, date: String, hour: String, minute: String,
+    read: { type: Boolean, default: false }
 });
 const Contact = mongoose.model("contact", contactSchema);
 
@@ -363,6 +364,16 @@ app.get("/overview", isAuth, async function(req, res) {
 app.get("/getcontact", isAuth, async function(req, res) {
     const contactDetails = await Contact.find().sort({date:-1});
     res.render("getcontact", { contactDetails });
+});
+
+app.post("/getcontact/read/:id", isAuth, async function(req, res) {
+    await Contact.findByIdAndUpdate(req.params.id, { read: true });
+    res.redirect("/getcontact");
+});
+
+app.post("/getcontact/readall", isAuth, async function(req, res) {
+    await Contact.updateMany({ read: false }, { read: true });
+    res.redirect("/getcontact");
 });
 
 app.post("/getcontact/delete/:id", isAuth, async function(req, res) {

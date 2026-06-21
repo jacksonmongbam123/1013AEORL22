@@ -6,6 +6,14 @@
             <h2><span>Contact</span> Messages</h2>
             <p>Messages submitted through the contact form.</p>
         </div>
+        <% const unreadCount = contactDetails.filter(c => !c.read).length; %>
+        <% if (unreadCount > 0) { %>
+            <form action="/getcontact/readall" method="post" style="margin:0;">
+                <button type="submit" class="btn-mark-all-read">
+                    <i class="fa-solid fa-check-double"></i> Mark all as read (<%= unreadCount %>)
+                </button>
+            </form>
+        <% } %>
     </div>
 
     <% if(contactDetails.length === 0) { %>
@@ -17,11 +25,23 @@
 
     <div class="admin-list-stack">
     <% for(var i=0; i<contactDetails.length; i++) { %>
-        <div class="contact-entry">
+        <div class="contact-entry <%= contactDetails[i].read ? '' : 'contact-entry--unread' %>">
             <div class="admin-list-card" style="margin-bottom:0.5rem;">
-                <h3 style="margin:0;"><%=contactDetails[i].name%></h3>
+                <h3 style="margin:0;">
+                    <% if (!contactDetails[i].read) { %>
+                        <span class="contact-unread-dot"></span>
+                    <% } %>
+                    <%=contactDetails[i].name%>
+                </h3>
                 <div class="admin-card-actions">
                     <span class="meta"><%=contactDetails[i].time%> &nbsp;<%=contactDetails[i].hour%>:<%=contactDetails[i].minute%></span>
+                    <% if (!contactDetails[i].read) { %>
+                        <form action="/getcontact/read/<%=contactDetails[i]._id%>" method="post" style="margin:0;">
+                            <button type="submit" class="btn-mark-read">
+                                <i class="fa-solid fa-check"></i> Mark read
+                            </button>
+                        </form>
+                    <% } %>
                     <form action="/getcontact/delete/<%=contactDetails[i]._id%>" method="post"
                           onsubmit="return confirmDelete(event)">
                         <button type="submit" class="btn-admin-delete">
