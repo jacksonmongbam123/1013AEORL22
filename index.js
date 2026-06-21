@@ -599,6 +599,27 @@ app.get("/logout", function(req, res) {
     });
 });
 
+// ── Global Search ──────────────────────────────────────────────────────────────────
+
+app.get("/search", async function(req, res) {
+    const su = req.protocol + "://" + req.get("host");
+    const q = (req.query.q || "").trim();
+    let blogs = [], learnings = [], careers = [];
+    if (q) {
+        const regex = new RegExp(q, "i");
+        [blogs, learnings, careers] = await Promise.all([
+            Blog.find({ $or: [{ title: regex }, { content: regex }] }).sort({ date: -1 }).limit(10),
+            Learning.find({ $or: [{ title: regex }, { content: regex }] }).sort({ date: -1 }).limit(10),
+            Career.find({ active: true, $or: [{ title: regex }, { description: regex }, { location: regex }] }).limit(10)
+        ]);
+    }
+    const total = blogs.length + learnings.length + careers.length;
+    res.render("search", { query: q, blogs, learnings, careers, total,
+        pageTitle: q ? "Search: " + q + " | Jackson Mongbam" : "Search | Jackson Mongbam",
+        pageDesc: "Search across blog posts, learnings, and careers.",
+        pageUrl: su + "/search" });
+});
+
 // ── Blog catch-all ────────────────────────────────────────────────────────────
 
 app.get("/:customPost", async function(req, res) {
