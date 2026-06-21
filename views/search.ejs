@@ -6,9 +6,9 @@
     </div>
 
     <!-- Search bar on results page -->
-    <form action="/search" method="get" style="display:flex;gap:0.6rem;margin-bottom:2rem;max-width:520px;">
-        <input class="form-control pushi" type="text" name="q" value="<%= query %>" placeholder="Search blog, learnings, careers...">
-        <button class="btn btn-primary postbutton" type="submit" style="width:auto;white-space:nowrap;">Search</button>
+    <form action="/search" method="get" style="display:flex;gap:0.5rem;margin-bottom:2rem;max-width:400px;align-items: center;">
+        <input class="form-control" type="text" name="q" value="<%= query %>" placeholder="Search..." style="font-size: 0.85rem; padding: 0.4rem 0.75rem; height: auto;">
+        <button class="btn btn-primary" type="submit" style="width:auto; white-space:nowrap; font-size: 0.85rem; padding: 0.4rem 1rem; height: auto;">Search</button>
     </form>
 
     <% if (query) { %>

@@ -601,6 +601,23 @@ app.get("/logout", function(req, res) {
 
 // ── Global Search ──────────────────────────────────────────────────────────────────
 
+app.get("/api/search", async function(req, res) {
+    const q = (req.query.q || "").trim();
+    if (!q) return res.json({ blogs: [], learnings: [], careers: [] });
+    
+    const regex = new RegExp(q, "i");
+    try {
+        const [blogs, learnings, careers] = await Promise.all([
+            Blog.find({ $or: [{ title: regex }, { content: regex }] }).select("title").limit(5),
+            Learning.find({ $or: [{ title: regex }, { content: regex }] }).select("title").limit(5),
+            Career.find({ active: true, $or: [{ title: regex }, { description: regex }] }).select("title").limit(5)
+        ]);
+        res.json({ blogs, learnings, careers });
+    } catch (err) {
+        res.status(500).json({ error: "Search failed" });
+    }
+});
+
 app.get("/search", async function(req, res) {
     const su = req.protocol + "://" + req.get("host");
     const q = (req.query.q || "").trim();
