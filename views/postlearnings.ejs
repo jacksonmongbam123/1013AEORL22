@@ -5,19 +5,124 @@
         <h2><span>Post</span> Learnings</h2>
     </div>
     <div class="admin-form-card">
-        <form action="/postlearnings" method="post">
+        <form id="learningsForm" action="<%= (typeof editItem !== 'undefined' && editItem) ? '/postlearnings/edit/' + editItem._id : '/postlearnings' %>" method="post">
             <div class="mb-3">
                 <label class="form-label">Learnings Title</label>
-                <input class="form-control pushi" type="text" name="learningsTitle" placeholder="Enter the learning title">
+                <input id="inputTitle" class="form-control pushi" type="text" name="learningsTitle"
+                    placeholder="Enter the learning title"
+                    value="<%= (typeof editItem !== 'undefined' && editItem) ? editItem.title : '' %>">
             </div>
             <div class="mb-3">
                 <label class="form-label">Learnings Description</label>
-                <textarea class="form-control" name="learningsBody" rows="6" placeholder="Describe what you learned..."></textarea>
+                <textarea id="inputBody" class="form-control" name="learningsBody" rows="6"
+                    placeholder="Describe what you learned..."><%= (typeof editItem !== 'undefined' && editItem) ? editItem.content : '' %></textarea>
             </div>
             <p class="note"><i><span>Note:</span> This is an admin page — only admins can make changes.</i></p>
-            <button class="btn btn-primary postbutton" type="submit">Post Learnings</button>
+            <div style="display:flex;gap:0.6rem;align-items:center;">
+                <button class="btn btn-primary postbutton" type="submit">
+                    <%= (typeof editItem !== 'undefined' && editItem) ? 'Save Changes' : 'Post Learnings' %>
+                </button>
+                <% if (typeof editItem !== 'undefined' && editItem) { %>
+                <a href="/postlearnings" class="btn btn-secondary" style="padding:0.45rem 1.1rem;border-radius:8px;font-size:0.9rem;text-decoration:none;">Cancel</a>
+                <% } %>
+            </div>
         </form>
     </div>
+
+    <% if (typeof learnings !== 'undefined' && learnings.length > 0) { %>
+    <div class="compose" style="margin-top:2.5rem;">
+        <h3><span>All</span> Learnings (<%= learnings.length %>)</h3>
+    </div>
+
+    <!-- Search & Filter -->
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center;">
+        <input id="searchInput" type="text" placeholder="🔍 Search by title or content..."
+            class="form-control pushi" style="max-width:340px;"
+            oninput="filterCards()">
+        <select id="sortSelect" class="form-control" style="max-width:180px;" onchange="filterCards()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+        </select>
+    </div>
+
+    <div id="learningsGrid">
+    <% learnings.forEach(function(item) { %>
+    <div class="admin-form-card learning-card"
+        style="margin-bottom:1.1rem;"
+        data-title="<%= item.title.toLowerCase() %>"
+        data-content="<%= item.content.toLowerCase() %>"
+        data-date="<%= new Date(item.date).getTime() %>">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem;">
+            <strong style="font-size:1.05rem;color:var(--text);"><%= item.title %></strong>
+            <span style="font-size:0.78rem;color:var(--text-muted);white-space:nowrap;">
+                <i class="fa-solid fa-calendar-days"></i>
+                <%= new Date(item.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) %>
+            </span>
+        </div>
+        <p style="white-space:pre-wrap;color:var(--text-muted);margin-bottom:1rem;font-size:0.9rem;"><%= item.content %></p>
+        <div style="display:flex;flex-direction:row;align-items:center;gap:0.6rem;">
+            <a href="/postlearnings/edit/<%= item._id %>" class="btn btn-primary postbutton" style="margin:0;font-size:0.85rem;padding:0.38rem 0.9rem;">
+                <i class="fa-solid fa-pen"></i> Edit
+            </a>
+            <form action="/postlearnings/delete/<%= item._id %>" method="post" style="margin:0;padding:0;"
+                onsubmit="return confirm('Delete this learning?');">
+                <button class="btn btn-danger" type="submit" style="margin:0;font-size:0.85rem;padding:0.38rem 0.9rem;">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    <% }); %>
+    </div>
+
+    <div id="noResults" style="display:none;text-align:center;color:var(--text-muted);padding:2rem;">
+        <i class="fa-solid fa-magnifying-glass"></i> No learnings match your search.
+    </div>
+
+    <% } else { %>
+    <div class="admin-form-card" style="margin-top:2rem;color:#888;text-align:center;">
+        <i class="fa-solid fa-circle-info"></i> No learnings posted yet. Use the form above to add one.
+    </div>
+    <% } %>
 </div>
+
+<script>
+function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const sort = document.getElementById('sortSelect').value;
+    const grid = document.getElementById('learningsGrid');
+    const cards = Array.from(grid ? grid.querySelectorAll('.learning-card') : []);
+
+    let visible = cards.filter(card => {
+        const title = card.dataset.title || '';
+        const content = card.dataset.content || '';
+        return !q || title.includes(q) || content.includes(q);
+    });
+
+    const hidden = cards.filter(c => !visible.includes(c));
+    hidden.forEach(c => c.style.display = 'none');
+
+    visible.sort((a, b) => {
+        if (sort === 'newest') return Number(b.dataset.date) - Number(a.dataset.date);
+        if (sort === 'oldest') return Number(a.dataset.date) - Number(b.dataset.date);
+        if (sort === 'az') return (a.dataset.title||'').localeCompare(b.dataset.title||'');
+        if (sort === 'za') return (b.dataset.title||'').localeCompare(a.dataset.title||'');
+        return 0;
+    });
+
+    visible.forEach(c => { c.style.display = ''; grid.appendChild(c); });
+
+    const noResults = document.getElementById('noResults');
+    if (noResults) noResults.style.display = visible.length === 0 ? 'block' : 'none';
+}
+
+<% if (typeof editItem !== 'undefined' && editItem) { %>
+window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('learningsForm').scrollIntoView({ behavior: 'smooth' });
+});
+<% } %>
+</script>
 
 <%- include('partials/footer'); -%>
