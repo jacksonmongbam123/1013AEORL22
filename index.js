@@ -7,6 +7,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
+const crypto = require("crypto");
 const app = express();
 
 // Configure multer storage for Candidate CV uploads
@@ -32,7 +33,16 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static("public"));
-app.use(session({ secret: process.env.SESSION_SECRET || "jackson mongbam", resave: false, saveUninitialized: true }));
+app.use(session({
+    secret: process.env.SESSION_SECRET || "jackson mongbam",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000   // 24 hours
+    }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -128,7 +138,11 @@ const Candidate = mongoose.model("candidate", candidateSchema);
 
 const today = new Date();
 const day = today.toLocaleDateString("en-US", { weekday:"short", day:"numeric", month:"short" });
-function isAuth(req, res, next) { if (req.isAuthenticated()) return next(); res.redirect("/adminlogin"); }
+function isAuth(req, res, next) {
+    if (req.isAuthenticated() && req.session.adminToken) return next();
+    req.session.destroy(function() {});
+    res.redirect("/adminlogin");
+}
 
 app.use(function(req, res, next) { res.locals.siteUrl = req.protocol + "://" + req.get("host"); next(); });
 
@@ -432,6 +446,7 @@ app.post("/adminregister", async function(req, res) {
         const user = await Admin.register({ username: req.body.username }, req.body.password);
         req.login(user, function(err) {
             if (err) return res.redirect("/adminerror");
+            req.session.adminToken = crypto.randomBytes(32).toString("hex");
             req.session.flash = "Registered and logged in successfully.";
             res.redirect("/loggedin");
         });
@@ -452,13 +467,21 @@ app.post("/adminlogin", function(req, res) {
                 req.session.loginError = true;
                 return res.redirect("/adminlogin");
             }
+            req.session.adminToken = crypto.randomBytes(32).toString("hex");
             req.session.flash = "Logged in successfully.";
             res.redirect("/loggedin");
         });
     })(req, res);
 });
 
-app.get("/logout", function(req, res) { req.logout(function() { res.redirect("/adminlogin"); }); });
+app.get("/logout", function(req, res) {
+    req.logout(function() {
+        req.session.destroy(function() {
+            res.clearCookie("connect.sid");
+            res.redirect("/adminlogin");
+        });
+    });
+});
 
 // ── Blog catch-all ────────────────────────────────────────────────────────────
 
