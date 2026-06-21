@@ -311,6 +311,36 @@ app.post("/compose", isAuth, async function(req, res) {
     res.redirect("/updated");
 });
 
+app.get("/overview", isAuth, async function(req, res) {
+    const [blogs, learnings, contacts, bookings, careers, candidates, homeCards, terms,
+           recentContacts, recentBookings, recentCandidates] = await Promise.all([
+        Blog.countDocuments(),
+        Learning.countDocuments(),
+        Contact.countDocuments(),
+        Book.countDocuments(),
+        Career.countDocuments(),
+        Candidate.countDocuments(),
+        HomeCard.countDocuments(),
+        Terms.countDocuments(),
+        Contact.find().sort({date:-1}).limit(5),
+        Book.find().sort({createdAt:-1}).limit(5),
+        Candidate.find().sort({createdAt:-1}).limit(5)
+    ]);
+    const [activeCareers, activeCards, bookingsPending, bookingsConfirmed, bookingsCancelled] = await Promise.all([
+        Career.countDocuments({active:true}),
+        HomeCard.countDocuments({active:true}),
+        Book.countDocuments({status:"Pending"}),
+        Book.countDocuments({status:"Confirmed"}),
+        Book.countDocuments({status:"Cancelled"})
+    ]);
+    res.render("overview", {
+        counts: { blogs, learnings, contacts, bookings, totalCareers: careers, activeCareers,
+                  candidates, totalCards: homeCards, activeCards, terms,
+                  bookingsPending, bookingsConfirmed, bookingsCancelled },
+        recentContacts, recentBookings, recentCandidates
+    });
+});
+
 app.get("/getcontact", isAuth, async function(req, res) {
     const contactDetails = await Contact.find().sort({date:-1});
     res.render("getcontact", { contactDetails });

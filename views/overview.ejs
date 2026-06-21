@@ -1,0 +1,198 @@
+<%- include('partials/admin'); -%>
+
+<div class="page-content">
+    <div class="admin-list-header">
+        <div>
+            <h2><span>Site</span> Overview</h2>
+            <p>A snapshot of everything on your site right now.</p>
+        </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="overview-grid">
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#EBF1FF;">
+                <i class="fa-solid fa-pen-to-square" style="color:#4F7EF7;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Blog Posts</span>
+                <span class="overview-stat-value"><%= counts.blogs %></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#f0fdf4;">
+                <i class="fa-solid fa-lightbulb" style="color:#22c55e;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Learnings</span>
+                <span class="overview-stat-value"><%= counts.learnings %></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#fff7ed;">
+                <i class="fa-solid fa-envelope" style="color:#f97316;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Contact Messages</span>
+                <span class="overview-stat-value"><%= counts.contacts %></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#fefce8;">
+                <i class="fa-solid fa-calendar-check" style="color:#eab308;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Bookings</span>
+                <span class="overview-stat-value"><%= counts.bookings %></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#fdf2f8;">
+                <i class="fa-solid fa-briefcase" style="color:#a855f7;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Active Careers</span>
+                <span class="overview-stat-value"><%= counts.activeCareers %> <small style="font-size:0.85rem;color:var(--text-muted);">/ <%= counts.totalCareers %></small></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#fef2f2;">
+                <i class="fa-solid fa-users" style="color:#ef4444;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Candidates</span>
+                <span class="overview-stat-value"><%= counts.candidates %></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#f0f9ff;">
+                <i class="fa-solid fa-rectangle-list" style="color:#0ea5e9;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Home Cards</span>
+                <span class="overview-stat-value"><%= counts.activeCards %> <small style="font-size:0.85rem;color:var(--text-muted);">/ <%= counts.totalCards %></small></span>
+            </div>
+        </div>
+        <div class="overview-stat-card">
+            <div class="overview-stat-icon" style="background:#f5f3ff;">
+                <i class="fa-solid fa-file-contract" style="color:#8b5cf6;"></i>
+            </div>
+            <div class="overview-stat-body">
+                <span class="overview-stat-label">Terms Sections</span>
+                <span class="overview-stat-value"><%= counts.terms %></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKINGS STATUS BREAKDOWN -->
+    <div class="overview-panels">
+
+        <div class="overview-panel">
+            <div class="overview-panel-header">
+                <i class="fa-solid fa-calendar-check"></i>
+                <h3>Bookings by Status</h3>
+            </div>
+            <div class="overview-status-row">
+                <div class="overview-status-pill overview-status-pill--warning">
+                    <span class="overview-status-count"><%= counts.bookingsPending %></span>
+                    <span class="overview-status-name">Pending</span>
+                </div>
+                <div class="overview-status-pill overview-status-pill--success">
+                    <span class="overview-status-count"><%= counts.bookingsConfirmed %></span>
+                    <span class="overview-status-name">Confirmed</span>
+                </div>
+                <div class="overview-status-pill overview-status-pill--danger">
+                    <span class="overview-status-count"><%= counts.bookingsCancelled %></span>
+                    <span class="overview-status-name">Cancelled</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT CONTACTS -->
+        <div class="overview-panel">
+            <div class="overview-panel-header">
+                <i class="fa-solid fa-envelope"></i>
+                <h3>Recent Messages</h3>
+                <a href="/getcontact" class="overview-panel-link">View all →</a>
+            </div>
+            <% if (recentContacts.length === 0) { %>
+                <p style="color:var(--text-muted); font-size:0.9rem;">No messages yet.</p>
+            <% } else { %>
+            <div class="overview-recent-list">
+                <% for(var i=0; i<recentContacts.length; i++) { %>
+                <div class="overview-recent-item">
+                    <div class="overview-recent-avatar">
+                        <%= recentContacts[i].name.charAt(0).toUpperCase() %>
+                    </div>
+                    <div class="overview-recent-body">
+                        <span class="overview-recent-name"><%= recentContacts[i].name %></span>
+                        <span class="overview-recent-sub"><%= recentContacts[i].mail %></span>
+                        <span class="overview-recent-excerpt"><%= recentContacts[i].message.substring(0,60) %><%= recentContacts[i].message.length > 60 ? '...' : '' %></span>
+                    </div>
+                    <span class="overview-recent-time"><%= recentContacts[i].time %></span>
+                </div>
+                <% } %>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- RECENT BOOKINGS -->
+        <div class="overview-panel">
+            <div class="overview-panel-header">
+                <i class="fa-solid fa-calendar-days"></i>
+                <h3>Recent Bookings</h3>
+                <a href="/admin-books" class="overview-panel-link">View all →</a>
+            </div>
+            <% if (recentBookings.length === 0) { %>
+                <p style="color:var(--text-muted); font-size:0.9rem;">No bookings yet.</p>
+            <% } else { %>
+            <div class="overview-recent-list">
+                <% for(var i=0; i<recentBookings.length; i++) { %>
+                <div class="overview-recent-item">
+                    <div class="overview-recent-avatar" style="background:var(--primary-light); color:var(--primary);">
+                        <i class="fa-solid fa-calendar" style="font-size:0.85rem;"></i>
+                    </div>
+                    <div class="overview-recent-body">
+                        <span class="overview-recent-name"><%= recentBookings[i].name %></span>
+                        <span class="overview-recent-sub"><%= recentBookings[i].service %> &nbsp;·&nbsp; <%= recentBookings[i].date %></span>
+                    </div>
+                    <span class="admin-badge <%= recentBookings[i].status==='Confirmed' ? 'admin-badge--success' : recentBookings[i].status==='Cancelled' ? 'admin-badge--danger' : 'admin-badge--warning' %>">
+                        <%= recentBookings[i].status %>
+                    </span>
+                </div>
+                <% } %>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- RECENT CANDIDATES -->
+        <div class="overview-panel">
+            <div class="overview-panel-header">
+                <i class="fa-solid fa-users"></i>
+                <h3>Recent Candidates</h3>
+                <a href="/admin-candidates" class="overview-panel-link">View all →</a>
+            </div>
+            <% if (recentCandidates.length === 0) { %>
+                <p style="color:var(--text-muted); font-size:0.9rem;">No candidates yet.</p>
+            <% } else { %>
+            <div class="overview-recent-list">
+                <% for(var i=0; i<recentCandidates.length; i++) { %>
+                <div class="overview-recent-item">
+                    <div class="overview-recent-avatar" style="background:#fdf2f8; color:#a855f7;">
+                        <%= recentCandidates[i].name.charAt(0).toUpperCase() %>
+                    </div>
+                    <div class="overview-recent-body">
+                        <span class="overview-recent-name"><%= recentCandidates[i].name %></span>
+                        <span class="overview-recent-sub"><%= recentCandidates[i].role %></span>
+                        <span class="overview-recent-excerpt"><%= recentCandidates[i].email %></span>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+            <% } %>
+        </div>
+
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>
