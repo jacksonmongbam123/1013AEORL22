@@ -112,6 +112,26 @@ span { color: var(--primary); }
     outline: 0 !important;
 }
 
+.navbar-toggler .close-icon {
+    display: none;
+}
+
+.navbar-toggler .hamburger-icon {
+    display: inline-block;
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
+.navbar-toggler:not(.collapsed) .hamburger-icon {
+    display: none;
+}
+
+.navbar-toggler:not(.collapsed) .close-icon {
+    display: inline-block;
+    font-size: 1.5rem;
+    color: var(--text);
+}
+
 .nav-link i {
     margin-right: 0.4rem;
     font-size: 0.9rem;
