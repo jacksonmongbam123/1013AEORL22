@@ -5,19 +5,60 @@
         <h2><span>Update</span> Home</h2>
     </div>
     <div class="admin-form-card">
-        <form action="/edithome" method="post">
+        <form id="edithomeForm" action="/edithome" method="post">
             <div class="mb-3">
                 <label class="form-label">Home Title</label>
-                <input class="form-control pushi" type="text" name="homeTitle" placeholder="Enter home page title">
+                <input id="inputHomeTitle" class="form-control pushi" type="text" name="homeTitle" placeholder="Enter home page title">
             </div>
             <div class="mb-3">
                 <label class="form-label">About Description</label>
-                <textarea class="form-control" name="aboutBody" rows="6" placeholder="Write the about section content here..."></textarea>
+                <textarea id="inputAboutBody" class="form-control" name="aboutBody" rows="6" placeholder="Write the about section content here..."></textarea>
             </div>
             <p class="note"><i><span>Note:</span> This is an admin page — only admins can make changes.</i></p>
             <button class="btn btn-primary postbutton" type="submit">Update</button>
         </form>
     </div>
+
+    <% if (homepage && homepage.length > 0) { %>
+    <div class="compose" style="margin-top:2rem;">
+        <h3><span>Current</span> Home Data</h3>
+    </div>
+    <% homepage.forEach(function(home) { %>
+    <div class="admin-form-card" style="margin-bottom:1.2rem;">
+        <div style="margin-bottom:0.8rem;">
+            <strong style="font-size:1.1rem;"><%= home.title %></strong>
+        </div>
+        <p style="white-space:pre-wrap;color:#555;margin-bottom:1rem;"><%= home.about %></p>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+            <button class="btn btn-primary postbutton"
+                onclick="fillForm(this)"
+                data-title="<%= home.title %>"
+                data-about="<%= home.about %>"
+                type="button">
+                <i class="fa-solid fa-pen"></i> Edit
+            </button>
+            <form action="/edithome/delete/<%= home._id %>" method="post" style="display:inline;"
+                onsubmit="return confirm('Delete this home entry?');">
+                <button class="btn btn-danger" type="submit">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    <% }); %>
+    <% } else { %>
+    <div class="admin-form-card" style="margin-top:2rem;color:#888;text-align:center;">
+        <i class="fa-solid fa-circle-info"></i> No home content saved yet. Use the form above to add one.
+    </div>
+    <% } %>
 </div>
+
+<script>
+function fillForm(btn) {
+    document.getElementById('inputHomeTitle').value = btn.getAttribute('data-title');
+    document.getElementById('inputAboutBody').value = btn.getAttribute('data-about');
+    document.getElementById('edithomeForm').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
 
 <%- include('partials/footer'); -%>
