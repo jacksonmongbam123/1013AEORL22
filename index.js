@@ -327,10 +327,26 @@ app.post("/edithome", isAuth, async function(req, res) {
     res.redirect("/updated");
 });
 
-app.get("/postlearnings", isAuth, function(req, res) { res.render("postlearnings"); });
+app.get("/postlearnings", isAuth, async function(req, res) {
+    const learnings = await Learning.find().sort({date:-1});
+    res.render("postlearnings", { learnings });
+});
 app.post("/postlearnings", isAuth, async function(req, res) {
     await new Learning({ title:req.body.learningsTitle, content:req.body.learningsBody, date:new Date() }).save();
-    res.redirect("/updated");
+    res.redirect("/postlearnings");
+});
+app.get("/postlearnings/edit/:id", isAuth, async function(req, res) {
+    const learning = await Learning.findById(req.params.id);
+    const learnings = await Learning.find().sort({date:-1});
+    res.render("postlearnings", { learnings, editItem: learning });
+});
+app.post("/postlearnings/edit/:id", isAuth, async function(req, res) {
+    await Learning.findByIdAndUpdate(req.params.id, { title:req.body.learningsTitle, content:req.body.learningsBody });
+    res.redirect("/postlearnings");
+});
+app.post("/postlearnings/delete/:id", isAuth, async function(req, res) {
+    await Learning.findByIdAndDelete(req.params.id);
+    res.redirect("/postlearnings");
 });
 
 app.get("/compose", isAuth, function(req, res) { res.render("compose"); });
