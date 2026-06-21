@@ -349,11 +349,27 @@ app.post("/postlearnings/delete/:id", isAuth, async function(req, res) {
     res.redirect("/postlearnings");
 });
 
-app.get("/compose", isAuth, function(req, res) { res.render("compose"); });
+app.get("/compose", isAuth, async function(req, res) {
+    const posts = await Blog.find().sort({date:-1});
+    res.render("compose", { posts });
+});
 app.post("/compose", isAuth, async function(req, res) {
     if (["about","learnings","home","contact"].includes(req.body.postTitle)) return res.redirect("/compose");
     await new Blog({ title:req.body.postTitle, content:req.body.postBody, timestamp:day, date:new Date() }).save();
-    res.redirect("/updated");
+    res.redirect("/compose");
+});
+app.get("/compose/edit/:id", isAuth, async function(req, res) {
+    const editItem = await Blog.findById(req.params.id);
+    const posts = await Blog.find().sort({date:-1});
+    res.render("compose", { posts, editItem });
+});
+app.post("/compose/edit/:id", isAuth, async function(req, res) {
+    await Blog.findByIdAndUpdate(req.params.id, { title:req.body.postTitle, content:req.body.postBody });
+    res.redirect("/compose");
+});
+app.post("/compose/delete/:id", isAuth, async function(req, res) {
+    await Blog.findByIdAndDelete(req.params.id);
+    res.redirect("/compose");
 });
 
 app.get("/overview", isAuth, async function(req, res) {
