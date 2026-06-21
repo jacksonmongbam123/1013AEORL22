@@ -847,11 +847,10 @@ span { color: var(--primary); }
 .admin-navbar {
     background: var(--white);
     border-bottom: 2px solid var(--border);
-    padding: 0 5%;
+    padding: 0.5rem 5%;
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    min-height: 54px;
+    gap: 0.4rem 1rem;
     box-shadow: 0 2px 8px rgba(79,126,247,0.07);
     position: sticky;
     top: 0;
@@ -869,6 +868,8 @@ span { color: var(--primary); }
     gap: 0.5rem;
     white-space: nowrap;
     letter-spacing: -0.3px;
+    flex-basis: 100%;
+    padding: 0.25rem 0;
 }
 
 .admin-navbar .admin-brand i { color: var(--primary); font-size: 1.05rem; }
