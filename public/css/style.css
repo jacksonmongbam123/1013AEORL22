@@ -879,7 +879,7 @@ span { color: var(--primary); }
     align-items: center;
     gap: 0.35rem;
     flex-wrap: wrap;
-    margin-left: auto;
+    flex: 1;
 }
 
 .admin-nav-links a {
@@ -2060,24 +2060,22 @@ span { color: var(--primary); }
 }
 
 /* =========================================
-   ADMIN NAVBAR — LOGOUT (small, right)
+   ADMIN NAVBAR — LOGOUT (icon only, always right)
    ========================================= */
 .admin-nav-logout {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.72rem;
-    font-weight: 700;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     text-decoration: none;
-    padding: 0.25rem 0.7rem;
-    border-radius: 20px;
-    white-space: nowrap;
     transition: var(--transition);
     flex-shrink: 0;
+    font-size: 0.95rem;
     color: #991b1b;
     background: #fee2e2;
     border: 1px solid #fca5a5;
-    margin-left: auto;
 }
 
 .admin-nav-logout:hover {
