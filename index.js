@@ -309,7 +309,15 @@ app.get("/updated", isAuth, function(req, res) { res.render("updated"); });
 
 // ── Admin — Existing ──────────────────────────────────────────────────────────
 
-app.get("/edithome", isAuth, function(req, res) { res.render("edithome"); });
+app.get("/edithome", isAuth, async function(req, res) {
+    const homepage = await Home.find({});
+    res.render("edithome", { homepage });
+});
+
+app.post("/edithome/delete/:id", isAuth, async function(req, res) {
+    await Home.findByIdAndDelete(req.params.id);
+    res.redirect("/edithome");
+});
 
 app.post("/edithome", isAuth, async function(req, res) {
     const { homeTitle, aboutBody } = req.body;
