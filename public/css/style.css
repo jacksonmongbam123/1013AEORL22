@@ -1734,3 +1734,19 @@ span { color: var(--primary); }
     align-items: center;
     margin-top: 1.25rem;
 }
+
+/* =========================================
+   ADMIN NAVBAR — LOGOUT BUTTON
+   ========================================= */
+.admin-nav-logout {
+    margin-left: 0.5rem;
+    color: #991b1b !important;
+    background: #fee2e2 !important;
+    border: 1px solid #fca5a5 !important;
+}
+
+.admin-nav-logout:hover {
+    color: var(--white) !important;
+    background: #991b1b !important;
+    border-color: #991b1b !important;
+}
