@@ -99,10 +99,17 @@ span { color: var(--primary); }
 .navbar-toggler,
 .navbar-toggler:focus,
 .navbar-toggler:active,
-.navbar-toggler-icon:focus {
+.navbar-toggler-icon:focus,
+.navbar-toggler:focus-visible {
     outline: none !important;
     box-shadow: none !important;
     border: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none !important;
+    outline: 0 !important;
 }
 
 .nav-link i {
