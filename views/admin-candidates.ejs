@@ -7,6 +7,14 @@
             <h2><i class="fa-solid fa-users me-2 text-primary"></i> <span>Candidate</span> Recruitment Desk</h2>
             <p class="text-muted">Interactive suite to select, review, and manage candidate academic profiles & resumes.</p>
         </div>
+        <% const unreviewed = candidates.filter(c => !c.reviewed).length; %>
+        <% if (unreviewed > 0) { %>
+            <form action="/admin-candidates/reviewedall" method="post" style="margin:0;">
+                <button type="submit" class="btn-mark-all-read">
+                    <i class="fa-solid fa-check-double"></i> Mark all reviewed (<%= unreviewed %>)
+                </button>
+            </form>
+        <% } %>
     </div>
 
     <% if (candidates.length === 0) { %>
@@ -39,7 +47,10 @@
                                 style="transition: all 0.2s ease; border-left: 4px solid transparent;">
                             
                             <div class="d-flex justify-content-between align-items-start">
-                                <h5 class="mb-1 text-truncate fw-bold candidate-item-name" style="font-size: 1.05rem; max-width: 70%;"><%= candidates[i].name %></h5>
+                                <h5 class="mb-1 text-truncate fw-bold candidate-item-name" style="font-size: 1.05rem; max-width: 70%;">
+                                    <%= candidates[i].name %>
+                                    <% if (!candidates[i].reviewed) { %><span class="cand-new-badge">New</span><% } %>
+                                </h5>
                                 <small class="text-muted text-nowrap" style="font-size: 0.78rem;">
                                     <%= candidates[i].createdAt ? new Date(candidates[i].createdAt).toLocaleDateString("en-US", { month: 'short', day: 'numeric' }) : 'Unknown' %>
                                 </small>
@@ -86,7 +97,14 @@
                                         <strong><%= candidates[i].createdAt ? new Date(candidates[i].createdAt).toLocaleString("en-US", { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Unknown' %></strong>
                                     </p>
                                 </div>
-                                <div>
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <% if (!candidates[i].reviewed) { %>
+                                        <form action="/admin-candidates/reviewed/<%= candidates[i]._id %>" method="post" style="margin:0;">
+                                            <button type="submit" class="btn-mark-read">
+                                                <i class="fa-solid fa-check"></i> Mark reviewed
+                                            </button>
+                                        </form>
+                                    <% } %>
                                     <span class="badge bg-primary text-white px-3 py-2 fs-7 fw-semibold" style="font-size:0.88rem; border-radius: 20px;">
                                         <i class="fa-solid fa-briefcase me-1"></i> Role: <%= candidates[i].role %>
                                     </span>

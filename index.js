@@ -53,7 +53,7 @@ app.use(async function(req, res, next) {
             const [pendingBookings, contactMessages, pendingCandidates] = await Promise.all([
                 Book.countDocuments({ status: "Pending" }),
                 Contact.countDocuments({ read: false }),
-                Candidate.countDocuments()
+                Candidate.countDocuments({ reviewed: false })
             ]);
             res.locals.adminBadges = { pendingBookings, contactMessages, pendingCandidates };
         } catch(e) {
@@ -150,7 +150,8 @@ const candidateSchema = new mongoose.Schema({
     cvPath: String,
     cvOriginalName: String,
     
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    reviewed: { type: Boolean, default: false }
 });
 const Candidate = mongoose.model("candidate", candidateSchema);
 
@@ -460,6 +461,16 @@ app.get("/admin-candidates", isAuth, async function(req, res) {
     const candidates = await Candidate.find({}).sort({createdAt:-1});
     res.render("admin-candidates", { candidates });
 });
+app.post("/admin-candidates/reviewed/:id", isAuth, async function(req, res) {
+    await Candidate.findByIdAndUpdate(req.params.id, { reviewed: true });
+    res.redirect("/admin-candidates");
+});
+
+app.post("/admin-candidates/reviewedall", isAuth, async function(req, res) {
+    await Candidate.updateMany({ reviewed: false }, { reviewed: true });
+    res.redirect("/admin-candidates");
+});
+
 app.post("/admin-candidates/delete/:id", isAuth, async function(req, res) {
     try {
         const candidate = await Candidate.findById(req.params.id);
@@ -513,7 +524,7 @@ app.post("/adminregister", async function(req, res) {
             if (err) return res.redirect("/adminerror");
             req.session.adminToken = crypto.randomBytes(32).toString("hex");
             req.session.flash = "Registered and logged in successfully.";
-            res.redirect("/loggedin");
+            res.redirect("/overview");
         });
     } catch (err) {
         console.error(err);
@@ -534,7 +545,7 @@ app.post("/adminlogin", function(req, res) {
             }
             req.session.adminToken = crypto.randomBytes(32).toString("hex");
             req.session.flash = "Logged in successfully.";
-            res.redirect("/loggedin");
+            res.redirect("/overview");
         });
     })(req, res);
 });
