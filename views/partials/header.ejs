@@ -71,7 +71,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="navbar-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
@@ -88,6 +88,14 @@
                         <a class="nav-link" href="/contact">Contact</a>
                     </li>
                 </ul>
+                <form class="d-flex ms-auto" action="/search" method="get" role="search" style="gap:0.4rem;">
+                    <input class="form-control" type="search" name="q" placeholder="Search..." aria-label="Search"
+                        value="<%= typeof query !== 'undefined' ? query : '' %>"
+                        style="min-width:180px;max-width:240px;border-radius:20px;font-size:0.88rem;">
+                    <button class="btn btn-primary" type="submit" style="border-radius:20px;padding:0.35rem 0.9rem;font-size:0.88rem;white-space:nowrap;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
             </div>
         </nav>
     </div>
