@@ -1739,16 +1739,26 @@ span { color: var(--primary); }
    ADMIN NAVBAR — LOGOUT BUTTON
    ========================================= */
 .admin-nav-logout {
-    margin-left: 0.5rem;
-    color: #991b1b !important;
-    background: #fee2e2 !important;
-    border: 1px solid #fca5a5 !important;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: clamp(0.78rem, 1.25vw, 0.86rem);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.38rem 0.9rem;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: var(--transition);
+    flex-shrink: 0;
+    color: #991b1b;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
 }
 
 .admin-nav-logout:hover {
-    color: var(--white) !important;
-    background: #991b1b !important;
-    border-color: #991b1b !important;
+    color: var(--white);
+    background: #991b1b;
+    border-color: #991b1b;
 }
 
 /* =========================================
