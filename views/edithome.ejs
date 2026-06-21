@@ -29,17 +29,19 @@
             <strong style="font-size:1.1rem;"><%= home.title %></strong>
         </div>
         <p style="white-space:pre-wrap;color:#555;margin-bottom:1rem;"><%= home.about %></p>
-        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:row;align-items:center;gap:0.6rem;">
             <button class="btn btn-primary postbutton"
                 onclick="fillForm(this)"
                 data-title="<%= home.title %>"
                 data-about="<%= home.about %>"
-                type="button">
+                type="button"
+                style="margin:0;">
                 <i class="fa-solid fa-pen"></i> Edit
             </button>
-            <form action="/edithome/delete/<%= home._id %>" method="post" style="display:inline;"
+            <form action="/edithome/delete/<%= home._id %>" method="post"
+                style="margin:0;padding:0;"
                 onsubmit="return confirm('Delete this home entry?');">
-                <button class="btn btn-danger" type="submit">
+                <button class="btn btn-danger" type="submit" style="margin:0;">
                     <i class="fa-solid fa-trash"></i> Delete
                 </button>
             </form>
