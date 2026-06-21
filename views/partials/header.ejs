@@ -65,34 +65,33 @@
 <body>
 <section id="title">
     <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg navbar-custom">
             <a class="navbar-brand" href="/"><strong>Jackson <span>Mongbam</span></strong></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav mx-auto">
                     <li class="navbar-item">
-                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="/"><i class="fa-solid fa-house"></i> Home</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link" href="/learnings">Learnings</a>
+                        <a class="nav-link" href="/learnings"><i class="fa-solid fa-book"></i> Learnings</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link" href="/blog">Blog</a>
+                        <a class="nav-link" href="/blog"><i class="fa-solid fa-pen-nib"></i> Blog</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/about"><i class="fa-solid fa-circle-info"></i> About</a>
                     </li>
                     <li class="navbar-item">
-                        <a class="nav-link" href="/contact">Contact</a>
+                        <a class="nav-link" href="/contact"><i class="fa-solid fa-envelope"></i> Contact</a>
                     </li>
                 </ul>
-                <form class="d-flex ms-auto" action="/search" method="get" role="search" style="gap:0.4rem;">
-                    <input class="form-control" type="search" name="q" placeholder="Search..." aria-label="Search"
-                        value="<%= typeof query !== 'undefined' ? query : '' %>"
-                        style="min-width:180px;max-width:240px;border-radius:20px;font-size:0.88rem;">
-                    <button class="btn btn-primary" type="submit" style="border-radius:20px;padding:0.35rem 0.9rem;font-size:0.88rem;white-space:nowrap;">
+                <form class="navbar-search-form" action="/search" method="get" role="search">
+                    <input class="navbar-search-input" type="search" name="q" placeholder="Search..." aria-label="Search"
+                        value="<%= typeof query !== 'undefined' ? query : '' %>">
+                    <button class="navbar-search-btn" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </form>

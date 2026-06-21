@@ -96,6 +96,59 @@ span { color: var(--primary); }
 
 .navbar-item { margin: 0 2px; }
 
+.nav-link i {
+    margin-right: 0.4rem;
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   NAVBAR SEARCH FORM
+   ========================================= */
+.navbar-search-form {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: auto;
+}
+
+.navbar-search-input {
+    padding: 0.4rem 0.75rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    width: 150px;
+    transition: var(--transition);
+    outline: none;
+}
+
+.navbar-search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(79,126,247,0.1);
+}
+
+.navbar-search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.navbar-search-btn {
+    padding: 0.4rem 0.6rem;
+    border: 1.5px solid var(--primary);
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-search-btn:hover {
+    background: #3a6ce0;
+    border-color: #3a6ce0;
+}
+
 /* =========================================
    PAGE WRAPPER
    ========================================= */
