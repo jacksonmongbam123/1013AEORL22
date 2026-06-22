@@ -661,46 +661,35 @@ app.post("/adminlogin", function(req, res) {
             console.log(`⏰ EXPIRES: ${new Date(req.session.otpExpiry).toLocaleTimeString()}`);
             console.log("=======================================");
 
-            // 🛡️ CRITICAL FIX: Explicitly save the session before rendering so OTP data
-            // is guaranteed to be persisted on every login attempt (fixes missing OTP on 3rd+ try)
+            // Save session first, then redirect so browser gets the updated cookie
             req.session.save(async function(saveErr) {
                 if (saveErr) {
                     console.error("[LOGIN] Session save error:", saveErr);
                 }
 
-                // Prepare Email
-                const mailOptions = {
-                    from: process.env.EMAIL_USER,
-                    to: user.username,
-                    subject: 'Admin Login OTP',
-                    text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
-                };
-
-                try {
-                    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-                        console.warn("[LOGIN] ⚠️ Email credentials missing in .env. Falling back to log-only mode.");
-                        return res.render("admin-otp", {
-                            otpError: "Email service not configured. Please use the OTP code shown in the server logs."
+                // Try sending email in background — don't block the redirect
+                if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+                    try {
+                        const sendMailPromise = transporter.sendMail({
+                            from: process.env.EMAIL_USER,
+                            to: user.username,
+                            subject: 'Admin Login OTP',
+                            text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
                         });
+                        const timeoutPromise = new Promise((_, reject) =>
+                            setTimeout(() => reject(new Error("Email timeout")), 15000)
+                        );
+                        await Promise.race([sendMailPromise, timeoutPromise]);
+                        console.log("[LOGIN] ✅ OTP email sent successfully.");
+                    } catch (mailErr) {
+                        console.error("[LOGIN] ❌ Email delivery failed:", mailErr.message);
                     }
-
-                    console.log(`[LOGIN] Sending OTP email to ${user.username}...`);
-                    const sendMailPromise = transporter.sendMail(mailOptions);
-                    const timeoutPromise = new Promise((_, reject) =>
-                        setTimeout(() => reject(new Error("Email timeout")), 15000)
-                    );
-
-                    await Promise.race([sendMailPromise, timeoutPromise]);
-                    console.log("[LOGIN] ✅ OTP email sent successfully.");
-                    res.render("admin-otp", { otpError: null });
-
-                } catch (mailErr) {
-                    console.error("[LOGIN] ❌ Email delivery failed:", mailErr.message);
-                    // Don't block the user if email fails, as the OTP is visible in logs
-                    res.render("admin-otp", {
-                        otpError: "Note: Email delivery failed. However, your OTP has been generated and logged to the server console."
-                    });
+                } else {
+                    console.warn("[LOGIN] ⚠️ Email credentials missing. OTP is in server logs.");
                 }
+
+                // Redirect so browser makes a fresh GET with the updated session cookie
+                res.redirect("/admin-otp");
             });
         })(req, res);
     }
