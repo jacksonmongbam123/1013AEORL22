@@ -634,6 +634,7 @@ app.post("/adminlogin", function(req, res) {
         req.session.adminToken = null;
 
         passport.authenticate("local", function(err, user, info) {
+            console.log("[LOGIN] Passport callback — err:", err ? err.message : "none", "| user:", user ? user.username : "false", "| info:", JSON.stringify(info));
             if (err) {
                 console.error("[LOGIN] Passport authentication error:", err);
                 req.session.loginError = true;
