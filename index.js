@@ -64,6 +64,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// 🛡️ Debug Middleware: Log all admin-related requests to help diagnose OTP/Session issues
+app.use((req, res, next) => {
+    if (req.path.startsWith('/admin') || req.path === '/logout' || req.path === '/loggedin' || req.path === '/overview') {
+        console.log(`[DEBUG] ${new Date().toISOString()} - ${req.method} ${req.path} - SessionID: ${req.sessionID} - Auth: ${req.isAuthenticated()}`);
+    }
+    next();
+});
+
 // Attach badge counts to every authenticated admin request
 app.use(async function(req, res, next) {
     // If database is not connected, skip badge counting to prevent hanging
@@ -614,62 +622,72 @@ app.post("/adminregister", async function(req, res) {
 });
 
 app.post("/adminlogin", function(req, res) {
-    console.log("Login attempt for:", req.body.username);
+    console.log(`[LOGIN] Attempt started for user: ${req.body.username}`);
+    
+    // Clear any existing partial session data before starting a new login attempt
+    req.session.adminOtp = null;
+    req.session.tempAdminUser = null;
+    req.session.otpExpiry = null;
+
     passport.authenticate("local", async function(err, user, info) {
         if (err) {
-            console.error("Auth Error:", err);
+            console.error("[LOGIN] Passport authentication error:", err);
             req.session.loginError = true;
             return res.redirect("/adminlogin");
         }
         if (!user) {
-            console.log("Auth failed: User not found or password incorrect");
+            console.log("[LOGIN] Authentication failed: Invalid username or password");
             req.session.loginError = true;
             return res.redirect("/adminlogin");
         }
         
         // Generate OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Store in session
         req.session.tempAdminUser = user._id;
         req.session.adminOtp = otp;
         req.session.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-        // 🛡️ FALLBACK: Always log OTP to console in case email is blocked by host firewall
-        console.log("---------------------------------------");
-        console.log("🔑 LOGIN OTP FOR", user.username, ":", otp);
-        console.log("---------------------------------------");
+        // 🛡️ CRITICAL: Log OTP to console - This is what shows in Render logs
+        console.log("=======================================");
+        console.log("🔑 NEW LOGIN OTP GENERATED");
+        console.log(`👤 USER: ${user.username}`);
+        console.log(`🔢 OTP CODE: ${otp}`);
+        console.log(`⏰ EXPIRES: ${new Date(req.session.otpExpiry).toLocaleTimeString()}`);
+        console.log("=======================================");
 
-        // Send OTP via Email
+        // Prepare Email
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: user.username, // Assuming username is the email
+            to: user.username,
             subject: 'Admin Login OTP',
             text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
         };
 
         try {
-            console.log("Attempting to send OTP email to:", user.username);
             if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-                console.warn("⚠️ WARNING: Email credentials not configured!");
+                console.warn("[LOGIN] ⚠️ Email credentials missing in .env. Falling back to log-only mode.");
                 return res.render("admin-otp", { 
-                    otpError: "Email not configured. Check server logs for OTP." 
+                    otpError: "Email service not configured. Please use the OTP code shown in the server logs." 
                 });
             }
             
-            // Set a longer timeout for sendMail to prevent hanging (30 seconds)
+            console.log(`[LOGIN] Sending OTP email to ${user.username}...`);
             const sendMailPromise = transporter.sendMail(mailOptions);
             const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error("Email send timeout after 30s")), 30000)
+                setTimeout(() => reject(new Error("Email timeout")), 15000)
             );
 
             await Promise.race([sendMailPromise, timeoutPromise]);
-            
-            console.log("✅ OTP email sent successfully to:", user.username);
+            console.log("[LOGIN] ✅ OTP email sent successfully.");
             res.render("admin-otp", { otpError: null });
+
         } catch (mailErr) {
-            console.error("❌ Error sending email:", mailErr.message);
-            // Even if email fails, we still show the OTP page because the OTP is in the logs!
+            console.error("[LOGIN] ❌ Email delivery failed:", mailErr.message);
+            // Don't block the user if email fails, as the OTP is visible in logs
             res.render("admin-otp", { 
-                otpError: "Email delivery blocked by host. Check your Render Logs for the OTP code." 
+                otpError: "Note: Email delivery failed. However, your OTP has been generated and logged to the server console." 
             });
         }
     })(req, res);
@@ -727,9 +745,20 @@ app.post("/admin-otp", async function(req, res) {
 });
 
 app.get("/logout", function(req, res) {
-    req.logout(function() {
-        req.session.destroy(function() {
+    console.log(`[AUTH] Logout requested for session: ${req.sessionID}`);
+    req.logout(function(err) {
+        if (err) console.error("[AUTH] Logout error:", err);
+        
+        // Clear all admin-related session data explicitly
+        req.session.adminToken = null;
+        req.session.adminOtp = null;
+        req.session.tempAdminUser = null;
+        req.session.otpExpiry = null;
+        
+        req.session.destroy(function(err) {
+            if (err) console.error("[AUTH] Session destruction error:", err);
             res.clearCookie("connect.sid");
+            console.log("[AUTH] Session destroyed. Redirecting to login.");
             res.redirect("/adminlogin");
         });
     });
