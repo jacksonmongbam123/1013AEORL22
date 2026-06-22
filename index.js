@@ -137,6 +137,14 @@ passport.use(Admin.createStrategy());
 passport.serializeUser(Admin.serializeUser());
 passport.deserializeUser(Admin.deserializeUser());
 
+// OTP stored in MongoDB — completely independent of session reliability
+const otpRecordSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    otp:      { type: String, required: true },
+    expiresAt:{ type: Date,   required: true }
+});
+const OtpRecord = mongoose.model("otprecord", otpRecordSchema);
+
 const homeSchema = new mongoose.Schema({ title: String, about: String, name: String });
 const Home = mongoose.model("home", homeSchema);
 
@@ -633,7 +641,7 @@ app.post("/adminregister", async function(req, res) {
 app.post("/adminlogin", function(req, res) {
     console.log(`[LOGIN] 🟢 NEW ATTEMPT DETECTED: ${req.body.username} (IP: ${req.ip})`);
 
-    passport.authenticate("local", function(err, user, info) {
+    passport.authenticate("local", async function(err, user, info) {
         if (err) {
             console.error("[LOGIN] Passport error:", err);
             return res.redirect("/adminlogin");
@@ -644,90 +652,89 @@ app.post("/adminlogin", function(req, res) {
             return res.redirect("/adminlogin");
         }
 
-        // Regenerate session completely — gives a brand-new session ID and empty data
-        // every login attempt, regardless of any previous session state
-        req.session.regenerate(function(regenErr) {
-            if (regenErr) {
-                console.error("[LOGIN] Session regenerate error:", regenErr);
-                return res.redirect("/adminlogin");
-            }
-
+        try {
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            req.session.tempAdminUser = user._id;
-            req.session.adminOtp = otp;
-            req.session.otpExpiry = Date.now() + 10 * 60 * 1000;
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+            // Store OTP in MongoDB — not the session — so it survives any session quirk
+            await OtpRecord.findOneAndUpdate(
+                { username: user.username },
+                { otp, expiresAt },
+                { upsert: true, new: true }
+            );
 
             console.log("=======================================");
             console.log("🔑 NEW LOGIN OTP GENERATED");
             console.log(`👤 USER: ${user.username}`);
             console.log(`🔢 OTP CODE: ${otp}`);
-            console.log(`⏰ EXPIRES: ${new Date(req.session.otpExpiry).toLocaleTimeString()}`);
+            console.log(`⏰ EXPIRES: ${expiresAt.toLocaleTimeString()}`);
             console.log("=======================================");
 
-            req.session.save(function(saveErr) {
-                if (saveErr) console.error("[LOGIN] Session save error:", saveErr);
+            // Session only needs to know who is pending — not the OTP itself
+            req.session.pendingUsername = user.username;
+            await new Promise((resolve) => req.session.save(resolve));
 
-                // Send email in background without blocking the redirect
-                if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-                    transporter.sendMail({
-                        from: process.env.EMAIL_USER,
-                        to: user.username,
-                        subject: 'Admin Login OTP',
-                        text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
-                    })
-                    .then(() => console.log("[LOGIN] ✅ OTP email sent."))
-                    .catch(e => console.error("[LOGIN] ❌ Email failed:", e.message));
-                }
+            // Gmail primary, logs already have it as fallback
+            if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+                transporter.sendMail({
+                    from: process.env.EMAIL_USER,
+                    to: user.username,
+                    subject: 'Admin Login OTP',
+                    text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
+                })
+                .then(() => console.log("[LOGIN] ✅ OTP email sent."))
+                .catch(e => console.error("[LOGIN] ❌ Email failed:", e.message));
+            }
 
-                res.redirect("/admin-otp");
-            });
-        });
+            res.redirect("/admin-otp");
+        } catch (e) {
+            console.error("[LOGIN] OTP generation error:", e);
+            res.redirect("/adminlogin");
+        }
     })(req, res);
 });
 
 app.get("/admin-otp", function(req, res) {
-    if (!req.session.tempAdminUser) return res.redirect("/adminlogin");
+    if (!req.session.pendingUsername) return res.redirect("/adminlogin");
     const flash = req.session.flash || null;
     req.session.flash = null;
     res.render("admin-otp", { otpError: null, flash: flash });
 });
 
 app.post("/resend-otp", async function(req, res) {
-    if (!req.session.tempAdminUser) {
-        console.warn("[RESEND] Attempted without temp user session");
+    const pendingUsername = req.session.pendingUsername;
+    if (!pendingUsername) {
+        console.warn("[RESEND] No pending username in session");
         return res.redirect("/adminlogin");
     }
-
     try {
-        const user = await Admin.findById(req.session.tempAdminUser);
-        if (!user) return res.redirect("/adminlogin");
-
-        // Generate new OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        req.session.adminOtp = otp;
-        req.session.otpExpiry = Date.now() + 10 * 60 * 1000;
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+        await OtpRecord.findOneAndUpdate(
+            { username: pendingUsername },
+            { otp, expiresAt },
+            { upsert: true, new: true }
+        );
 
         console.log("=======================================");
-        console.log("🔄 OTP RESENT SUCCESSFULLY");
-        console.log(`👤 USER: ${user.username}`);
+        console.log("🔄 OTP RESENT");
+        console.log(`👤 USER: ${pendingUsername}`);
         console.log(`🔢 NEW OTP CODE: ${otp}`);
         console.log("=======================================");
 
-        // 🛡️ FIX: Save session before sending email / redirecting
-        await new Promise((resolve) => req.session.save(resolve));
-
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: user.username,
-            subject: 'Admin Login OTP (Resent)',
-            text: `Your new OTP for admin login is: ${otp}. It will expire in 10 minutes.`
-        };
-
         if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-            await transporter.sendMail(mailOptions);
+            transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: pendingUsername,
+                subject: 'Admin Login OTP (Resent)',
+                text: `Your new OTP is: ${otp}. It will expire in 10 minutes.`
+            })
+            .then(() => console.log("[RESEND] ✅ Email sent."))
+            .catch(e => console.error("[RESEND] ❌ Email failed:", e.message));
         }
 
-        req.session.flash = "A new OTP has been sent and logged.";
+        req.session.flash = "A new OTP has been sent.";
         res.redirect("/admin-otp");
     } catch (err) {
         console.error("[RESEND] Error:", err);
@@ -737,47 +744,49 @@ app.post("/resend-otp", async function(req, res) {
 
 app.post("/admin-otp", async function(req, res) {
     const { otp } = req.body;
-    if (!req.session.tempAdminUser || !req.session.adminOtp) {
+    const pendingUsername = req.session.pendingUsername;
+
+    if (!pendingUsername) {
         return res.redirect("/adminlogin");
     }
 
-    if (Date.now() > req.session.otpExpiry) {
-        req.session.adminOtp = null;
-        req.session.tempAdminUser = null;
-        return res.render("admin-otp", { otpError: "OTP has expired. Please login again." });
-    }
+    try {
+        const record = await OtpRecord.findOne({ username: pendingUsername });
 
-    if (otp === req.session.adminOtp) {
-        try {
-            console.log("OTP verified for user ID:", req.session.tempAdminUser);
-            const user = await Admin.findById(req.session.tempAdminUser);
+        if (!record) {
+            return res.render("admin-otp", { otpError: "OTP expired or not found. Please login again." });
+        }
+
+        if (Date.now() > record.expiresAt) {
+            await OtpRecord.deleteOne({ username: pendingUsername });
+            return res.render("admin-otp", { otpError: "OTP has expired. Please login again." });
+        }
+
+        if (otp === record.otp) {
+            await OtpRecord.deleteOne({ username: pendingUsername });
+            const user = await Admin.findOne({ username: pendingUsername });
             if (!user) {
-                console.error("User not found after OTP verification");
+                console.error("[OTP] User not found after verification:", pendingUsername);
                 return res.redirect("/adminlogin");
             }
             req.login(user, function(err) {
                 if (err) {
-                    console.error("Login error after OTP:", err);
-                    req.session.loginError = true;
+                    console.error("[OTP] Login error:", err);
                     return res.redirect("/adminlogin");
                 }
-                // Clear OTP session data
-                req.session.adminOtp = null;
-                req.session.tempAdminUser = null;
-                req.session.otpExpiry = null;
-                
+                req.session.pendingUsername = null;
                 req.session.adminToken = crypto.randomBytes(32).toString("hex");
-                req.session.flash = "Logged in successfully with OTP.";
-                console.log("Admin logged in successfully:", user.username);
+                req.session.flash = "Logged in successfully.";
+                console.log("[OTP] ✅ Admin logged in:", user.username);
                 res.redirect("/overview");
             });
-        } catch (err) {
-            console.error("Error during OTP login phase:", err);
-            res.redirect("/adminlogin");
+        } else {
+            console.log("[OTP] Invalid attempt for:", pendingUsername);
+            res.render("admin-otp", { otpError: "Invalid OTP. Please try again." });
         }
-    } else {
-        console.log("Invalid OTP attempt");
-        res.render("admin-otp", { otpError: "Invalid OTP. Please try again." });
+    } catch (err) {
+        console.error("[OTP] Verification error:", err);
+        res.redirect("/adminlogin");
     }
 });
 
