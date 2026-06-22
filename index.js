@@ -607,17 +607,22 @@ app.post("/adminlogin", function(req, res) {
         };
 
         try {
-            if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-                await transporter.sendMail(mailOptions);
-                console.log("OTP sent to:", user.username);
-            } else {
-                console.log("Email credentials not set. OTP is:", otp);
+            if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+                console.warn("⚠️ WARNING: Email credentials not configured!");
+                console.warn("OTP for testing:", otp);
+                return res.render("admin-otp", { 
+                    otpError: "Email not configured. Check server logs for OTP." 
+                });
             }
+            
+            await transporter.sendMail(mailOptions);
+            console.log("✅ OTP sent to:", user.username);
             res.render("admin-otp", { otpError: null });
         } catch (mailErr) {
-            console.error("Error sending email:", mailErr);
-            req.session.loginError = true;
-            res.redirect("/adminlogin");
+            console.error("❌ Error sending email:", mailErr.message);
+            res.render("admin-otp", { 
+                otpError: "Failed to send OTP. Please check your email configuration." 
+            });
         }
     })(req, res);
 });
