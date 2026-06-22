@@ -15,12 +15,16 @@ const app = express();
 // Configure Nodemailer transporter
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: process.env.SMTP_PORT || 465,
-    secure: true, // true for 465, false for other ports
+    port: parseInt(process.env.SMTP_PORT) || 465,
+    secure: (parseInt(process.env.SMTP_PORT) === 465), // true for 465, false for others (like 587)
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    // Increase connection timeout
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    socketTimeout: 10000
 });
 
 // Configure multer storage for Candidate CV uploads
@@ -646,10 +650,10 @@ app.post("/adminlogin", function(req, res) {
                 });
             }
             
-            // Set a timeout for sendMail to prevent hanging
+            // Set a longer timeout for sendMail to prevent hanging (30 seconds)
             const sendMailPromise = transporter.sendMail(mailOptions);
             const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error("Email send timeout")), 10000)
+                setTimeout(() => reject(new Error("Email send timeout after 30s")), 30000)
             );
 
             await Promise.race([sendMailPromise, timeoutPromise]);
