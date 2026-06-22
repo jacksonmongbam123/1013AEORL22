@@ -1,0 +1,26 @@
+<%- include('partials/header'); -%>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <% if (typeof otpError !== 'undefined' && otpError) { %>
+        <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.6rem;">
+            <i class="fa-solid fa-circle-exclamation" style="color:#DC2626; font-size:1rem;"></i>
+            <span style="color:#DC2626; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;"><%= otpError %></span>
+        </div>
+        <% } %>
+        <h2>Verify <span>OTP</span></h2>
+        <p style="text-align:center; color:#6B7280; margin-bottom:1.5rem; font-size:0.9rem;">
+            An OTP has been sent to your email. Please enter it below to complete your login.
+        </p>
+        <form action="/admin-otp" method="post">
+            <div class="form-group">
+                <label>OTP Code</label>
+                <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}" style="text-align:center; letter-spacing:0.5rem; font-size:1.2rem;">
+            </div>
+            <button type="submit" class="btn-auth btn-auth--login">Verify & Login</button>
+            <p class="auth-link"><a href="/adminlogin">Back to Login</a></p>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer'); -%>

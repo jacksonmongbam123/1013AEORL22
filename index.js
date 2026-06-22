@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const _ = require("lodash");
 const mongoose = require("mongoose");
@@ -8,7 +9,19 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 const app = express();
+
+// Configure Nodemailer transporter
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: process.env.SMTP_PORT || 465,
+    secure: true, // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 // Configure multer storage for Candidate CV uploads
 const storage = multer.diskStorage({
@@ -573,21 +586,83 @@ app.post("/adminregister", async function(req, res) {
 });
 
 app.post("/adminlogin", function(req, res) {
-    passport.authenticate("local", function(err, user, info) {
+    passport.authenticate("local", async function(err, user, info) {
         if (err || !user) {
             req.session.loginError = true;
             return res.redirect("/adminlogin");
         }
-        req.login(user, function(err) {
-            if (err) {
-                req.session.loginError = true;
-                return res.redirect("/adminlogin");
+        
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        req.session.tempAdminUser = user._id;
+        req.session.adminOtp = otp;
+        req.session.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+        // Send OTP via Email
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.username, // Assuming username is the email
+            subject: 'Admin Login OTP',
+            text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
+        };
+
+        try {
+            if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+                await transporter.sendMail(mailOptions);
+                console.log("OTP sent to:", user.username);
+            } else {
+                console.log("Email credentials not set. OTP is:", otp);
             }
-            req.session.adminToken = crypto.randomBytes(32).toString("hex");
-            req.session.flash = "Logged in successfully.";
-            res.redirect("/overview");
-        });
+            res.render("admin-otp", { otpError: null });
+        } catch (mailErr) {
+            console.error("Error sending email:", mailErr);
+            req.session.loginError = true;
+            res.redirect("/adminlogin");
+        }
     })(req, res);
+});
+
+app.get("/admin-otp", function(req, res) {
+    if (!req.session.tempAdminUser) return res.redirect("/adminlogin");
+    res.render("admin-otp", { otpError: null });
+});
+
+app.post("/admin-otp", async function(req, res) {
+    const { otp } = req.body;
+    if (!req.session.tempAdminUser || !req.session.adminOtp) {
+        return res.redirect("/adminlogin");
+    }
+
+    if (Date.now() > req.session.otpExpiry) {
+        req.session.adminOtp = null;
+        req.session.tempAdminUser = null;
+        return res.render("admin-otp", { otpError: "OTP has expired. Please login again." });
+    }
+
+    if (otp === req.session.adminOtp) {
+        try {
+            const user = await Admin.findById(req.session.tempAdminUser);
+            req.login(user, function(err) {
+                if (err) {
+                    req.session.loginError = true;
+                    return res.redirect("/adminlogin");
+                }
+                // Clear OTP session data
+                req.session.adminOtp = null;
+                req.session.tempAdminUser = null;
+                req.session.otpExpiry = null;
+                
+                req.session.adminToken = crypto.randomBytes(32).toString("hex");
+                req.session.flash = "Logged in successfully with OTP.";
+                res.redirect("/overview");
+            });
+        } catch (err) {
+            console.error(err);
+            res.redirect("/adminlogin");
+        }
+    } else {
+        res.render("admin-otp", { otpError: "Invalid OTP. Please try again." });
+    }
 });
 
 app.get("/logout", function(req, res) {
