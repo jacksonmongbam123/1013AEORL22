@@ -61,15 +61,29 @@ app.use(passport.session());
 
 // Attach badge counts to every authenticated admin request
 app.use(async function(req, res, next) {
+    // If database is not connected, skip badge counting to prevent hanging
+    if (mongoose.connection.readyState !== 1) {
+        res.locals.adminBadges = { pendingBookings: 0, contactMessages: 0, pendingCandidates: 0 };
+        return next();
+    }
+
     if (req.isAuthenticated() && req.session && req.session.adminToken) {
         try {
-            const [pendingBookings, contactMessages, pendingCandidates] = await Promise.all([
+            // Add a timeout to badge counting
+            const badgePromise = Promise.all([
                 Book.countDocuments({ status: "Pending" }),
                 Contact.countDocuments({ read: false }),
                 Candidate.countDocuments({ reviewed: false })
             ]);
+            
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error("Badge count timeout")), 3000)
+            );
+
+            const [pendingBookings, contactMessages, pendingCandidates] = await Promise.race([badgePromise, timeoutPromise]);
             res.locals.adminBadges = { pendingBookings, contactMessages, pendingCandidates };
         } catch(e) {
+            console.error("Badge counting error:", e.message);
             res.locals.adminBadges = { pendingBookings: 0, contactMessages: 0, pendingCandidates: 0 };
         }
     } else {
@@ -82,11 +96,16 @@ const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
 console.log("Connecting to MongoDB...");
-mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
+mongoose.connect(MONGODB_URI, { 
+    serverSelectionTimeoutMS: 5000,
+    connectTimeoutMS: 5000 
+})
     .then(function() { console.log("✅ MongoDB connected"); })
     .catch(function(err) { 
         console.error("❌ MongoDB connection error:", err.message);
         console.error("Please check if your IP is whitelisted in MongoDB Atlas.");
+        // We don't exit the process here so the server can still serve the login page
+        // with an error message instead of being completely dead.
     });
 
 // ── Schemas ──────────────────────────────────────────────────────────────────
