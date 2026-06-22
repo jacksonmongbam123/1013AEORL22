@@ -13,22 +13,19 @@ const nodemailer = require("nodemailer");
 const app = express();
 
 // Configure Nodemailer transporter
-// NOTE: Port 587 with secure:false (STARTTLS) is recommended for cloud hosting like Render
+// Using 'service: gmail' is the most robust method for Gmail on cloud platforms
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT) || 587,
-    secure: (parseInt(process.env.SMTP_PORT) === 465), 
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    tls: {
-        // Do not fail on invalid certs
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 20000, // 20 seconds
-    greetingTimeout: 20000,
-    socketTimeout: 20000
+    // Increase connection timeout for cloud reliability
+    connectionTimeout: 30000, // 30 seconds
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
+    debug: true, // Enable debug logs
+    logger: true // Log to console
 });
 
 // Configure multer storage for Candidate CV uploads
