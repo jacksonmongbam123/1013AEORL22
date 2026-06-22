@@ -53,8 +53,8 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(session({
     secret: process.env.SESSION_SECRET || "jackson mongbam",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,            // Force session to be saved back to the session store
+    saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
     cookie: {
         httpOnly: true,
         sameSite: "lax",
@@ -342,6 +342,8 @@ app.get("/adminerror", function(req, res) { res.render("adminerror"); });
 app.get("/adminloginerror", function(req, res) { res.render("adminloginerror"); });
 
 app.get("/adminlogin", function(req, res) {
+    // 🛡️ Prevent browser caching so the login page always reloads from server
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     const loginError = req.session.loginError || false;
     req.session.loginError = null;
     res.render("adminlogin", { loginError });
@@ -622,12 +624,19 @@ app.post("/adminregister", async function(req, res) {
 });
 
 app.post("/adminlogin", function(req, res) {
-    console.log(`[LOGIN] Attempt started for user: ${req.body.username}`);
+    console.log(`[LOGIN] 🟢 NEW ATTEMPT DETECTED: ${req.body.username} (IP: ${req.ip})`);
     
-    // Clear any existing partial session data before starting a new login attempt
+    // 🛡️ CRITICAL FIX: If user is already authenticated, log them out first to ensure a fresh OTP cycle
+    if (req.isAuthenticated()) {
+        console.log("[LOGIN] 🔄 User already authenticated, logging out for fresh OTP cycle...");
+        req.logout(() => {});
+    }
+
+    // Force clear session variables
     req.session.adminOtp = null;
     req.session.tempAdminUser = null;
     req.session.otpExpiry = null;
+    req.session.adminToken = null;
 
     passport.authenticate("local", async function(err, user, info) {
         if (err) {
