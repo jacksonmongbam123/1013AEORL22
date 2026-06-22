@@ -633,6 +633,11 @@ app.post("/adminlogin", function(req, res) {
         req.session.adminOtp = otp;
         req.session.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
 
+        // 🛡️ FALLBACK: Always log OTP to console in case email is blocked by host firewall
+        console.log("---------------------------------------");
+        console.log("🔑 LOGIN OTP FOR", user.username, ":", otp);
+        console.log("---------------------------------------");
+
         // Send OTP via Email
         const mailOptions = {
             from: process.env.EMAIL_USER,
@@ -642,10 +647,9 @@ app.post("/adminlogin", function(req, res) {
         };
 
         try {
-            console.log("Attempting to send OTP to:", user.username);
+            console.log("Attempting to send OTP email to:", user.username);
             if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
                 console.warn("⚠️ WARNING: Email credentials not configured!");
-                console.warn("OTP for testing:", otp);
                 return res.render("admin-otp", { 
                     otpError: "Email not configured. Check server logs for OTP." 
                 });
@@ -659,12 +663,13 @@ app.post("/adminlogin", function(req, res) {
 
             await Promise.race([sendMailPromise, timeoutPromise]);
             
-            console.log("✅ OTP sent to:", user.username);
+            console.log("✅ OTP email sent successfully to:", user.username);
             res.render("admin-otp", { otpError: null });
         } catch (mailErr) {
             console.error("❌ Error sending email:", mailErr.message);
+            // Even if email fails, we still show the OTP page because the OTP is in the logs!
             res.render("admin-otp", { 
-                otpError: "Failed to send OTP: " + mailErr.message 
+                otpError: "Email delivery blocked by host. Check your Render Logs for the OTP code." 
             });
         }
     })(req, res);
