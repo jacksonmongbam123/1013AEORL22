@@ -81,9 +81,13 @@ app.use(async function(req, res, next) {
 const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
-mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
-    .then(function() { console.log("MongoDB connected"); })
-    .catch(function(err) { console.error("MongoDB connection error:", err.message); });
+console.log("Connecting to MongoDB...");
+mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
+    .then(function() { console.log("✅ MongoDB connected"); })
+    .catch(function(err) { 
+        console.error("❌ MongoDB connection error:", err.message);
+        console.error("Please check if your IP is whitelisted in MongoDB Atlas.");
+    });
 
 // ── Schemas ──────────────────────────────────────────────────────────────────
 
@@ -586,8 +590,15 @@ app.post("/adminregister", async function(req, res) {
 });
 
 app.post("/adminlogin", function(req, res) {
+    console.log("Login attempt for:", req.body.username);
     passport.authenticate("local", async function(err, user, info) {
-        if (err || !user) {
+        if (err) {
+            console.error("Auth Error:", err);
+            req.session.loginError = true;
+            return res.redirect("/adminlogin");
+        }
+        if (!user) {
+            console.log("Auth failed: User not found or password incorrect");
             req.session.loginError = true;
             return res.redirect("/adminlogin");
         }
@@ -607,6 +618,7 @@ app.post("/adminlogin", function(req, res) {
         };
 
         try {
+            console.log("Attempting to send OTP to:", user.username);
             if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
                 console.warn("⚠️ WARNING: Email credentials not configured!");
                 console.warn("OTP for testing:", otp);
@@ -615,13 +627,20 @@ app.post("/adminlogin", function(req, res) {
                 });
             }
             
-            await transporter.sendMail(mailOptions);
+            // Set a timeout for sendMail to prevent hanging
+            const sendMailPromise = transporter.sendMail(mailOptions);
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error("Email send timeout")), 10000)
+            );
+
+            await Promise.race([sendMailPromise, timeoutPromise]);
+            
             console.log("✅ OTP sent to:", user.username);
             res.render("admin-otp", { otpError: null });
         } catch (mailErr) {
             console.error("❌ Error sending email:", mailErr.message);
             res.render("admin-otp", { 
-                otpError: "Failed to send OTP. Please check your email configuration." 
+                otpError: "Failed to send OTP: " + mailErr.message 
             });
         }
     })(req, res);
@@ -646,9 +665,15 @@ app.post("/admin-otp", async function(req, res) {
 
     if (otp === req.session.adminOtp) {
         try {
+            console.log("OTP verified for user ID:", req.session.tempAdminUser);
             const user = await Admin.findById(req.session.tempAdminUser);
+            if (!user) {
+                console.error("User not found after OTP verification");
+                return res.redirect("/adminlogin");
+            }
             req.login(user, function(err) {
                 if (err) {
+                    console.error("Login error after OTP:", err);
                     req.session.loginError = true;
                     return res.redirect("/adminlogin");
                 }
@@ -659,13 +684,15 @@ app.post("/admin-otp", async function(req, res) {
                 
                 req.session.adminToken = crypto.randomBytes(32).toString("hex");
                 req.session.flash = "Logged in successfully with OTP.";
+                console.log("Admin logged in successfully:", user.username);
                 res.redirect("/overview");
             });
         } catch (err) {
-            console.error(err);
+            console.error("Error during OTP login phase:", err);
             res.redirect("/adminlogin");
         }
     } else {
+        console.log("Invalid OTP attempt");
         res.render("admin-otp", { otpError: "Invalid OTP. Please try again." });
     }
 });
