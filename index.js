@@ -3,6 +3,7 @@ const express = require("express");
 const _ = require("lodash");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const fs = require("fs");
@@ -51,10 +52,17 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static("public"));
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
+
 app.use(session({
     secret: process.env.SESSION_SECRET || "jackson mongbam",
-    resave: true,            // Force session to be saved back to the session store
-    saveUninitialized: true, // Force a session that is "uninitialized" to be saved to the store
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: MONGODB_URI,
+        ttl: 24 * 60 * 60,       // sessions expire after 24 hours
+        autoRemove: "native"
+    }),
     cookie: {
         httpOnly: true,
         sameSite: "lax",
@@ -107,7 +115,6 @@ app.use(async function(req, res, next) {
 
 const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
 console.log("Connecting to MongoDB...");
 mongoose.connect(MONGODB_URI, { 
     serverSelectionTimeoutMS: 30000,
