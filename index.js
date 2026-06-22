@@ -16,17 +16,17 @@ const app = express();
 // Configure Nodemailer transporter
 // Using 'service: gmail' is the most robust method for Gmail on cloud platforms
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    family: 4,          // Force IPv4 — Render blocks IPv6 outbound
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    // Increase connection timeout for cloud reliability
-    connectionTimeout: 30000, // 30 seconds
+    connectionTimeout: 30000,
     greetingTimeout: 30000,
-    socketTimeout: 30000,
-    debug: true, // Enable debug logs
-    logger: true // Log to console
+    socketTimeout: 30000
 });
 
 // Configure multer storage for Candidate CV uploads
@@ -121,7 +121,20 @@ mongoose.connect(MONGODB_URI, {
     connectTimeoutMS: 30000,
     socketTimeoutMS: 30000
 })
-    .then(function() { console.log("✅ MongoDB connected successfully"); })
+    .then(async function() {
+        console.log("✅ MongoDB connected successfully");
+        // Drop stale username unique index from old OtpRecord schema — if present it
+        // causes E11000 on the second+ login and silently redirects back to login page
+        try {
+            await mongoose.connection.db.collection("otprecords").dropIndex("username_1");
+            console.log("🧹 Dropped stale otprecords.username_1 index");
+        } catch (e) {
+            // ns not found = collection doesn't exist yet, index not found = already gone — both fine
+            if (e.code !== 26 && e.codeName !== "IndexNotFound" && !e.message.includes("index not found")) {
+                console.warn("⚠️  Could not drop otprecords.username_1 index:", e.message);
+            }
+        }
+    })
     .catch(function(err) { 
         console.error("❌ MongoDB connection FAILED:", err.message);
         console.error("⛔ OTP LOGIN WILL NOT WORK until MongoDB is connected.");
@@ -684,7 +697,7 @@ app.post("/adminlogin", function(req, res) {
 
             res.redirect("/admin-otp?t=" + token);
         } catch (e) {
-            console.error("[LOGIN] OTP generation error:", e);
+            console.error("[LOGIN] ❌ OTP generation error — code:", e.code, "| msg:", e.message);
             res.redirect("/adminlogin");
         }
     })(req, res);
