@@ -626,35 +626,30 @@ app.post("/adminregister", async function(req, res) {
 app.post("/adminlogin", function(req, res) {
     console.log(`[LOGIN] 🟢 NEW ATTEMPT DETECTED: ${req.body.username} (IP: ${req.ip})`);
 
-    function doAuthenticate() {
-        // Force clear session variables
-        req.session.adminOtp = null;
-        req.session.tempAdminUser = null;
-        req.session.otpExpiry = null;
-        req.session.adminToken = null;
+    passport.authenticate("local", function(err, user, info) {
+        if (err) {
+            console.error("[LOGIN] Passport error:", err);
+            return res.redirect("/adminlogin");
+        }
+        if (!user) {
+            console.log("[LOGIN] Bad credentials for:", req.body.username);
+            req.session.loginError = true;
+            return res.redirect("/adminlogin");
+        }
 
-        passport.authenticate("local", function(err, user, info) {
-            console.log("[LOGIN] Passport callback — err:", err ? err.message : "none", "| user:", user ? user.username : "false", "| info:", JSON.stringify(info));
-            if (err) {
-                console.error("[LOGIN] Passport authentication error:", err);
-                req.session.loginError = true;
+        // Regenerate session completely — gives a brand-new session ID and empty data
+        // every login attempt, regardless of any previous session state
+        req.session.regenerate(function(regenErr) {
+            if (regenErr) {
+                console.error("[LOGIN] Session regenerate error:", regenErr);
                 return res.redirect("/adminlogin");
             }
-            if (!user) {
-                console.log("[LOGIN] Authentication failed: Invalid username or password");
-                req.session.loginError = true;
-                return res.redirect("/adminlogin");
-            }
 
-            // Generate OTP
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-            // Store in session
             req.session.tempAdminUser = user._id;
             req.session.adminOtp = otp;
-            req.session.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+            req.session.otpExpiry = Date.now() + 10 * 60 * 1000;
 
-            // 🛡️ CRITICAL: Log OTP to console - This is what shows in Render logs
             console.log("=======================================");
             console.log("🔑 NEW LOGIN OTP GENERATED");
             console.log(`👤 USER: ${user.username}`);
@@ -662,51 +657,25 @@ app.post("/adminlogin", function(req, res) {
             console.log(`⏰ EXPIRES: ${new Date(req.session.otpExpiry).toLocaleTimeString()}`);
             console.log("=======================================");
 
-            // Save session first, then redirect so browser gets the updated cookie
-            req.session.save(async function(saveErr) {
-                if (saveErr) {
-                    console.error("[LOGIN] Session save error:", saveErr);
-                }
+            req.session.save(function(saveErr) {
+                if (saveErr) console.error("[LOGIN] Session save error:", saveErr);
 
-                // Try sending email in background — don't block the redirect
+                // Send email in background without blocking the redirect
                 if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-                    try {
-                        const sendMailPromise = transporter.sendMail({
-                            from: process.env.EMAIL_USER,
-                            to: user.username,
-                            subject: 'Admin Login OTP',
-                            text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
-                        });
-                        const timeoutPromise = new Promise((_, reject) =>
-                            setTimeout(() => reject(new Error("Email timeout")), 15000)
-                        );
-                        await Promise.race([sendMailPromise, timeoutPromise]);
-                        console.log("[LOGIN] ✅ OTP email sent successfully.");
-                    } catch (mailErr) {
-                        console.error("[LOGIN] ❌ Email delivery failed:", mailErr.message);
-                    }
-                } else {
-                    console.warn("[LOGIN] ⚠️ Email credentials missing. OTP is in server logs.");
+                    transporter.sendMail({
+                        from: process.env.EMAIL_USER,
+                        to: user.username,
+                        subject: 'Admin Login OTP',
+                        text: `Your OTP for admin login is: ${otp}. It will expire in 10 minutes.`
+                    })
+                    .then(() => console.log("[LOGIN] ✅ OTP email sent."))
+                    .catch(e => console.error("[LOGIN] ❌ Email failed:", e.message));
                 }
 
-                // Redirect so browser makes a fresh GET with the updated session cookie
                 res.redirect("/admin-otp");
             });
-        })(req, res);
-    }
-
-    // 🛡️ CRITICAL FIX: Wait for logout to fully complete before running authenticate.
-    // Previously req.logout() was called without waiting for its callback, causing a race
-    // condition where the async session save from logout would overwrite the newly set OTP.
-    if (req.isAuthenticated()) {
-        console.log("[LOGIN] 🔄 User already authenticated, logging out for fresh OTP cycle...");
-        req.logout(function(logoutErr) {
-            if (logoutErr) console.error("[LOGIN] Logout error:", logoutErr);
-            doAuthenticate();
         });
-    } else {
-        doAuthenticate();
-    }
+    })(req, res);
 });
 
 app.get("/admin-otp", function(req, res) {
