@@ -657,6 +657,7 @@ app.post("/adminlogin", function(req, res) {
     console.log(`[LOGIN] 🟢 NEW ATTEMPT DETECTED: ${req.body.username} (IP: ${req.ip})`);
 
     passport.authenticate("local", async function(err, user, info) {
+        console.log("[LOGIN] Passport result — err:", err ? err.message : "none", "| user:", user ? user.username : "false");
         if (err) {
             console.error("[LOGIN] Passport error:", err);
             return res.redirect("/adminlogin");
@@ -672,16 +673,20 @@ app.post("/adminlogin", function(req, res) {
             const token = crypto.randomBytes(24).toString("hex");
             const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-            // Delete any previous OTP record for this user, then insert fresh
-            await OtpRecord.deleteMany({ username: user.username });
-            await OtpRecord.create({ token, username: user.username, otp, expiresAt });
-
+            // ── Step 1: log OTP immediately before any DB call ──────────────────
             console.log("=======================================");
             console.log("🔑 NEW LOGIN OTP GENERATED");
             console.log(`👤 USER: ${user.username}`);
             console.log(`🔢 OTP CODE: ${otp}`);
             console.log(`⏰ EXPIRES: ${expiresAt.toLocaleTimeString()}`);
             console.log("=======================================");
+
+            // ── Step 2: persist to MongoDB ──────────────────────────────────────
+            console.log("[LOGIN] Deleting old OTP records for user...");
+            await OtpRecord.deleteMany({ username: user.username });
+            console.log("[LOGIN] Creating new OTP record...");
+            await OtpRecord.create({ token, username: user.username, otp, expiresAt });
+            console.log("[LOGIN] OTP record saved. Redirecting to OTP page.");
 
             // Session is NOT used — token is in the URL, OTP is in MongoDB
             if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
