@@ -888,5 +888,6 @@ app.get("/:customPost", async function(req, res) {
 });
 
 app.listen(process.env.PORT || 3000, "0.0.0.0", function() {
-    console.log("Server running on port " + (process.env.PORT || 3000));
+    const url = process.env.RENDER_EXTERNAL_URL || ("http://localhost:" + (process.env.PORT || 3000));
+    console.log("Server running at " + url);
 });
