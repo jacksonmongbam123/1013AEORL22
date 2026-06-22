@@ -695,7 +695,49 @@ app.post("/adminlogin", function(req, res) {
 
 app.get("/admin-otp", function(req, res) {
     if (!req.session.tempAdminUser) return res.redirect("/adminlogin");
-    res.render("admin-otp", { otpError: null });
+    const flash = req.session.flash || null;
+    req.session.flash = null;
+    res.render("admin-otp", { otpError: null, flash: flash });
+});
+
+app.post("/resend-otp", async function(req, res) {
+    if (!req.session.tempAdminUser) {
+        console.warn("[RESEND] Attempted without temp user session");
+        return res.redirect("/adminlogin");
+    }
+
+    try {
+        const user = await Admin.findById(req.session.tempAdminUser);
+        if (!user) return res.redirect("/adminlogin");
+
+        // Generate new OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        req.session.adminOtp = otp;
+        req.session.otpExpiry = Date.now() + 10 * 60 * 1000;
+
+        console.log("=======================================");
+        console.log("🔄 OTP RESENT SUCCESSFULLY");
+        console.log(`👤 USER: ${user.username}`);
+        console.log(`🔢 NEW OTP CODE: ${otp}`);
+        console.log("=======================================");
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.username,
+            subject: 'Admin Login OTP (Resent)',
+            text: `Your new OTP for admin login is: ${otp}. It will expire in 10 minutes.`
+        };
+
+        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+            await transporter.sendMail(mailOptions);
+        }
+
+        req.session.flash = "A new OTP has been sent and logged.";
+        res.redirect("/admin-otp");
+    } catch (err) {
+        console.error("[RESEND] Error:", err);
+        res.redirect("/admin-otp");
+    }
 });
 
 app.post("/admin-otp", async function(req, res) {

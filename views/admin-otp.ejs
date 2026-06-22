@@ -8,6 +8,12 @@
             <span style="color:#DC2626; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;"><%= otpError %></span>
         </div>
         <% } %>
+        <% if (typeof flash !== 'undefined' && flash) { %>
+        <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.6rem;">
+            <i class="fa-solid fa-circle-check" style="color:#16A34A; font-size:1rem;"></i>
+            <span style="color:#16A34A; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;"><%= flash %></span>
+        </div>
+        <% } %>
         <h2>Verify <span>OTP</span></h2>
         <p style="text-align:center; color:#6B7280; margin-bottom:1.5rem; font-size:0.9rem;">
             An OTP has been sent to your email. Please enter it below to complete your login.
@@ -18,8 +24,15 @@
                 <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}" style="text-align:center; letter-spacing:0.5rem; font-size:1.2rem;">
             </div>
             <button type="submit" class="btn-auth btn-auth--login">Verify & Login</button>
-            <p class="auth-link"><a href="/adminlogin">Back to Login</a></p>
         </form>
+        
+        <form action="/resend-otp" method="post" style="margin-top: 1rem;">
+            <button type="submit" style="background: none; border: 1px solid #D1D5DB; color: #4B5563; padding: 0.6rem 1rem; border-radius: 8px; width: 100%; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                <i class="fa-solid fa-rotate-right" style="margin-right: 0.5rem;"></i> Resend OTP
+            </button>
+        </form>
+
+        <p class="auth-link" style="margin-top: 1.5rem;"><a href="/adminlogin">Back to Login</a></p>
     </div>
 </div>
 
