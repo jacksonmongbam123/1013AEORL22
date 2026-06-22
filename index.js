@@ -110,15 +110,15 @@ const confirmpassword = process.env.ADMIN_CONFIRM_PASSWORD || "1013AEORL22";
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://jacksonadmin:jacksonadmin@cluster0.mkff4zn.mongodb.net/?retryWrites=true&w=majority";
 console.log("Connecting to MongoDB...");
 mongoose.connect(MONGODB_URI, { 
-    serverSelectionTimeoutMS: 5000,
-    connectTimeoutMS: 5000 
+    serverSelectionTimeoutMS: 30000,
+    connectTimeoutMS: 30000,
+    socketTimeoutMS: 30000
 })
-    .then(function() { console.log("✅ MongoDB connected"); })
+    .then(function() { console.log("✅ MongoDB connected successfully"); })
     .catch(function(err) { 
-        console.error("❌ MongoDB connection error:", err.message);
-        console.error("Please check if your IP is whitelisted in MongoDB Atlas.");
-        // We don't exit the process here so the server can still serve the login page
-        // with an error message instead of being completely dead.
+        console.error("❌ MongoDB connection FAILED:", err.message);
+        console.error("⛔ OTP LOGIN WILL NOT WORK until MongoDB is connected.");
+        console.error("👉 Fix: Go to MongoDB Atlas → Network Access → Add IP 0.0.0.0/0 (Allow from anywhere)");
     });
 
 // ── Schemas ──────────────────────────────────────────────────────────────────
