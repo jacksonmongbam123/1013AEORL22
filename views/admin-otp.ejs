@@ -19,6 +19,7 @@
             An OTP has been sent to your email. Please enter it below to complete your login.
         </p>
         <form action="/admin-otp" method="post">
+            <input type="hidden" name="token" value="<%= token %>">
             <div class="form-group">
                 <label>OTP Code</label>
                 <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}" style="text-align:center; letter-spacing:0.5rem; font-size:1.2rem;">
@@ -27,6 +28,7 @@
         </form>
         
         <form action="/resend-otp" method="post" style="margin-top: 1rem;">
+            <input type="hidden" name="token" value="<%= token %>">
             <button type="submit" style="background: none; border: 1px solid #D1D5DB; color: #4B5563; padding: 0.6rem 1rem; border-radius: 8px; width: 100%; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                 <i class="fa-solid fa-rotate-right" style="margin-right: 0.5rem;"></i> Resend OTP
             </button>
