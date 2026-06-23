@@ -1896,6 +1896,8 @@ span { color: var(--primary); }
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .overview-panel {
@@ -2013,6 +2015,7 @@ span { color: var(--primary); }
     gap: 0.1rem;
     flex: 1;
     min-width: 0;
+    word-break: break-word;
 }
 
 .overview-recent-name {
@@ -2035,9 +2038,12 @@ span { color: var(--primary); }
 .overview-recent-excerpt {
     font-size: 0.78rem;
     color: var(--text-muted);
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .overview-recent-time {
@@ -2059,6 +2065,38 @@ span { color: var(--primary); }
 
 @media screen and (max-width: 500px) {
     .overview-grid { grid-template-columns: 1fr; }
+    
+    .overview-panel {
+        padding: 1rem;
+    }
+
+    .overview-status-row {
+        gap: 0.5rem;
+    }
+
+    .overview-status-pill {
+        min-width: calc(50% - 0.25rem);
+        flex: 1 1 auto;
+    }
+
+    .overview-recent-item {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .overview-recent-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .overview-recent-time {
+        margin-top: 0;
+        align-self: flex-start;
+    }
+
+    .overview-recent-body {
+        width: 100%;
+    }
 }
 
 /* =========================================
