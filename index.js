@@ -642,17 +642,26 @@ app.post("/admin-homecards/delete/:id", isAuth, async function(req, res) {
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
 app.post("/adminregister", async function(req, res) {
-    if (req.body.adminid !== confirmpassword) return res.redirect("/adminerror");
+    // adminid is the field name for "Confirm Admin Password" in adminregister.ejs
+    if (req.body.adminid !== confirmpassword) {
+        console.warn("[REGISTER] ❌ Admin password mismatch.");
+        return res.redirect("/adminerror");
+    }
     try {
+        console.log("[REGISTER] 🆕 Registering new admin:", req.body.username);
         const user = await Admin.register({ username: req.body.username }, req.body.password);
         req.login(user, function(err) {
-            if (err) return res.redirect("/adminerror");
+            if (err) {
+                console.error("[REGISTER] ❌ Login after register failed:", err);
+                return res.redirect("/adminerror");
+            }
             req.session.adminToken = crypto.randomBytes(32).toString("hex");
             req.session.flash = "Registered and logged in successfully.";
+            console.log("[REGISTER] ✅ Admin registered and logged in:", user.username);
             res.redirect("/overview");
         });
     } catch (err) {
-        console.error(err);
+        console.error("[REGISTER] ❌ Registration error:", err.message);
         res.redirect("/adminerror");
     }
 });
@@ -661,13 +670,13 @@ app.post("/adminlogin", function(req, res) {
     console.log(`[LOGIN] 🟢 NEW ATTEMPT DETECTED: ${req.body.username} (IP: ${req.ip})`);
 
     passport.authenticate("local", async function(err, user, info) {
-        console.log("[LOGIN] Passport result — err:", err ? err.message : "none", "| user:", user ? user.username : "false");
+        console.log("[LOGIN] Passport result — err:", err ? err.message : "none", "| user:", user ? user.username : "false", "| info:", info);
         if (err) {
             console.error("[LOGIN] Passport error:", err);
             return res.redirect("/adminlogin");
         }
         if (!user) {
-            console.log("[LOGIN] Bad credentials for:", req.body.username);
+            console.log("[LOGIN] Authentication failed for:", req.body.username, "| Reason:", info ? info.message : "No reason provided");
             req.session.loginError = true;
             return res.redirect("/adminlogin");
         }
@@ -793,24 +802,25 @@ app.post("/admin-otp", async function(req, res) {
         }
 
         if (otp === record.otp) {
+            console.log("[OTP] ✅ Code verified for:", record.username);
             await OtpRecord.deleteOne({ token });
             const user = await Admin.findOne({ username: record.username });
             if (!user) {
-                console.error("[OTP] User not found:", record.username);
+                console.error("[OTP] ❌ User not found in DB after OTP verification:", record.username);
                 return res.redirect("/adminlogin");
             }
             req.login(user, function(err) {
                 if (err) {
-                    console.error("[OTP] Login error:", err);
+                    console.error("[OTP] ❌ passport.login error:", err);
                     return res.redirect("/adminlogin");
                 }
                 req.session.adminToken = crypto.randomBytes(32).toString("hex");
                 req.session.flash = "Logged in successfully";
-                console.log("[OTP] ✅ Admin logged in:", user.username);
+                console.log("[OTP] 🎊 Admin session established:", user.username);
                 res.redirect("/overview");
             });
         } else {
-            console.log("[OTP] Invalid code for:", record.username);
+            console.log("[OTP] ❌ Invalid code entered for:", record.username, "| Expected:", record.otp, "| Got:", otp);
             res.render("admin-otp", { otpError: "Invalid OTP. Please try again.", flash: null, token });
         }
     } catch (err) {
