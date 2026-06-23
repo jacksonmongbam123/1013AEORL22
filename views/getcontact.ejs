@@ -1,10 +1,11 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content">
-    <div class="admin-list-header">
-        <div>
-            <h2><span>Contact</span> Messages</h2>
-            <p>Messages submitted through the contact form.</p>
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+        <div class="page-header-content">
+            <p class="page-label">Admin</p>
+            <h1>Contact <span>Messages</span></h1>
+            <p class="page-subtitle">Messages submitted through the contact form.</p>
         </div>
         <% const unreadCount = contactDetails.filter(c => !c.read).length; %>
         <% if (unreadCount > 0) { %>
