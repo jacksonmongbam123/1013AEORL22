@@ -475,11 +475,14 @@ app.get("/overview", isAuth, async function(req, res) {
         Book.countDocuments({status:"Confirmed"}),
         Book.countDocuments({status:"Cancelled"})
     ]);
+    const flash = req.session.flash;
+    delete req.session.flash;
     res.render("overview", {
         counts: { blogs, learnings, contacts, bookings, totalCareers: careers, activeCareers,
                   candidates, totalCards: homeCards, activeCards, terms,
                   bookingsPending, bookingsConfirmed, bookingsCancelled },
-        recentContacts, recentBookings, recentCandidates
+        recentContacts, recentBookings, recentCandidates,
+        flash
     });
 });
 
@@ -789,6 +792,7 @@ app.post("/admin-otp", async function(req, res) {
                     return res.redirect("/adminlogin");
                 }
                 req.session.adminToken = crypto.randomBytes(32).toString("hex");
+                req.session.flash = "Logged in successfully";
                 console.log("[OTP] ✅ Admin logged in:", user.username);
                 res.redirect("/overview");
             });

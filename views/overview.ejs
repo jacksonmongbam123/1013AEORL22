@@ -1,6 +1,31 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content">
+    <% if (flash) { %>
+        <div id="flash-message" style="background: #dcfce7; color: #166534; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #bbf7d0; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; animation: fadeIn 0.3s ease;">
+            <i class="fa-solid fa-circle-check"></i>
+            <%= flash %>
+        </div>
+        <script>
+            setTimeout(function() {
+                var msg = document.getElementById('flash-message');
+                if (msg) {
+                    msg.style.transition = 'opacity 0.5s ease';
+                    msg.style.opacity = '0';
+                    setTimeout(function() {
+                        msg.remove();
+                    }, 500);
+                }
+            }, 3000);
+        </script>
+        <style>
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    <% } %>
+
     <div class="admin-list-header">
         <div>
             <h2><span>Site</span> Overview</h2>
