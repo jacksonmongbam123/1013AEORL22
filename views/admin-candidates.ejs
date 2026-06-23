@@ -1,11 +1,11 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content" style="max-width: 1400px; margin: 0 auto; padding: 1.5rem;">
-    <!-- Head info -->
-    <div class="admin-list-header mb-4">
-        <div>
-            <h2><i class="fa-solid fa-users me-2 text-primary"></i> <span>Candidate</span> Recruitment Desk</h2>
-            <p class="text-muted">Interactive suite to select, review, and manage candidate academic profiles & resumes.</p>
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:0.5rem;">
+        <div class="page-header-content">
+            <p class="page-label">Admin</p>
+            <h1>Candidate <span>Recruitment</span></h1>
+            <p class="page-subtitle">Review and manage candidate academic profiles &amp; resumes.</p>
         </div>
         <% const unreviewed = candidates.filter(c => !c.reviewed).length; %>
         <% if (unreviewed > 0) { %>
