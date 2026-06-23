@@ -1,13 +1,45 @@
 <%- include('partials/header'); -%>
 
 <style>
-.auth-wrapper{display:flex;min-height:100vh;margin:0;padding:0;align-items:center;justify-content:center;background:var(--bg,#f9fafb);}
-.auth-wrapper .auth-card{max-width:420px;width:100%;padding:3rem 2.5rem;}
-@media(max-width:768px){.auth-wrapper{padding:2rem 1.25rem;}.auth-wrapper .auth-card{padding:2rem 1.25rem;}}
+.auth-split-wrapper{display:flex;min-height:100vh;margin:0;padding:0;align-items:stretch;background:var(--bg,#f9fafb);}
+.auth-info-panel{flex:0 0 420px;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:#fff;}
+.auth-info-card{background:#f0f7ff;border:1.5px solid #bfdbfe;border-radius:16px;padding:2.25rem 2rem;width:100%;max-width:340px;box-shadow:0 2px 16px rgba(59,130,246,0.07);}
+.auth-info-card .info-icon{width:52px;height:52px;background:#dbeafe;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
+.auth-info-card .info-icon i{font-size:1.4rem;color:#2563eb;}
+.auth-info-card h3{font-size:1.1rem;font-weight:700;color:#1e3a5f;margin-bottom:0.35rem;}
+.auth-info-card .info-sub{font-size:0.83rem;color:#4b6a8a;margin-bottom:1.5rem;line-height:1.55;}
+.auth-info-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.65rem;}
+.auth-info-card ul li{display:flex;align-items:flex-start;gap:0.65rem;font-size:0.83rem;color:#2d4a6a;line-height:1.5;}
+.auth-info-card ul li i{color:#2563eb;font-size:0.8rem;margin-top:0.2rem;flex-shrink:0;}
+.auth-info-card .info-note{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #bfdbfe;font-size:0.75rem;color:#5a7a99;display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;}
+.auth-info-card .info-note i{color:#2563eb;font-size:0.8rem;margin-top:0.15rem;flex-shrink:0;}
+.auth-form-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;}
+.auth-form-panel .auth-card{max-width:420px;width:100%;}
+@media(max-width:900px){.auth-split-wrapper{flex-direction:column;}.auth-info-panel{flex:0 0 auto;padding:2rem 1.5rem;}.auth-info-card{max-width:100%;}.auth-form-panel{padding:2rem 1.25rem;}}
 </style>
 
-<div class="auth-wrapper">
-    <div class="auth-card">
+<div class="auth-split-wrapper">
+    <div class="auth-info-panel">
+        <div class="auth-info-card">
+            <div class="info-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3>Admin Access</h3>
+            <p class="info-sub">Welcome to the secure admin portal. Authorized personnel only.</p>
+            <ul>
+                <li><i class="fa-solid fa-circle-check"></i>Enter your registered admin email address</li>
+                <li><i class="fa-solid fa-circle-check"></i>Use your secure admin password</li>
+                <li><i class="fa-solid fa-circle-check"></i>Access portfolio management tools</li>
+                <li><i class="fa-solid fa-circle-check"></i>Manage content, careers &amp; more</li>
+            </ul>
+            <div class="info-note">
+                <i class="fa-solid fa-lock"></i>
+                <span>This area is restricted. Contact support if you need access.</span>
+            </div>
+        </div>
+    </div>
+    <div class="auth-form-panel">
+        <div class="auth-card">
             <% if (loginError) { %>
             <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
                 <i class="fa-solid fa-circle-exclamation" style="color:#DC2626;font-size:1rem;"></i>
@@ -27,6 +59,7 @@
                 <button type="submit" class="btn-auth btn-auth--login">Login</button>
                 <p class="auth-link">Don't have an account? <a href="/adminregister">Sign up</a></p>
             </form>
+        </div>
     </div>
 </div>
 
