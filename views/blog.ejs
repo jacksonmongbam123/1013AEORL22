@@ -1,9 +1,13 @@
 <%- include('partials/header'); -%>
 
 <div class="page-content">
-    <div class="blogtitle">
-        <h2><span>B</span>log</h2>
-        <p style="color: var(--text-muted);">Thoughts, tutorials, and stories.</p>
+    <!-- Redesigned Header Section -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <p class="page-label">Articles & Insights</p>
+            <h1>My <span>Blog</span></h1>
+            <p class="page-subtitle">Thoughts, tutorials, and stories about web development, technology, and my personal journey as a developer.</p>
+        </div>
     </div>
 
     <% if(postuser.length > 0) { %>
