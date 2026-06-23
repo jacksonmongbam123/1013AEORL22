@@ -1,26 +1,54 @@
 <%- include('partials/header'); -%>
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <% if (loginError) { %>
-        <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.6rem;">
-            <i class="fa-solid fa-circle-exclamation" style="color:#DC2626; font-size:1rem;"></i>
-            <span style="color:#DC2626; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;">Invalid username or password. Please try again.</span>
+<style>
+.auth-split-wrapper{display:flex;min-height:100vh;margin:0;padding:0;}
+.auth-split-left{flex:0 0 45%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 2.5rem;color:#fff;text-align:center;position:relative;overflow:hidden;}
+.auth-split-left::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 60%,rgba(255,255,255,0.1) 0%,transparent 65%);}
+.auth-split-icon{width:96px;height:96px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2rem;border:1.5px solid rgba(255,255,255,0.25);position:relative;}
+.auth-split-icon i{font-size:2.4rem;color:#fff;}
+.auth-split-left h2{font-size:2rem;font-weight:700;margin-bottom:0.75rem;position:relative;}
+.auth-split-left .split-sub{font-size:1rem;opacity:0.8;max-width:300px;line-height:1.65;position:relative;}
+.auth-split-dots{display:flex;gap:0.5rem;margin-top:2.5rem;position:relative;}
+.auth-split-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);}
+.auth-split-dots span.active{background:#fff;}
+.auth-split-right{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:var(--bg,#f9fafb);}
+.auth-split-right .auth-card{max-width:420px;width:100%;}
+@media(max-width:768px){.auth-split-wrapper{flex-direction:column;}.auth-split-left{flex:0 0 auto;padding:2.5rem 1.5rem;min-height:230px;}.auth-split-right{padding:2rem 1.25rem;}}
+</style>
+
+<div class="auth-split-wrapper">
+    <div class="auth-split-left" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);">
+        <div class="auth-split-icon">
+            <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <% } %>
-        <h2>Admin <span>Login</span></h2>
-        <form action="/adminlogin" method="post">
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="username" placeholder="admin@example.com" required>
+        <h2>Admin Portal</h2>
+        <p class="split-sub">Secure access to manage your portfolio. Sign in to continue to your dashboard.</p>
+        <div class="auth-split-dots">
+            <span class="active"></span><span></span><span></span>
+        </div>
+    </div>
+    <div class="auth-split-right">
+        <div class="auth-card">
+            <% if (loginError) { %>
+            <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
+                <i class="fa-solid fa-circle-exclamation" style="color:#DC2626;font-size:1rem;"></i>
+                <span style="color:#DC2626;font-size:clamp(0.83rem,1.3vw,0.9rem);font-weight:600;">Invalid username or password. Please try again.</span>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Your password" required>
-            </div>
-            <button type="submit" class="btn-auth btn-auth--login">Login</button>
-            <p class="auth-link">Don't have an account? <a href="/adminregister">Sign up</a></p>
-        </form>
+            <% } %>
+            <h2>Admin <span>Login</span></h2>
+            <form action="/adminlogin" method="post">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="username" placeholder="admin@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Your password" required>
+                </div>
+                <button type="submit" class="btn-auth btn-auth--login">Login</button>
+                <p class="auth-link">Don't have an account? <a href="/adminregister">Sign up</a></p>
+            </form>
+        </div>
     </div>
 </div>
 
