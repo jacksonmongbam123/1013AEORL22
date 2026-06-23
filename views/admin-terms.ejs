@@ -1,15 +1,14 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content">
-    <div class="admin-list-header">
-        <div>
-            <h2><span>Manage</span> Terms of Use</h2>
-            <p>Each entry becomes a section on the public Terms page.</p>
-        </div>
-        <a href="/admin-terms/add" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none;">
-            <i class="fa-solid fa-plus"></i> Add Section
-        </a>
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+    <div class="page-header-content">
+        <p class="page-label">Admin</p>
+        <h1>Manage <span>Terms</span></h1>
+        <p class="page-subtitle">Each entry becomes a section on the public Terms of Use page.</p>
     </div>
+    <a href="/admin-terms/add" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;"><i class="fa-solid fa-plus"></i> Add Section</a>
+</div>
 
     <% if (termsList.length === 0) { %>
     <div class="admin-empty-state">
