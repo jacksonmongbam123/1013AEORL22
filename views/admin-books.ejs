@@ -1,12 +1,13 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content">
-    <div class="admin-list-header">
-        <div>
-            <h2><span>Manage</span> Bookings</h2>
-            <p>Appointment requests submitted through the booking form.</p>
-        </div>
+    <div class="page-header">
+    <div class="page-header-content">
+        <p class="page-label">Admin</p>
+        <h1>Manage <span>Bookings</span></h1>
+        <p class="page-subtitle">Appointment requests submitted through the booking form.</p>
     </div>
+</div>
 
     <% if (bookings.length === 0) { %>
     <div class="admin-empty-state">
