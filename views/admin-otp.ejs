@@ -14,6 +14,23 @@
 .auth-split-right{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:var(--bg,#f9fafb);}
 .auth-split-right .auth-card{max-width:420px;width:100%;}
 @media(max-width:768px){.auth-split-wrapper{flex-direction:column;}.auth-split-left{flex:0 0 auto;padding:2.5rem 1.5rem;min-height:230px;}.auth-split-right{padding:2rem 1.25rem;}}
+
+/* OTP digit boxes */
+.otp-boxes{display:flex;gap:0.6rem;justify-content:center;margin-bottom:1.5rem;}
+.otp-box{
+    width:48px;height:56px;
+    border:2px solid var(--border,#E5E7EB);
+    border-radius:10px;
+    font-size:1.5rem;font-weight:700;
+    text-align:center;
+    background:var(--bg,#fff);
+    color:var(--text,#111);
+    outline:none;
+    transition:border-color 0.2s, box-shadow 0.2s;
+    caret-color: transparent;
+}
+.otp-box:focus{border-color:var(--primary,#4F7EF7);box-shadow:0 0 0 3px rgba(79,126,247,0.15);}
+.otp-box.filled{border-color:var(--primary,#4F7EF7);}
 </style>
 
 <div class="auth-split-wrapper">
@@ -32,38 +49,109 @@
             <% if (typeof otpError !== 'undefined' && otpError) { %>
             <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
                 <i class="fa-solid fa-circle-exclamation" style="color:#DC2626;font-size:1rem;"></i>
-                <span style="color:#DC2626;font-size:clamp(0.83rem,1.3vw,0.9rem);font-weight:600;"><%= otpError %></span>
+                <span style="color:#DC2626;font-size:0.88rem;font-weight:600;"><%= otpError %></span>
             </div>
             <% } %>
             <% if (typeof flash !== 'undefined' && flash) { %>
             <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
                 <i class="fa-solid fa-circle-check" style="color:#16A34A;font-size:1rem;"></i>
-                <span style="color:#16A34A;font-size:clamp(0.83rem,1.3vw,0.9rem);font-weight:600;"><%= flash %></span>
+                <span style="color:#16A34A;font-size:0.88rem;font-weight:600;"><%= flash %></span>
             </div>
             <% } %>
-            <h2>Verify <span>OTP</span></h2>
-            <p style="text-align:center;color:#6B7280;margin-bottom:1.5rem;font-size:0.9rem;">
-                Enter the 6-digit code from your email or Render logs to complete login.
-            </p>
-            <form action="/admin-otp" method="post">
-                <input type="hidden" name="token" value="<%= token %>">
-                <div class="form-group">
-                    <label>OTP Code</label>
-                    <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}" style="text-align:center;letter-spacing:0.5rem;font-size:1.2rem;">
-                </div>
-                <button type="submit" class="btn-auth btn-auth--login">Verify &amp; Login</button>
-            </form>
 
-            <form action="/resend-otp" method="post" style="margin-top:1rem;">
+            <h2 style="text-align:center;">Verify <span>OTP</span></h2>
+            <p style="text-align:center;color:var(--text-muted,#6B7280);margin:0.4rem 0 1.5rem;font-size:0.88rem;">
+                Enter the 6-digit code sent to your email.
+            </p>
+
+            <form action="/admin-otp" method="post" id="otpForm">
                 <input type="hidden" name="token" value="<%= token %>">
-                <button type="submit" style="background:none;border:1px solid #D1D5DB;color:#4B5563;padding:0.6rem 1rem;border-radius:8px;width:100%;font-weight:600;cursor:pointer;transition:all 0.2s;">
-                    <i class="fa-solid fa-rotate-right" style="margin-right:0.5rem;"></i> Resend OTP
+                <input type="hidden" name="otp" id="otpHidden">
+
+                <div class="otp-boxes" id="otpBoxes">
+                    <input class="otp-box" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" data-idx="0">
+                    <input class="otp-box" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" data-idx="1">
+                    <input class="otp-box" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" data-idx="2">
+                    <input class="otp-box" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" data-idx="3">
+                    <input class="otp-box" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" data-idx="4">
+                    <input class="otp-box" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off" data-idx="5">
+                </div>
+
+                <button type="submit" class="btn-auth btn-auth--login" id="verifyBtn" disabled
+                    style="opacity:0.5;cursor:not-allowed;">
+                    Verify &amp; Login
                 </button>
             </form>
 
-            <p class="auth-link" style="margin-top:1.5rem;"><a href="/adminlogin">Back to Login</a></p>
+            <form action="/resend-otp" method="post" style="margin-top:0.85rem;">
+                <input type="hidden" name="token" value="<%= token %>">
+                <button type="submit" style="background:none;border:1.5px solid var(--border,#E5E7EB);color:var(--text-muted,#4B5563);padding:0.6rem 1rem;border-radius:8px;width:100%;font-weight:600;cursor:pointer;font-size:0.9rem;transition:border-color 0.2s;">
+                    <i class="fa-solid fa-rotate-right" style="margin-right:0.45rem;"></i> Resend OTP
+                </button>
+            </form>
+
+            <p class="auth-link" style="margin-top:1.25rem;"><a href="/adminlogin">← Back to Login</a></p>
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    const boxes  = Array.from(document.querySelectorAll('.otp-box'));
+    const hidden = document.getElementById('otpHidden');
+    const btn    = document.getElementById('verifyBtn');
+    const form   = document.getElementById('otpForm');
+
+    function syncHidden() {
+        const val = boxes.map(b => b.value).join('');
+        hidden.value = val;
+        const ready = val.length === 6 && /^\d{6}$/.test(val);
+        btn.disabled = !ready;
+        btn.style.opacity  = ready ? '1'            : '0.5';
+        btn.style.cursor   = ready ? 'pointer'      : 'not-allowed';
+        boxes.forEach(b => b.classList.toggle('filled', b.value !== ''));
+    }
+
+    boxes.forEach(function (box, i) {
+        box.addEventListener('keydown', function (e) {
+            if (e.key === 'Backspace') {
+                if (box.value === '' && i > 0) { boxes[i-1].focus(); boxes[i-1].value = ''; }
+                else box.value = '';
+                syncHidden(); e.preventDefault();
+            } else if (e.key === 'ArrowLeft' && i > 0) { boxes[i-1].focus(); }
+            else if (e.key === 'ArrowRight' && i < 5) { boxes[i+1].focus(); }
+        });
+
+        box.addEventListener('input', function () {
+            const v = box.value.replace(/\D/g,'');
+            if (v.length > 1) {
+                // handle paste into first box
+                v.split('').slice(0,6).forEach(function(ch, j) { if (boxes[j]) boxes[j].value = ch; });
+                boxes[Math.min(v.length, 5)].focus();
+            } else {
+                box.value = v;
+                if (v && i < 5) boxes[i+1].focus();
+            }
+            syncHidden();
+        });
+
+        box.addEventListener('paste', function (e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+            pasted.split('').forEach(function(ch, j) { if (boxes[j]) boxes[j].value = ch; });
+            boxes[Math.min(pasted.length, 5)].focus();
+            syncHidden();
+        });
+    });
+
+    form.addEventListener('submit', function (e) {
+        syncHidden();
+        if (!/^\d{6}$/.test(hidden.value)) { e.preventDefault(); boxes[0].focus(); }
+    });
+
+    // focus first box on load
+    boxes[0].focus();
+})();
+</script>
 
 <%- include('partials/footer'); -%>
