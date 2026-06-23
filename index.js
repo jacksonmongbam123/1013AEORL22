@@ -16,17 +16,18 @@ const app = express();
 // Configure Nodemailer transporter
 // Using 'service: gmail' is the most robust method for Gmail on cloud platforms
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
+    service: 'gmail',
     family: 4,          // Force IPv4 — Render blocks IPv6 outbound
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 30000
+    pool: true,         // Use pooled connections
+    maxConnections: 3,
+    maxMessages: 100,
+    connectionTimeout: 20000, // 20 seconds
+    greetingTimeout: 20000,
+    socketTimeout: 20000
 });
 
 // Configure multer storage for Candidate CV uploads
@@ -693,14 +694,20 @@ app.post("/adminlogin", function(req, res) {
 
             // Session is NOT used — token is in the URL, OTP is in MongoDB
             if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+                console.log("[LOGIN] Attempting to send OTP email...");
                 transporter.sendMail({
-                    from: process.env.EMAIL_USER,
+                    from: `"Admin Panel" <${process.env.EMAIL_USER}>`,
                     to: user.username,
                     subject: "Admin Login OTP",
-                    text: `Your OTP is: ${otp}. Expires in 10 minutes.`
+                    text: `Your OTP is: ${otp}. It expires in 10 minutes.`
                 })
-                .then(() => console.log("[LOGIN] ✅ OTP email sent."))
-                .catch(e => console.error("[LOGIN] ❌ Email failed:", e.message));
+                .then(() => console.log("[LOGIN] ✅ OTP email sent successfully to:", user.username))
+                .catch(e => {
+                    console.error("[LOGIN] ❌ Email failed:", e.message);
+                    if (e.code === 'ETIMEDOUT') console.error("[LOGIN] ⚠️ Connection timed out. Check if Gmail allows connections from this IP.");
+                });
+            } else {
+                console.warn("[LOGIN] ⚠️ EMAIL_USER or EMAIL_PASS not set. OTP email NOT sent.");
             }
 
             res.redirect("/admin-otp?t=" + token);
@@ -745,14 +752,20 @@ app.post("/resend-otp", async function(req, res) {
         console.log("=======================================");
 
         if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+            console.log("[RESEND] Attempting to resend OTP email...");
             transporter.sendMail({
-                from: process.env.EMAIL_USER,
+                from: `"Admin Panel" <${process.env.EMAIL_USER}>`,
                 to: existing.username,
                 subject: "Admin Login OTP (Resent)",
-                text: `Your new OTP is: ${newOtp}. Expires in 10 minutes.`
+                text: `Your new OTP is: ${newOtp}. It expires in 10 minutes.`
             })
-            .then(() => console.log("[RESEND] ✅ Email sent."))
-            .catch(e => console.error("[RESEND] ❌ Email failed:", e.message));
+            .then(() => console.log("[RESEND] ✅ Resent OTP email sent successfully to:", existing.username))
+            .catch(e => {
+                console.error("[RESEND] ❌ Email failed:", e.message);
+                if (e.code === 'ETIMEDOUT') console.error("[RESEND] ⚠️ Connection timed out. Check if Gmail allows connections from this IP.");
+            });
+        } else {
+            console.warn("[RESEND] ⚠️ EMAIL_USER or EMAIL_PASS not set. OTP email NOT resent.");
         }
 
         res.redirect("/admin-otp?t=" + newToken);
