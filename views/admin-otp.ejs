@@ -1,40 +1,68 @@
 <%- include('partials/header'); -%>
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <% if (typeof otpError !== 'undefined' && otpError) { %>
-        <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.6rem;">
-            <i class="fa-solid fa-circle-exclamation" style="color:#DC2626; font-size:1rem;"></i>
-            <span style="color:#DC2626; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;"><%= otpError %></span>
-        </div>
-        <% } %>
-        <% if (typeof flash !== 'undefined' && flash) { %>
-        <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.6rem;">
-            <i class="fa-solid fa-circle-check" style="color:#16A34A; font-size:1rem;"></i>
-            <span style="color:#16A34A; font-size:clamp(0.83rem,1.3vw,0.9rem); font-weight:600;"><%= flash %></span>
-        </div>
-        <% } %>
-        <h2>Verify <span>OTP</span></h2>
-        <p style="text-align:center; color:#6B7280; margin-bottom:1.5rem; font-size:0.9rem;">
-            An OTP has been sent to your email. Please enter it below to complete your login.
-        </p>
-        <form action="/admin-otp" method="post">
-            <input type="hidden" name="token" value="<%= token %>">
-            <div class="form-group">
-                <label>OTP Code</label>
-                <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}" style="text-align:center; letter-spacing:0.5rem; font-size:1.2rem;">
-            </div>
-            <button type="submit" class="btn-auth btn-auth--login">Verify & Login</button>
-        </form>
-        
-        <form action="/resend-otp" method="post" style="margin-top: 1rem;">
-            <input type="hidden" name="token" value="<%= token %>">
-            <button type="submit" style="background: none; border: 1px solid #D1D5DB; color: #4B5563; padding: 0.6rem 1rem; border-radius: 8px; width: 100%; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                <i class="fa-solid fa-rotate-right" style="margin-right: 0.5rem;"></i> Resend OTP
-            </button>
-        </form>
+<style>
+.auth-split-wrapper{display:flex;min-height:100vh;margin:0;padding:0;}
+.auth-split-left{flex:0 0 45%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 2.5rem;color:#fff;text-align:center;position:relative;overflow:hidden;}
+.auth-split-left::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 60%,rgba(255,255,255,0.1) 0%,transparent 65%);}
+.auth-split-icon{width:96px;height:96px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2rem;border:1.5px solid rgba(255,255,255,0.25);position:relative;}
+.auth-split-icon i{font-size:2.4rem;color:#fff;}
+.auth-split-left h2{font-size:2rem;font-weight:700;margin-bottom:0.75rem;position:relative;}
+.auth-split-left .split-sub{font-size:1rem;opacity:0.8;max-width:300px;line-height:1.65;position:relative;}
+.auth-split-dots{display:flex;gap:0.5rem;margin-top:2.5rem;position:relative;}
+.auth-split-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);}
+.auth-split-dots span.active{background:#fff;}
+.auth-split-right{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:var(--bg,#f9fafb);}
+.auth-split-right .auth-card{max-width:420px;width:100%;}
+@media(max-width:768px){.auth-split-wrapper{flex-direction:column;}.auth-split-left{flex:0 0 auto;padding:2.5rem 1.5rem;min-height:230px;}.auth-split-right{padding:2rem 1.25rem;}}
+</style>
 
-        <p class="auth-link" style="margin-top: 1.5rem;"><a href="/adminlogin">Back to Login</a></p>
+<div class="auth-split-wrapper">
+    <div class="auth-split-left" style="background:linear-gradient(135deg,#1a1a2e,#4a0072,#7b2d8b);">
+        <div class="auth-split-icon">
+            <i class="fa-solid fa-key"></i>
+        </div>
+        <h2>Verify Identity</h2>
+        <p class="split-sub">A one-time passcode has been sent to your registered email address.</p>
+        <div class="auth-split-dots">
+            <span></span><span></span><span class="active"></span>
+        </div>
+    </div>
+    <div class="auth-split-right">
+        <div class="auth-card">
+            <% if (typeof otpError !== 'undefined' && otpError) { %>
+            <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
+                <i class="fa-solid fa-circle-exclamation" style="color:#DC2626;font-size:1rem;"></i>
+                <span style="color:#DC2626;font-size:clamp(0.83rem,1.3vw,0.9rem);font-weight:600;"><%= otpError %></span>
+            </div>
+            <% } %>
+            <% if (typeof flash !== 'undefined' && flash) { %>
+            <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
+                <i class="fa-solid fa-circle-check" style="color:#16A34A;font-size:1rem;"></i>
+                <span style="color:#16A34A;font-size:clamp(0.83rem,1.3vw,0.9rem);font-weight:600;"><%= flash %></span>
+            </div>
+            <% } %>
+            <h2>Verify <span>OTP</span></h2>
+            <p style="text-align:center;color:#6B7280;margin-bottom:1.5rem;font-size:0.9rem;">
+                Enter the 6-digit code from your email or Render logs to complete login.
+            </p>
+            <form action="/admin-otp" method="post">
+                <input type="hidden" name="token" value="<%= token %>">
+                <div class="form-group">
+                    <label>OTP Code</label>
+                    <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}" style="text-align:center;letter-spacing:0.5rem;font-size:1.2rem;">
+                </div>
+                <button type="submit" class="btn-auth btn-auth--login">Verify &amp; Login</button>
+            </form>
+
+            <form action="/resend-otp" method="post" style="margin-top:1rem;">
+                <input type="hidden" name="token" value="<%= token %>">
+                <button type="submit" style="background:none;border:1px solid #D1D5DB;color:#4B5563;padding:0.6rem 1rem;border-radius:8px;width:100%;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                    <i class="fa-solid fa-rotate-right" style="margin-right:0.5rem;"></i> Resend OTP
+                </button>
+            </form>
+
+            <p class="auth-link" style="margin-top:1.5rem;"><a href="/adminlogin">Back to Login</a></p>
+        </div>
     </div>
 </div>
 
