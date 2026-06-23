@@ -1,9 +1,13 @@
 <%- include('partials/admin'); -%>
 
 <div class="page-content">
-    <div class="compose">
-        <h2><span>Publish</span> Blog</h2>
+    <div class="page-header">
+    <div class="page-header-content">
+        <p class="page-label">Admin</p>
+        <h1>Publish <span>Blog</span></h1>
+        <p class="page-subtitle">Write and publish new blog posts or edit existing ones.</p>
     </div>
+</div>
     <div class="admin-form-card">
         <form id="blogForm" action="<%= (typeof editItem !== 'undefined' && editItem) ? '/compose/edit/' + editItem._id : '/compose' %>" method="post">
             <div class="mb-3">
@@ -30,8 +34,11 @@
     </div>
 
     <% if (typeof posts !== 'undefined' && posts.length > 0) { %>
-    <div class="compose" style="margin-top:2.5rem;">
-        <h3><span>All</span> Blog Posts (<%= posts.length %>)</h3>
+    <div class="page-header" style="margin-top:2.5rem;">
+        <div class="page-header-content">
+            <p class="page-label">All Posts</p>
+            <h1>All <span>Blog Posts</span> <small style="font-size:1.1rem;font-weight:400;opacity:0.6;">(<%= posts.length %>)</small></h1>
+        </div>
     </div>
     <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center;">
         <input id="searchInput" type="text" placeholder="🔍 Search by title or content..."
