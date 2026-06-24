@@ -1,19 +1,21 @@
 <%- include('partials/header'); -%>
 
 <style>
-.auth-split-wrapper{display:flex;min-height:100vh;margin:0;padding:0;}
-.auth-split-left{flex:0 0 45%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:3rem 2.5rem;color:#fff;text-align:center;position:relative;overflow:hidden;}
-.auth-split-left::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 60%,rgba(255,255,255,0.1) 0%,transparent 65%);}
-.auth-split-icon{width:96px;height:96px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2rem;border:1.5px solid rgba(255,255,255,0.25);position:relative;}
-.auth-split-icon i{font-size:2.4rem;color:#fff;}
-.auth-split-left h2{font-size:2rem;font-weight:700;margin-bottom:0.75rem;position:relative;}
-.auth-split-left .split-sub{font-size:1rem;opacity:0.8;max-width:300px;line-height:1.65;position:relative;}
-.auth-split-dots{display:flex;gap:0.5rem;margin-top:2.5rem;position:relative;}
-.auth-split-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);}
-.auth-split-dots span.active{background:#fff;}
-.auth-split-right{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:var(--bg,#f9fafb);}
-.auth-split-right .auth-card{max-width:420px;width:100%;}
-@media(max-width:768px){.auth-split-wrapper{flex-direction:column;}.auth-split-left{flex:0 0 auto;padding:2.5rem 1.5rem;min-height:230px;}.auth-split-right{padding:2rem 1.25rem;}}
+.auth-split-wrapper{display:flex;min-height:100vh;margin:0;padding:0;align-items:stretch;background:var(--bg,#f9fafb);}
+.auth-info-panel{flex:0 0 420px;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:var(--bg,#f9fafb);}
+.auth-info-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:clamp(1.75rem, 5vw, 3rem);box-shadow:var(--card-shadow);width:100%;max-width:340px;}
+.auth-info-card .info-icon{width:52px;height:52px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
+.auth-info-card .info-icon i{font-size:1.4rem;color:var(--primary);}
+.auth-info-card h3{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.35rem;}
+.auth-info-card .info-sub{font-size:0.83rem;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.55;}
+.auth-info-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.65rem;}
+.auth-info-card ul li{display:flex;align-items:flex-start;gap:0.65rem;font-size:0.83rem;color:var(--text);line-height:1.5;}
+.auth-info-card ul li i{color:var(--primary);font-size:0.8rem;margin-top:0.2rem;flex-shrink:0;}
+.auth-info-card .info-note{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;}
+.auth-info-card .info-note i{color:var(--primary);font-size:0.8rem;margin-top:0.15rem;flex-shrink:0;}
+.auth-form-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;background:var(--bg,#f9fafb);}
+.auth-form-panel .auth-card{max-width:420px;width:100%;}
+@media(max-width:900px){.auth-split-wrapper{flex-direction:column;}.auth-info-panel{flex:0 0 auto;padding:2rem 1.5rem;}.auth-info-card{max-width:100%;}.auth-form-panel{padding:2rem 1.25rem;}}
 
 /* OTP digit boxes */
 .otp-boxes{display:flex;gap:0.6rem;justify-content:center;margin-bottom:1.5rem;}
@@ -34,17 +36,26 @@
 </style>
 
 <div class="auth-split-wrapper">
-    <div class="auth-split-left" style="background:linear-gradient(135deg,#1a1a2e,#4a0072,#7b2d8b);">
-        <div class="auth-split-icon">
-            <i class="fa-solid fa-key"></i>
-        </div>
-        <h2>Verify Identity</h2>
-        <p class="split-sub">A one-time passcode has been sent to your registered email address.</p>
-        <div class="auth-split-dots">
-            <span></span><span></span><span class="active"></span>
+    <div class="auth-info-panel">
+        <div class="auth-info-card">
+            <div class="info-icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h3>Verify Identity</h3>
+            <p class="info-sub">Protecting your account with an extra layer of security.</p>
+            <ul>
+                <li><i class="fa-solid fa-circle-check"></i>Check your registered email address</li>
+                <li><i class="fa-solid fa-circle-check"></i>Enter the 6-digit verification code</li>
+                <li><i class="fa-solid fa-circle-check"></i>Code is valid for a limited time</li>
+                <li><i class="fa-solid fa-circle-check"></i>Do not share this code with anyone</li>
+            </ul>
+            <div class="info-note">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Two-factor authentication ensures only you can access your account.</span>
+            </div>
         </div>
     </div>
-    <div class="auth-split-right">
+    <div class="auth-form-panel">
         <div class="auth-card">
             <% if (typeof otpError !== 'undefined' && otpError) { %>
             <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.6rem;">
@@ -59,7 +70,7 @@
             </div>
             <% } %>
 
-            <h2 style="text-align:center;">Verify <span>OTP</span></h2>
+            <h2>Verify <span>OTP</span></h2>
             <p style="text-align:center;color:var(--text-muted,#6B7280);margin:0.4rem 0 1.5rem;font-size:0.88rem;">
                 Enter the 6-digit code sent to your email.
             </p>
