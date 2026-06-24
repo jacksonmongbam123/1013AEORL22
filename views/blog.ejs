@@ -51,13 +51,17 @@
                 data-title="<%=postuser[i].title.toLowerCase()%>"
                 data-date="<%=new Date(postuser[i].date).getTime()%>"
                 data-title-raw="<%=postuser[i].title%>">
-                <div class="blogti">
-                    <h3><%=postuser[i].title%></h3>
-                    <label><%=postuser[i].timestamp%></label>
+                <div class="blogcard-header mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <span class="blogcard-tag"><i class="fa-solid fa-feather-pointed me-1"></i> Article</span>
+                    <span class="blogcard-date"><i class="fa-regular fa-calendar-days me-1"></i> <%=postuser[i].timestamp || postuser[i].date%></span>
                 </div>
-                <p><%=postuser[i].content.substring(0, 400) + "..."%>
-                    <a href="/<%=encodeURIComponent(postuser[i].title)%>"> Read more</a>
-                </p>
+                <h3 class="blogcard-title"><%=postuser[i].title%></h3>
+                <p class="blogcard-excerpt mb-3"><%=postuser[i].content.substring(0, 240) + (postuser[i].content.length > 240 ? "..." : "")%></p>
+                <div class="blogcard-footer mt-auto pt-2">
+                    <a href="/<%=encodeURIComponent(postuser[i].title)%>" class="blogcard-link">
+                        Read full article <i class="fa-solid fa-arrow-right-long ms-1"></i>
+                    </a>
+                </div>
             </div>
         <% } %>
     </div>
