@@ -3010,4 +3010,30 @@ span { color: var(--primary); }
     transform: translateY(-1px);
 }
 
+/* Admin pill-style cancel buttons for forms */
+.btn-admin-cancel-style {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+    font-weight: 600;
+    color: var(--text-muted) !important;
+    background: var(--white) !important;
+    border: 1px solid var(--border) !important;
+    padding: 0.6rem 1.6rem;
+    border-radius: 20px;
+    transition: var(--transition);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-admin-cancel-style:hover {
+    color: var(--primary) !important;
+    background: var(--primary-light) !important;
+    border-color: var(--primary) !important;
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+
 

@@ -27,7 +27,7 @@
                     <i class="fa-regular fa-paper-plane me-1"></i> <%= (typeof editItem !== 'undefined' && editItem) ? 'Save Changes' : 'Publish' %>
                 </button>
                 <% if (typeof editItem !== 'undefined' && editItem) { %>
-                <a href="/compose" class="btn btn-secondary" style="width:auto;margin:0;padding:0.45rem 1.1rem;border-radius:8px;font-size:0.9rem;text-decoration:none;display:inline-block;">Cancel</a>
+                <a href="/compose" class="btn-admin-cancel-style" style="width:auto;margin:0;"><i class="fa-solid fa-xmark me-1"></i> Cancel</a>
                 <% } %>
             </div>
         </form>
