@@ -2845,9 +2845,16 @@ span { color: var(--primary); }
     transform: translateX(3px);
 }
 
+/* Hero CTA buttons wrapping and spacing */
+.hero-cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: center;
+}
+
 /* Numerical Milestones */
-.bg-gradient-brand {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+.milestones-section {
     position: relative;
     overflow: hidden;
 }
@@ -2859,7 +2866,7 @@ span { color: var(--primary); }
 .milestone-number {
     font-size: clamp(1.8rem, 4.5vw, 2.8rem);
     font-weight: 800;
-    color: var(--white);
+    color: var(--primary);
     display: block;
     line-height: 1.2;
     margin-bottom: 0.25rem;
@@ -2868,7 +2875,7 @@ span { color: var(--primary); }
 .milestone-label {
     font-size: 0.82rem;
     font-weight: 600;
-    color: #94a3b8;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
