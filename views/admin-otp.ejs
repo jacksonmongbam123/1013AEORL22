@@ -33,6 +33,26 @@
 }
 .otp-box:focus{border-color:var(--primary,#4F7EF7);box-shadow:0 0 0 3px rgba(79,126,247,0.15);}
 .otp-box.filled{border-color:var(--primary,#4F7EF7);}
+
+@media(max-width:480px){
+    .otp-boxes{gap:0.4rem;}
+    .otp-box{
+        width:40px;
+        height:48px;
+        font-size:1.3rem;
+        border-radius:8px;
+    }
+}
+
+@media(max-width:360px){
+    .otp-boxes{gap:0.3rem;}
+    .otp-box{
+        width:34px;
+        height:42px;
+        font-size:1.15rem;
+        border-radius:6px;
+    }
+}
 </style>
 
 <div class="auth-split-wrapper">
