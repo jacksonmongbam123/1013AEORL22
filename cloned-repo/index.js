@@ -84,7 +84,53 @@ app.use(function(req, res, next) { res.locals.siteUrl = req.protocol + "://" + r
 
 app.get("/robots.txt", function(req, res) {
     const su = req.protocol + "://" + req.get("host");
-    res.type("text/plain").send(["User-agent: *","Allow: /","Disallow: /admin","Disallow: /adminlogin","Disallow: /adminregister","Disallow: /loggedin","Disallow: /compose","Disallow: /postlearnings","Disallow: /edithome","Disallow: /getcontact","Sitemap: "+su+"/sitemap.xml"].join("\n"));
+    const robotsText = [
+        "# Allow all crawlers to index the public site and access the favicon assets",
+        "User-agent: *",
+        "Allow: /",
+        "Allow: /img/",
+        "Allow: /favicon.ico",
+        "Allow: /favicon.png",
+        "Allow: /img/favicon.svg",
+        "Disallow: /admin",
+        "Disallow: /adminlogin",
+        "Disallow: /adminregister",
+        "Disallow: /loggedin",
+        "Disallow: /compose",
+        "Disallow: /postlearnings",
+        "Disallow: /edithome",
+        "Disallow: /getcontact",
+        "",
+        "# Explicitly ensure Googlebot can crawl public pages and favicons",
+        "User-agent: Googlebot",
+        "Allow: /",
+        "Allow: /img/",
+        "Allow: /favicon.ico",
+        "Allow: /favicon.png",
+        "Disallow: /admin",
+        "Disallow: /adminlogin",
+        "Disallow: /adminregister",
+        "Disallow: /loggedin",
+        "Disallow: /compose",
+        "Disallow: /postlearnings",
+        "Disallow: /edithome",
+        "Disallow: /getcontact",
+        "",
+        "# Explicitly ensure Google-Favicon can crawl the favicons",
+        "User-agent: Google-Favicon",
+        "Allow: /favicon.ico",
+        "Allow: /favicon.png",
+        "Allow: /img/favicon.svg",
+        "Allow: /img/favicon-32x32.png",
+        "Allow: /img/favicon-48x48.png",
+        "Allow: /img/favicon-96x96.png",
+        "Allow: /img/favicon-144x144.png",
+        "Allow: /img/favicon-192x192.png",
+        "Allow: /img/apple-touch-icon.png",
+        "",
+        "Sitemap: " + su + "/sitemap.xml"
+    ].join("\n");
+    res.type("text/plain").send(robotsText);
 });
 
 app.get("/sitemap.xml", async function(req, res) {

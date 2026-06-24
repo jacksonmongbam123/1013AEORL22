@@ -1,10 +1,33 @@
-# Allow all crawlers to index the site and access the favicon assets
+# Allow all crawlers to index the public site and access the favicon assets
 User-agent: *
 Allow: /
 Allow: /img/
 Allow: /favicon.ico
 Allow: /favicon.png
 Allow: /img/favicon.svg
+Disallow: /admin
+Disallow: /adminlogin
+Disallow: /adminregister
+Disallow: /loggedin
+Disallow: /compose
+Disallow: /postlearnings
+Disallow: /edithome
+Disallow: /getcontact
+
+# Explicitly ensure Googlebot can crawl public pages and favicons
+User-agent: Googlebot
+Allow: /
+Allow: /img/
+Allow: /favicon.ico
+Allow: /favicon.png
+Disallow: /admin
+Disallow: /adminlogin
+Disallow: /adminregister
+Disallow: /loggedin
+Disallow: /compose
+Disallow: /postlearnings
+Disallow: /edithome
+Disallow: /getcontact
 
 # Explicitly ensure Google-Favicon can crawl the favicons
 User-agent: Google-Favicon
@@ -17,3 +40,4 @@ Allow: /img/favicon-96x96.png
 Allow: /img/favicon-144x144.png
 Allow: /img/favicon-192x192.png
 Allow: /img/apple-touch-icon.png
+
