@@ -1,0 +1,19 @@
+# Allow all crawlers to index the site and access the favicon assets
+User-agent: *
+Allow: /
+Allow: /img/
+Allow: /favicon.ico
+Allow: /favicon.png
+Allow: /img/favicon.svg
+
+# Explicitly ensure Google-Favicon can crawl the favicons
+User-agent: Google-Favicon
+Allow: /favicon.ico
+Allow: /favicon.png
+Allow: /img/favicon.svg
+Allow: /img/favicon-32x32.png
+Allow: /img/favicon-48x48.png
+Allow: /img/favicon-96x96.png
+Allow: /img/favicon-144x144.png
+Allow: /img/favicon-192x192.png
+Allow: /img/apple-touch-icon.png
