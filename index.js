@@ -267,8 +267,34 @@ app.get("/sitemap.xml", async function(req, res) {
 
 app.get("/", async function(req, res) {
     const su = req.protocol + "://" + req.get("host");
-    const [homepage, homecards] = await Promise.all([Home.find({}), HomeCard.find({active:true}).sort({order:1})]);
-    res.render("index", { homepage, homecards, pageTitle:"Jackson Mongbam — Developer & Programmer", pageDesc:"Personal blog and portfolio.", pageUrl:su });
+    try {
+        const [homepage, homecards, latestBlogs, latestLearnings] = await Promise.all([
+            Home.find({}),
+            HomeCard.find({active:true}).sort({order:1}),
+            Blog.find({}).sort({date:-1}).limit(3),
+            Learning.find({}).sort({date:-1}).limit(3)
+        ]);
+        res.render("index", { 
+            homepage, 
+            homecards, 
+            latestBlogs, 
+            latestLearnings,
+            pageTitle:"Jackson Mongbam — Developer & Programmer", 
+            pageDesc:"Personal blog and portfolio.", 
+            pageUrl:su 
+        });
+    } catch (e) {
+        console.error("Error fetching homepage dynamic content:", e);
+        res.render("index", { 
+            homepage: [], 
+            homecards: [], 
+            latestBlogs: [], 
+            latestLearnings: [],
+            pageTitle:"Jackson Mongbam — Developer & Programmer", 
+            pageDesc:"Personal blog and portfolio.", 
+            pageUrl:su 
+        });
+    }
 });
 
 app.get("/learnings", async function(req, res) {

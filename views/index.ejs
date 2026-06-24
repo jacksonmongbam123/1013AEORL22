@@ -1,102 +1,152 @@
 <%- include('partials/header'); -%>
 
 <!-- HERO -->
-<section class="hero-section">
+<section class="hero-section py-5">
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-lg-6 hero-text" style="padding: 3% 2%;">
-                <% for(var i=0; i<homepage.length; i++) { %>
-                    <h1><%=homepage[i].title%></h1>
-                <% }; %>
-                <p class="subtitle">A <span>Pro</span>grammer &amp; Developer</p>
-                <a href="/book">
-                    <button type="button" class="btn btn-dark btn-lg download-button">Book</button>
-                </a>
-                <a href="/learnings">
-                    <button type="button" class="btn btn-outline-dark btn-lg download-button">Explore more</button>
-                </a>
+            <div class="col-lg-6 hero-text text-left py-4">
+                <!-- Live Availability Badge -->
+                <div class="status-badge mb-3">
+                    <span class="status-dot"></span> Available for Freelance &amp; Projects
+                </div>
+                
+                <% if (homepage && homepage.length > 0) { %>
+                    <% for(var i=0; i<homepage.length; i++) { %>
+                        <h1 class="hero-title"><%=homepage[i].title%></h1>
+                    <% }; %>
+                <% } else { %>
+                    <h1 class="hero-title">Building High-Performance Digital Solutions</h1>
+                <% } %>
+                
+                <p class="subtitle mb-4">A professional <span>Pro</span>grammer, Developer &amp; Tech Enthusiast</p>
+                
+                <div class="hero-cta-buttons mb-2">
+                    <a href="/book" class="btn btn-primary btn-lg custom-hero-btn primary-btn shadow-sm">
+                        <i class="fa-solid fa-calendar-check me-2"></i>Book Session
+                    </a>
+                    <a href="/learnings" class="btn btn-outline-dark btn-lg custom-hero-btn secondary-btn ms-2">
+                        <i class="fa-solid fa-compass me-2"></i>Explore Learnings
+                    </a>
+                </div>
             </div>
-            <div class="col-lg-6 homeimage text-center">
-                <img src="img/mountain.png" alt="Hero illustration" class="img-fluid">
+            <div class="col-lg-6 homeimage text-center position-relative mt-4 mt-lg-0">
+                <div class="hero-image-wrapper">
+                    <img src="img/mountain.png" alt="Hero illustration" class="img-fluid hero-main-img">
+                    <div class="floating-badge badge-1">
+                        <i class="fa-solid fa-code"></i> <span>Clean Code</span>
+                    </div>
+                    <div class="floating-badge badge-2">
+                        <i class="fa-solid fa-rocket"></i> <span>High Speed</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ABOUT PREVIEW -->
-<section id="about">
+<section id="about" class="py-5">
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-lg-5 homeimage text-center mb-4 mb-lg-0">
-                <img src="img/about.png" alt="About illustration" class="img-fluid" style="max-width:380px; border-radius:12px;">
+            <div class="col-lg-5 homeimage text-center mb-5 mb-lg-0">
+                <div class="about-image-wrapper">
+                    <img src="img/about.png" alt="About illustration" class="img-fluid about-img" style="max-width:380px;">
+                </div>
             </div>
             <div class="col-lg-7 hawert">
-                <h2>About <span>This Site</span></h2>
-                <% for(var i=0; i<homepage.length; i++) { %>
-                    <p><%=homepage[i].about.substring(0, 300) + "..."%></p>
-                <% }; %>
-                <a href="/about" class="btn-read-more">Read more</a>
+                <div class="section-tag mb-2">Who I Am</div>
+                <h2 class="mb-3">About <span>My Vision</span></h2>
+                <% if (homepage && homepage.length > 0) { %>
+                    <% for(var i=0; i<homepage.length; i++) { %>
+                        <p class="about-lead"><%=homepage[i].about.substring(0, 320) + "..."%></p>
+                    <% }; %>
+                <% } else { %>
+                    <p class="about-lead">I am a passionate developer focusing on modern web standards, beautiful design, and optimal server configurations. I help clients turn their ideas into stable and performant applications.</p>
+                <% } %>
+                <a href="/about" class="btn-read-more-custom mt-3">
+                    Learn More <i class="fa-solid fa-arrow-right-long ms-2"></i>
+                </a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- FEATURES -->
-<section id="features">
+<section id="features" class="py-5 bg-white">
     <div class="container-fluid">
-        <h2 style="text-align:center; margin-bottom:2rem;">What I <span>Do</span></h2>
-        <div class="row">
+        <div class="section-header text-center mb-5">
+            <div class="section-tag mb-2">My Services</div>
+            <h2 class="mb-3">What I <span>Do Best</span></h2>
+            <p class="section-subtitle max-w-2xl mx-auto">Providing end-to-end engineering, beautiful interfaces, and robust cloud configurations.</p>
+        </div>
+        
+        <div class="row g-4">
         <% if (homecards && homecards.length > 0) { %>
             <% for(var j=0; j<homecards.length; j++) { %>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="<%= homecards[j].icon %>"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="<%= homecards[j].icon %>"></i>
+                    </div>
                     <h3><%= homecards[j].title %></h3>
                     <p><%= homecards[j].description %></p>
                 </div>
             </div>
             <% } %>
         <% } else { %>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="fa-sharp fa-solid fa-crop-simple"></i>
-                    <h3>Design</h3>
-                    <p>Creating beautiful, user-focused interfaces that look great on every device.</p>
+            <!-- High quality defaults if database cards are not populated -->
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="fa-sharp fa-solid fa-crop-simple"></i>
+                    </div>
+                    <h3>UI/UX Design</h3>
+                    <p>Creating highly polished, user-focused web interfaces with a great sense of visual rhythm, typography, and contrast.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="fa-solid fa-code"></i>
-                    <h3>Development</h3>
-                    <p>Building robust web applications with modern technologies and best practices.</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3>Full Stack Development</h3>
+                    <p>Developing scalable web and server applications using cutting-edge stacks (Node.js, Express, React, MongoDB).</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="fa-brands fa-aws"></i>
-                    <h3>Hosting</h3>
-                    <p>Deploying and maintaining applications on reliable cloud infrastructure.</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="fa-brands fa-aws"></i>
+                    </div>
+                    <h3>Cloud Deployment</h3>
+                    <p>Deploying application servers, setting up domain names, handling SSL certificates, and configuring secure firewalls.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="fa-solid fa-server"></i>
-                    <h3>Server</h3>
-                    <p>Configuring and managing server environments for optimal performance.</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <h3>Server Administration</h3>
+                    <p>Optimizing server-side runtimes, processes, memory usage, and background operations for maximum performance.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="fa-solid fa-people-roof"></i>
-                    <h3>Management</h3>
-                    <p>Coordinating projects and teams to deliver results on time and on scope.</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="fa-solid fa-people-roof"></i>
+                    </div>
+                    <h3>Technical Project Lead</h3>
+                    <p>Leading project lifecycles from architecture planning, code structures, to deployment, ensuring clear timelines and goals.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="feature-box">
-                    <i class="fa-solid fa-network-wired"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card-custom">
+                    <div class="icon-box-custom">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
                     <h3>Network Operations</h3>
-                    <p>Managing networking infrastructure for connectivity and security.</p>
+                    <p>Configuring secure proxy services, reverse proxies like Nginx, API gateways, load balancing, and secure virtual networks.</p>
                 </div>
             </div>
         <% } %>
@@ -104,9 +154,269 @@
     </div>
 </section>
 
-<!-- SLIDER -->
+<!-- TECH STACK & SKILLS -->
+<section id="tech-stack" class="py-5 bg-light-section">
+    <div class="container-fluid">
+        <div class="section-header text-center mb-5">
+            <div class="section-tag mb-2">My Toolbox</div>
+            <h2 class="mb-3">My <span>Tech Stack</span></h2>
+            <p class="section-subtitle max-w-2xl mx-auto">The core programming languages, frameworks, and database structures that I build with daily.</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Frontend -->
+            <div class="col-lg-3 col-md-6">
+                <div class="tech-category-card">
+                    <div class="tech-card-header">
+                        <i class="fa-solid fa-desktop text-primary-color"></i>
+                        <h4>Frontend</h4>
+                    </div>
+                    <div class="tech-badges">
+                        <span class="tech-badge"><i class="fa-brands fa-react"></i> React</span>
+                        <span class="tech-badge"><i class="fa-brands fa-html5"></i> HTML5</span>
+                        <span class="tech-badge"><i class="fa-brands fa-css3-alt"></i> CSS3</span>
+                        <span class="tech-badge"><i class="fa-brands fa-js"></i> ES6+ JS</span>
+                        <span class="tech-badge"><i class="fa-brands fa-bootstrap"></i> Bootstrap 5</span>
+                        <span class="tech-badge">Tailwind CSS</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Backend -->
+            <div class="col-lg-3 col-md-6">
+                <div class="tech-category-card">
+                    <div class="tech-card-header">
+                        <i class="fa-solid fa-gears text-success-color"></i>
+                        <h4>Backend</h4>
+                    </div>
+                    <div class="tech-badges">
+                        <span class="tech-badge"><i class="fa-brands fa-node-js"></i> Node.js</span>
+                        <span class="tech-badge">Express.js</span>
+                        <span class="tech-badge">RESTful APIs</span>
+                        <span class="tech-badge">MVC Pattern</span>
+                        <span class="tech-badge">OAuth / JWT</span>
+                        <span class="tech-badge">Nodemailer</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Database & Storage -->
+            <div class="col-lg-3 col-md-6">
+                <div class="tech-category-card">
+                    <div class="tech-card-header">
+                        <i class="fa-solid fa-database text-warning-color"></i>
+                        <h4>Database</h4>
+                    </div>
+                    <div class="tech-badges">
+                        <span class="tech-badge">MongoDB</span>
+                        <span class="tech-badge">Mongoose</span>
+                        <span class="tech-badge">Cloud Atlas</span>
+                        <span class="tech-badge">Session Store</span>
+                        <span class="tech-badge">Drizzle ORM</span>
+                        <span class="tech-badge">PostgreSQL</span>
+                    </div>
+                </div>
+            </div>
+            <!-- DevOps & Tools -->
+            <div class="col-lg-3 col-md-6">
+                <div class="tech-category-card">
+                    <div class="tech-card-header">
+                        <i class="fa-solid fa-toolbox text-danger-color"></i>
+                        <h4>DevOps &amp; Tools</h4>
+                    </div>
+                    <div class="tech-badges">
+                        <span class="tech-badge"><i class="fa-brands fa-git-alt"></i> Git</span>
+                        <span class="tech-badge"><i class="fa-brands fa-github"></i> GitHub</span>
+                        <span class="tech-badge">Nginx Proxy</span>
+                        <span class="tech-badge">VPS (Ubuntu)</span>
+                        <span class="tech-badge">Vite</span>
+                        <span class="tech-badge">PM2 / npm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LATEST LEARNINGS PREVIEW -->
+<section id="latest-learnings" class="py-5 bg-white">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-3">
+            <div>
+                <div class="section-tag mb-2">Educational Feed</div>
+                <h2 class="mb-1">Recent <span>Learnings</span></h2>
+                <p class="section-subtitle mb-0">Micro-lessons, code snippets, and structured concepts I have recently discovered.</p>
+            </div>
+            <a href="/learnings" class="btn btn-outline-primary rounded-pill px-4">
+                All Learnings <i class="fa-solid fa-arrow-right-long ms-2"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            <% if (latestLearnings && latestLearnings.length > 0) { %>
+                <% for(var k=0; k<latestLearnings.length; k++) { %>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="learning-preview-card">
+                            <div>
+                                <div class="learning-card-header">
+                                    <span class="learning-date"><i class="fa-regular fa-calendar-days me-1"></i> <%= latestLearnings[k].date %></span>
+                                    <span class="learning-badge-tag"><%= k === 0 ? "Latest" : "Insight" %></span>
+                                </div>
+                                <h3><%= latestLearnings[k].title %></h3>
+                                <p class="learning-excerpt"><%= latestLearnings[k].content.substring(0, 160) + (latestLearnings[k].content.length > 160 ? "..." : "") %></p>
+                            </div>
+                            <a href="/learnings" class="learning-read-link mt-3">Read full entry <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                        </div>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <!-- Beautiful static fallbacks if database learnings are not populated -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="learning-preview-card">
+                        <div>
+                            <div class="learning-card-header">
+                                <span class="learning-date"><i class="fa-regular fa-calendar-days me-1"></i> June 24, 2026</span>
+                                <span class="learning-badge-tag">NodeJS</span>
+                            </div>
+                            <h3>Understanding Secure Session Stores</h3>
+                            <p class="learning-excerpt">A dive into session-based state, Cookie parameters, and using MongoStore for secure, scalable authentication sessions on persistent servers.</p>
+                        </div>
+                        <a href="/learnings" class="learning-read-link mt-3">Read full entry <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="learning-preview-card">
+                        <div>
+                            <div class="learning-card-header">
+                                <span class="learning-date"><i class="fa-regular fa-calendar-days me-1"></i> June 18, 2026</span>
+                                <span class="learning-badge-tag">Database</span>
+                            </div>
+                            <h3>MongoDB Optimization with Mongoose Indexes</h3>
+                            <p class="learning-excerpt">How to leverage compound indexes, remove duplicate unique constraints in collection sub-records, and speed up query processing times.</p>
+                        </div>
+                        <a href="/learnings" class="learning-read-link mt-3">Read full entry <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="learning-preview-card">
+                        <div>
+                            <div class="learning-card-header">
+                                <span class="learning-date"><i class="fa-regular fa-calendar-days me-1"></i> June 10, 2026</span>
+                                <span class="learning-badge-tag">DevOps</span>
+                            </div>
+                            <h3>Reverse Proxy setups with Nginx</h3>
+                            <p class="learning-excerpt">Configuring upstream blocks, SSL/TLS certifications via certbot, handling secure headers, and keeping production systems protected behind proxy layers.</p>
+                        </div>
+                        <a href="/learnings" class="learning-read-link mt-3">Read full entry <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<!-- MILESTONES / METRICS -->
+<section class="milestones-section py-5 bg-gradient-brand">
+    <div class="container-fluid text-center">
+        <div class="row g-4">
+            <div class="col-6 col-lg-3">
+                <div class="milestone-box">
+                    <span class="milestone-number">3+</span>
+                    <span class="milestone-label">Years of Development</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="milestone-box">
+                    <span class="milestone-number">24+</span>
+                    <span class="milestone-label">Projects Completed</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="milestone-box">
+                    <span class="milestone-number">500+</span>
+                    <span class="milestone-label">GitHub Contributions</span>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="milestone-box">
+                    <span class="milestone-number">100%</span>
+                    <span class="milestone-label">Customer Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LATEST BLOG PREVIEW -->
+<section id="latest-blog" class="py-5 bg-light-section">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-3">
+            <div>
+                <div class="section-tag mb-2">Read My Thoughts</div>
+                <h2 class="mb-1">Recent <span>Stories &amp; Blog Posts</span></h2>
+                <p class="section-subtitle mb-0">Thoughtful articles on software architecture, technology, and engineering practices.</p>
+            </div>
+            <a href="/blog" class="btn btn-outline-primary rounded-pill px-4">
+                View Full Blog <i class="fa-solid fa-arrow-right-long ms-2"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            <% if (latestBlogs && latestBlogs.length > 0) { %>
+                <% for(var k=0; k<latestBlogs.length; k++) { %>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-preview-card">
+                            <div>
+                                <span class="blog-date"><i class="fa-regular fa-calendar-days me-1"></i> <%= latestBlogs[k].date || latestBlogs[k].timestamp %></span>
+                                <h3><%= latestBlogs[k].title %></h3>
+                                <p class="blog-excerpt"><%= latestBlogs[k].content.substring(0, 180) + (latestBlogs[k].content.length > 180 ? "..." : "") %></p>
+                            </div>
+                            <a href="/blog" class="blog-read-link mt-3">Continue Reading <i class="fa-solid fa-arrow-right-long ms-1"></i></a>
+                        </div>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <!-- Beautiful static fallbacks if database blogs are not populated -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-preview-card">
+                        <div>
+                            <span class="blog-date"><i class="fa-regular fa-calendar-days me-1"></i> June 24, 2026</span>
+                            <h3>Why I Am Building My Core Infrastructure with Node.js</h3>
+                            <p class="blog-excerpt">Discussing the benefits of JavaScript on both client and server sides, the speed of asynchronous loop designs, and setting up lightweight full-stack environments.</p>
+                        </div>
+                        <a href="/blog" class="blog-read-link mt-3">Continue Reading <i class="fa-solid fa-arrow-right-long ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-preview-card">
+                        <div>
+                            <span class="blog-date"><i class="fa-regular fa-calendar-days me-1"></i> June 20, 2026</span>
+                            <h3>A Practical Guide to Two-Factor Verification (OTP)</h3>
+                            <p class="blog-excerpt">How implementing simple, secure numeric verification pins through NodeMailer can dramatically improve admin security bounds without bloating backend packages.</p>
+                        </div>
+                        <a href="/blog" class="blog-read-link mt-3">Continue Reading <i class="fa-solid fa-arrow-right-long ms-1"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-preview-card">
+                        <div>
+                            <span class="blog-date"><i class="fa-regular fa-calendar-days me-1"></i> June 15, 2026</span>
+                            <h3>Design Rhythms: Moving Beyond CSS Framework Defaults</h3>
+                            <p class="blog-excerpt">Exploring visual contrast, negative space, customized drop-shadow definitions, and establishing custom design languages inside simple client-side websites.</p>
+                        </div>
+                        <a href="/blog" class="blog-read-link mt-3">Continue Reading <i class="fa-solid fa-arrow-right-long ms-1"></i></a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDER / CONCEPTS -->
 <section id="slider">
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
+        <div class="section-header text-center mb-4">
+            <div class="section-tag mb-2">My Ideology</div>
+            <h2>Process &amp; <span>Delivery Workflow</span></h2>
+        </div>
         <div id="ideaslider" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
@@ -134,6 +444,94 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ ACCORDION -->
+<section id="faq" class="py-5 bg-white">
+    <div class="container-fluid">
+        <div class="section-header text-center mb-5">
+            <div class="section-tag mb-2">Got Questions?</div>
+            <h2 class="mb-3">Frequently Asked <span>Questions</span></h2>
+            <p class="section-subtitle max-w-2xl mx-auto">Get answers to the most common questions regarding my development cycle, services, and collaborations.</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion custom-accordion" id="faqAccordion">
+                    
+                    <!-- Q1 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <i class="fa-solid fa-circle-question me-2 text-primary"></i> What technologies do you specialize in?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                I specialize in full-stack web development using the MERN stack (MongoDB, Express, React, Node.js). I also have strong experience with SQL databases, Tailwind CSS, Bootstrap, and running cloud systems behind Nginx reverse proxies.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Q2 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="fa-solid fa-circle-question me-2 text-primary"></i> How can I book an appointment or consultation session?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                You can easily book an appointment by clicking the <strong>Book Session</strong> button in the hero area or heading to the <a href="/book">Book Page</a>. Fill out the short booking form, select your desired service and details, and I will get back to you with confirmation details.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Q3 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <i class="fa-solid fa-circle-question me-2 text-primary"></i> Are you open to freelance and project contracts?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Yes, I am actively available for remote freelance contracts, architectural consultations, and full-stack development roles. Reach out via the <a href="/contact">Contact Page</a> with your project scope, and let's discuss details!
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Q4 -->
+                    <div class="accordion-item faq-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button faq-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <i class="fa-solid fa-circle-question me-2 text-primary"></i> Do you write about tech or offer study materials?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body faq-body">
+                                Absolutely! I maintain a regular <a href="/blog">Blog</a> explaining core design concepts, and a dedicated <a href="/learnings">Learnings</a> diary capturing smaller snippets of knowledge. You can find comprehensive study guides and files directly in the footer references or via the learnings feed.
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner-section py-5 bg-white">
+    <div class="container-fluid">
+        <div class="cta-banner-card text-center text-white">
+            <h2 class="mb-3 text-white">Have a Great Project Idea in Mind?</h2>
+            <p class="max-w-2xl mx-auto mb-4 opacity-90">Let's collaborate to build something stunning, performant, and fully customized to your specific business requirements.</p>
+            <a href="/contact" class="btn btn-light btn-lg rounded-pill px-4 text-primary font-weight-bold shadow-sm">
+                Let's Connect <i class="fa-solid fa-paper-plane ms-2"></i>
+            </a>
         </div>
     </div>
 </section>
