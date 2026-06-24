@@ -882,8 +882,8 @@ span { color: var(--primary); }
 }
 
 .auth-card .btn-auth {
-    width: auto;
-    display: inline-flex;
+    display: flex;
+    width: fit-content;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
