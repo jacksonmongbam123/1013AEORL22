@@ -8,24 +8,26 @@
         <p class="page-subtitle">Share your notes, discoveries, and learning resources.</p>
     </div>
 </div>
-    <div class="admin-form-card">
+    <div class="admin-form-card" style="max-width: 900px; margin-bottom: 2rem;">
         <form id="learningsForm" action="<%= (typeof editItem !== 'undefined' && editItem) ? '/postlearnings/edit/' + editItem._id : '/postlearnings' %>" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label">Learnings Title</label>
-                <input id="inputTitle" class="form-control pushi" type="text" name="learningsTitle"
-                    placeholder="Enter the learning title"
-                    value="<%= (typeof editItem !== 'undefined' && editItem) ? editItem.title : '' %>">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Upload Photo</label>
-                <input type="file" name="learningImage" id="learningImageInput" class="form-control pushi" accept="image/*" style="border-radius: 8px;">
-                <div class="form-text text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Supported formats: JPG, JPEG, PNG, GIF. Max size: 10MB.</div>
-                <% if (typeof editItem !== 'undefined' && editItem && editItem.image) { %>
-                    <div class="mt-2" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Current photo:</span>
-                        <img src="<%= editItem.image %>" alt="Learning Photo" style="max-height: 50px; border-radius: 6px; border: 1px solid var(--border);">
-                    </div>
-                <% } %>
+            <div class="form-row-2col">
+                <div class="mb-3">
+                    <label class="form-label">Learnings Title</label>
+                    <input id="inputTitle" class="form-control pushi" type="text" name="learningsTitle"
+                        placeholder="Enter the learning title"
+                        value="<%= (typeof editItem !== 'undefined' && editItem) ? editItem.title : '' %>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Upload Photo</label>
+                    <input type="file" name="learningImage" id="learningImageInput" class="form-control pushi" accept="image/*" style="border-radius: 8px;">
+                    <div class="form-text text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Supported formats: JPG, JPEG, PNG, GIF. Max size: 10MB.</div>
+                    <% if (typeof editItem !== 'undefined' && editItem && editItem.image) { %>
+                        <div class="mt-2" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">Current photo:</span>
+                            <img src="<%= editItem.image %>" alt="Learning Photo" style="max-height: 50px; border-radius: 6px; border: 1px solid var(--border);">
+                        </div>
+                    <% } %>
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Learnings Description</label>
