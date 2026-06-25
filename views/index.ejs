@@ -255,6 +255,11 @@
                 <% for(var k=0; k<latestLearnings.length; k++) { %>
                     <div class="col-lg-4 col-md-6">
                         <div class="learning-preview-card">
+                            <% if (latestLearnings[k].image) { %>
+                                <div class="learning-preview-cover" style="width: calc(100% + 3.7rem); margin-left: -1.85rem; margin-top: -1.85rem; height: 160px; overflow: hidden; border-top-left-radius: 15px; border-top-right-radius: 15px; margin-bottom: 1.15rem; border-bottom: 1px solid var(--border);">
+                                    <img src="<%= latestLearnings[k].image %>" alt="<%= latestLearnings[k].title %>" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            <% } %>
                             <div>
                                 <div class="learning-card-header">
                                     <span class="learning-date"><i class="fa-regular fa-calendar-days me-1"></i> <%= latestLearnings[k].date %></span>
@@ -364,6 +369,11 @@
                 <% for(var k=0; k<latestBlogs.length; k++) { %>
                     <div class="col-lg-4 col-md-6">
                         <div class="blog-preview-card">
+                            <% if (latestBlogs[k].image) { %>
+                                <div class="blog-preview-cover" style="width: calc(100% + 3.7rem); margin-left: -1.85rem; margin-top: -1.85rem; height: 160px; overflow: hidden; border-top-left-radius: 15px; border-top-right-radius: 15px; margin-bottom: 1.15rem; border-bottom: 1px solid var(--border);">
+                                    <img src="<%= latestBlogs[k].image %>" alt="<%= latestBlogs[k].title %>" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            <% } %>
                             <div>
                                 <span class="blog-date"><i class="fa-regular fa-calendar-days me-1"></i> <%= latestBlogs[k].date || latestBlogs[k].timestamp %></span>
                                 <h3><%= latestBlogs[k].title %></h3>

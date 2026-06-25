@@ -51,6 +51,11 @@
                 data-title="<%=postuser[i].title.toLowerCase()%>"
                 data-date="<%=new Date(postuser[i].date).getTime()%>"
                 data-title-raw="<%=postuser[i].title%>">
+                <% if (postuser[i].image) { %>
+                    <div class="blogcard-cover" style="width: calc(100% + 4rem); margin-left: -2rem; margin-top: -2.25rem; height: 200px; overflow: hidden; border-top-left-radius: 15px; border-top-right-radius: 15px; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border);">
+                        <img src="<%= postuser[i].image %>" alt="<%= postuser[i].title %>" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                <% } %>
                 <div class="blogcard-header mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <span class="blogcard-tag"><i class="fa-solid fa-feather-pointed me-1"></i> Article</span>
                     <span class="blogcard-date"><i class="fa-regular fa-calendar-days me-1"></i> <%=postuser[i].timestamp || postuser[i].date%></span>

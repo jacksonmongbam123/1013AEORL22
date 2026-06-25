@@ -164,10 +164,10 @@ const OtpRecord = mongoose.model("otprecord", otpRecordSchema);
 const homeSchema = new mongoose.Schema({ title: String, about: String, name: String });
 const Home = mongoose.model("home", homeSchema);
 
-const blogSchema = new mongoose.Schema({ title: String, content: String, timestamp: String, date: String });
+const blogSchema = new mongoose.Schema({ title: String, content: String, timestamp: String, date: String, image: String });
 const Blog = mongoose.model("blog", blogSchema);
 
-const learningSchema = new mongoose.Schema({ title: String, content: String, date: String });
+const learningSchema = new mongoose.Schema({ title: String, content: String, date: String, image: String });
 const Learning = mongoose.model("learning", learningSchema);
 
 const contactSchema = new mongoose.Schema({
@@ -240,6 +240,7 @@ const Candidate = mongoose.model("candidate", candidateSchema);
 const today = new Date();
 const day = today.toLocaleDateString("en-US", { weekday:"short", day:"numeric", month:"short" });
 function isAuth(req, res, next) {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     if (req.isAuthenticated() && req.session.adminToken) return next();
     req.session.destroy(function() {});
     res.redirect("/adminlogin");
@@ -485,8 +486,13 @@ app.get("/postlearnings", isAuth, async function(req, res) {
     const learnings = await Learning.find().sort({date:-1});
     res.render("postlearnings", { learnings });
 });
-app.post("/postlearnings", isAuth, async function(req, res) {
-    await new Learning({ title:req.body.learningsTitle, content:req.body.learningsBody, date:new Date() }).save();
+app.post("/postlearnings", isAuth, upload.single("learningImage"), async function(req, res) {
+    await new Learning({
+        title: req.body.learningsTitle,
+        content: req.body.learningsBody,
+        date: new Date(),
+        image: req.file ? "/uploads/" + req.file.filename : null
+    }).save();
     res.redirect("/postlearnings");
 });
 app.get("/postlearnings/edit/:id", isAuth, async function(req, res) {
@@ -494,8 +500,12 @@ app.get("/postlearnings/edit/:id", isAuth, async function(req, res) {
     const learnings = await Learning.find().sort({date:-1});
     res.render("postlearnings", { learnings, editItem: learning });
 });
-app.post("/postlearnings/edit/:id", isAuth, async function(req, res) {
-    await Learning.findByIdAndUpdate(req.params.id, { title:req.body.learningsTitle, content:req.body.learningsBody });
+app.post("/postlearnings/edit/:id", isAuth, upload.single("learningImage"), async function(req, res) {
+    const updateData = { title: req.body.learningsTitle, content: req.body.learningsBody };
+    if (req.file) {
+        updateData.image = "/uploads/" + req.file.filename;
+    }
+    await Learning.findByIdAndUpdate(req.params.id, updateData);
     res.redirect("/postlearnings");
 });
 app.post("/postlearnings/delete/:id", isAuth, async function(req, res) {
@@ -507,9 +517,15 @@ app.get("/compose", isAuth, async function(req, res) {
     const posts = await Blog.find().sort({date:-1});
     res.render("compose", { posts });
 });
-app.post("/compose", isAuth, async function(req, res) {
+app.post("/compose", isAuth, upload.single("blogImage"), async function(req, res) {
     if (["about","learnings","home","contact"].includes(req.body.postTitle)) return res.redirect("/compose");
-    await new Blog({ title:req.body.postTitle, content:req.body.postBody, timestamp:day, date:new Date() }).save();
+    await new Blog({
+        title: req.body.postTitle,
+        content: req.body.postBody,
+        timestamp: day,
+        date: new Date(),
+        image: req.file ? "/uploads/" + req.file.filename : null
+    }).save();
     res.redirect("/compose");
 });
 app.get("/compose/edit/:id", isAuth, async function(req, res) {
@@ -517,8 +533,12 @@ app.get("/compose/edit/:id", isAuth, async function(req, res) {
     const posts = await Blog.find().sort({date:-1});
     res.render("compose", { posts, editItem });
 });
-app.post("/compose/edit/:id", isAuth, async function(req, res) {
-    await Blog.findByIdAndUpdate(req.params.id, { title:req.body.postTitle, content:req.body.postBody });
+app.post("/compose/edit/:id", isAuth, upload.single("blogImage"), async function(req, res) {
+    const updateData = { title: req.body.postTitle, content: req.body.postBody };
+    if (req.file) {
+        updateData.image = "/uploads/" + req.file.filename;
+    }
+    await Blog.findByIdAndUpdate(req.params.id, updateData);
     res.redirect("/compose");
 });
 app.post("/compose/delete/:id", isAuth, async function(req, res) {
@@ -967,7 +987,7 @@ app.get("/:customPost", async function(req, res) {
     const posts = await Blog.find({});
     for (const post of posts) {
         if (_.lowerCase(post.title) === newPost) {
-            return res.render("blogpost", { postTitle:post.title, postContent:post.content, pageTitle:post.title+" | Jackson Mongbam", pageDesc:post.content.substring(0,155).replace(/\n/g," "), pageUrl:su+"/"+encodeURIComponent(post.title), ogType:"article" });
+            return res.render("blogpost", { postTitle:post.title, postContent:post.content, postImage:post.image, pageTitle:post.title+" | Jackson Mongbam", pageDesc:post.content.substring(0,155).replace(/\n/g," "), pageUrl:su+"/"+encodeURIComponent(post.title), ogType:"article" });
         }
     }
     res.status(404).render("maintenance");
