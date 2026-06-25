@@ -1586,7 +1586,6 @@ span { color: var(--primary); }
     .homeimage img { margin-top: 3%; width: 80%; }
     #about { padding: 6% 5%; }
     #features { padding: 5% 5%; }
-    .cards-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media screen and (max-width: 768px) {
@@ -1598,6 +1597,7 @@ span { color: var(--primary); }
     .admin-form-card { padding: 1.5rem 1.25rem; }
     .blogtitle { padding: 1.5rem 0 0.75rem; }
     .inner-footer { gap: 2rem; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media screen and (max-width: 600px) {
