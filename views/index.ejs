@@ -93,20 +93,61 @@
 <!-- ABOUT PREVIEW -->
 <section id="about" class="py-5">
     <div class="container-fluid">
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-10 hawert">
-                <div class="section-tag mb-2 mx-auto" style="width: fit-content;">Who I Am</div>
-                <h2 class="mb-3">About <span>My Vision</span></h2>
+        <div class="row align-items-center">
+            <div class="col-lg-7 hawert text-start">
+                <div class="section-tag mb-2">Who I Am</div>
+                <h2 class="mb-3" style="text-align: left;">About <span>My Vision</span></h2>
                 <% if (homepage && homepage.length > 0) { %>
                     <% for(var i=0; i<homepage.length; i++) { %>
-                        <p class="about-lead"><%=homepage[i].about.substring(0, 320) + "..."%></p>
+                        <p class="about-lead" style="text-align: left;"><%=homepage[i].about.substring(0, 320) + "..."%></p>
                     <% }; %>
                 <% } else { %>
-                    <p class="about-lead">I am a passionate developer focusing on modern web standards, beautiful design, and optimal server configurations. I help clients turn their ideas into stable and performant applications.</p>
+                    <p class="about-lead" style="text-align: left;">I am a passionate developer focusing on modern web standards, beautiful design, and optimal server configurations. I help clients turn their ideas into stable and performant applications.</p>
                 <% } %>
-                <a href="/about" class="btn-read-more-custom mt-3 mx-auto" style="width: fit-content; display: inline-flex; align-items: center;">
+                <a href="/about" class="btn-read-more-custom mt-3" style="width: fit-content; display: inline-flex; align-items: center;">
                     Learn More <i class="fa-solid fa-arrow-right-long ms-2"></i>
                 </a>
+            </div>
+            
+            <div class="col-lg-5 mt-4 mt-lg-0">
+                <!-- Achievement Flow Card -->
+                <div class="achievement-flow-card">
+                    <div class="flow-header">
+                        <div class="flow-title">
+                            <i class="fa-solid fa-wand-magic-sparkles text-primary"></i> Achievement Flow
+                        </div>
+                        <div class="flow-subtitle">Our path of turning complex ideas into digital realities</div>
+                    </div>
+                    
+                    <div class="flow-timeline">
+                        <!-- Node 1 -->
+                        <div class="flow-node completed">
+                            <div class="flow-node-dot"></div>
+                            <div class="flow-node-title">
+                                <span>Concept & Architecture</span>
+                                <i class="fa-solid fa-circle-check text-primary ms-1" style="font-size: 0.85rem;"></i>
+                            </div>
+                            <div class="flow-node-desc">Analyzing constraints, designing schema diagrams, and aligning tech choices with scalability needs.</div>
+                        </div>
+                        
+                        <!-- Node 2 -->
+                        <div class="flow-node active">
+                            <div class="flow-node-dot"></div>
+                            <div class="flow-node-title">
+                                <span>Development & Refactoring</span>
+                                <span class="spinner-grow spinner-grow-sm text-primary ms-1" style="width: 8px; height: 8px;" role="status"></span>
+                            </div>
+                            <div class="flow-node-desc">Translating wireframes into beautiful EJS pages, configuring optimal responsive CSS grid columns, and coding backend logic.</div>
+                        </div>
+                        
+                        <!-- Node 3 -->
+                        <div class="flow-node">
+                            <div class="flow-node-dot"></div>
+                            <div class="flow-node-title">Launch, Audit & Scale</div>
+                            <div class="flow-node-desc">Deploying onto modern container infrastructures, load testing under high stress, and maximizing web performance.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
