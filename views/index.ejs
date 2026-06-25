@@ -3,19 +3,19 @@
 <!-- HERO -->
 <section class="hero-section py-5">
     <div class="container-fluid">
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-10 hero-text py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7 hero-text text-start py-4">
                 <!-- Live Availability Badge -->
-                <div class="status-badge mb-3 mx-auto" style="width: fit-content;">
+                <div class="status-badge mb-3">
                     <span class="status-dot"></span> Available for Freelance &amp; Projects
                 </div>
                 
                 <% if (homepage && homepage.length > 0) { %>
                     <% for(var i=0; i<homepage.length; i++) { %>
-                        <h1 class="hero-title"><%=homepage[i].title%></h1>
+                        <h1 class="hero-title" style="text-align: left;"><%=homepage[i].title%></h1>
                     <% }; %>
                 <% } else { %>
-                    <h1 class="hero-title">Building High-Performance Digital Solutions</h1>
+                    <h1 class="hero-title" style="text-align: left;">Building High-Performance Digital Solutions</h1>
                 <% } %>
                 
                 <p class="subtitle mb-4">A professional <span>Pro</span>grammer, Developer &amp; Tech Enthusiast</p>
@@ -27,6 +27,63 @@
                     <a href="/learnings" class="btn btn-outline-dark btn-lg custom-hero-btn secondary-btn">
                         <i class="fa-solid fa-compass me-2"></i>Explore Learnings
                     </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-5 py-4">
+                <!-- Roadmap Checklist Card -->
+                <div class="roadmap-card">
+                    <div class="roadmap-header">
+                        <div class="roadmap-title-row">
+                            <span class="roadmap-tag"><i class="fa-solid fa-road me-1"></i> Architecture Roadmap</span>
+                            <span class="roadmap-pct">65% Complete</span>
+                        </div>
+                        <div class="roadmap-progress">
+                            <div class="roadmap-progress-bar" style="width: 65%;"></div>
+                        </div>
+                        <span class="roadmap-subtitle">Track development stages and architectural checklist</span>
+                    </div>
+                    <div class="roadmap-list">
+                        <!-- Step 1 -->
+                        <div class="roadmap-item">
+                            <div class="roadmap-indicator completed">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="roadmap-details">
+                                <div class="roadmap-item-header">
+                                    <span class="roadmap-item-title">System Architecture</span>
+                                    <span class="roadmap-status completed">Done</span>
+                                </div>
+                                <p class="roadmap-item-desc">Designing database schemas, routing, controllers, and setting up scalable EJS view components.</p>
+                            </div>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="roadmap-item">
+                            <div class="roadmap-indicator active">
+                                <i class="fa-solid fa-spinner-third fa-spin"></i>
+                            </div>
+                            <div class="roadmap-details">
+                                <div class="roadmap-item-header">
+                                    <span class="roadmap-item-title">Grid & Form Optimization</span>
+                                    <span class="roadmap-status active">Active</span>
+                                </div>
+                                <p class="roadmap-item-desc">Refactoring layouts into responsive 3-column grids & optimising publish forms into 2-column styles.</p>
+                            </div>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="roadmap-item">
+                            <div class="roadmap-indicator pending">
+                                <i class="fa-solid fa-ellipsis-h"></i>
+                            </div>
+                            <div class="roadmap-details">
+                                <div class="roadmap-item-header">
+                                    <span class="roadmap-item-title">Production Server Staging</span>
+                                    <span class="roadmap-status pending">Planned</span>
+                                </div>
+                                <p class="roadmap-item-desc">Binding secure credentials, configuring upstream proxy caches, and public server SSL domain bindings.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
