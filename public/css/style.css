@@ -1094,15 +1094,22 @@ span { color: var(--primary); }
     margin-top: 1rem;
 }
 
-@media screen and (max-width: 1024px) {
-    #blogGrid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
 #blogGrid .blog-card, #learningsGrid .learning-card {
     max-width: 100%;
     margin-bottom: 0 !important;
+}
+
+@media screen and (max-width: 1024px) {
+    /* Kept 3 columns for blogGrid on larger tablet widths, dropping to 2 columns on mobile/small-tablet screens */
+    #blogGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 850px) {
+    #blogGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -1110,7 +1117,13 @@ span { color: var(--primary); }
         grid-template-columns: 1fr;
         gap: 0;
     }
-    #blogGrid, #learningsGrid {
+    #learningsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 580px) {
+    #blogGrid {
         grid-template-columns: 1fr;
     }
 }
