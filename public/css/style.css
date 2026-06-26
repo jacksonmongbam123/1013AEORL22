@@ -1080,11 +1080,24 @@ span { color: var(--primary); }
     gap: 1.5rem;
 }
 
-#blogGrid, #learningsGrid {
+#blogGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+#learningsGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     margin-top: 1rem;
+}
+
+@media screen and (max-width: 1024px) {
+    #blogGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 #blogGrid .blog-card, #learningsGrid .learning-card {
