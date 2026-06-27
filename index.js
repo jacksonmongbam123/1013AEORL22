@@ -49,6 +49,11 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
+const uploadImage = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
+
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -486,12 +491,16 @@ app.get("/postlearnings", isAuth, async function(req, res) {
     const learnings = await Learning.find().sort({date:-1});
     res.render("postlearnings", { learnings });
 });
-app.post("/postlearnings", isAuth, upload.single("learningImage"), async function(req, res) {
+app.post("/postlearnings", isAuth, uploadImage.single("learningImage"), async function(req, res) {
+    let base64Image = null;
+    if (req.file) {
+        base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    }
     await new Learning({
         title: req.body.learningsTitle,
         content: req.body.learningsBody,
         date: new Date(),
-        image: req.file ? "/uploads/" + req.file.filename : null
+        image: base64Image
     }).save();
     res.redirect("/postlearnings");
 });
@@ -500,10 +509,10 @@ app.get("/postlearnings/edit/:id", isAuth, async function(req, res) {
     const learnings = await Learning.find().sort({date:-1});
     res.render("postlearnings", { learnings, editItem: learning });
 });
-app.post("/postlearnings/edit/:id", isAuth, upload.single("learningImage"), async function(req, res) {
+app.post("/postlearnings/edit/:id", isAuth, uploadImage.single("learningImage"), async function(req, res) {
     const updateData = { title: req.body.learningsTitle, content: req.body.learningsBody };
     if (req.file) {
-        updateData.image = "/uploads/" + req.file.filename;
+        updateData.image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
     }
     await Learning.findByIdAndUpdate(req.params.id, updateData);
     res.redirect("/postlearnings");
@@ -517,14 +526,18 @@ app.get("/compose", isAuth, async function(req, res) {
     const posts = await Blog.find().sort({date:-1});
     res.render("compose", { posts });
 });
-app.post("/compose", isAuth, upload.single("blogImage"), async function(req, res) {
+app.post("/compose", isAuth, uploadImage.single("blogImage"), async function(req, res) {
     if (["about","learnings","home","contact"].includes(req.body.postTitle)) return res.redirect("/compose");
+    let base64Image = null;
+    if (req.file) {
+        base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+    }
     await new Blog({
         title: req.body.postTitle,
         content: req.body.postBody,
         timestamp: day,
         date: new Date(),
-        image: req.file ? "/uploads/" + req.file.filename : null
+        image: base64Image
     }).save();
     res.redirect("/compose");
 });
@@ -533,10 +546,10 @@ app.get("/compose/edit/:id", isAuth, async function(req, res) {
     const posts = await Blog.find().sort({date:-1});
     res.render("compose", { posts, editItem });
 });
-app.post("/compose/edit/:id", isAuth, upload.single("blogImage"), async function(req, res) {
+app.post("/compose/edit/:id", isAuth, uploadImage.single("blogImage"), async function(req, res) {
     const updateData = { title: req.body.postTitle, content: req.body.postBody };
     if (req.file) {
-        updateData.image = "/uploads/" + req.file.filename;
+        updateData.image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
     }
     await Blog.findByIdAndUpdate(req.params.id, updateData);
     res.redirect("/compose");
