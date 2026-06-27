@@ -1123,6 +1123,16 @@ span { color: var(--primary); }
     #learningsGrid {
         grid-template-columns: 1fr;
     }
+    .publish-blog-image-container,
+    .post-learnings-image-container {
+        max-height: none !important;
+        height: auto !important;
+    }
+    .publish-blog-image,
+    .post-learnings-image {
+        height: auto !important;
+        object-fit: contain !important;
+    }
 }
 
 @media screen and (max-width: 580px) {
