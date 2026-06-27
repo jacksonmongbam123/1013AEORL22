@@ -1099,6 +1099,19 @@ span { color: var(--primary); }
     margin-bottom: 0 !important;
 }
 
+.publish-blog-image-container,
+.post-learnings-image-container {
+    max-height: none !important;
+    height: auto !important;
+}
+
+.publish-blog-image,
+.post-learnings-image {
+    height: auto !important;
+    width: 100% !important;
+    object-fit: contain !important;
+}
+
 @media screen and (max-width: 1024px) {
     /* Kept 3 columns for blogGrid on larger tablet widths, dropping to 2 columns on mobile/small-tablet screens */
     #blogGrid {
@@ -1122,16 +1135,6 @@ span { color: var(--primary); }
     }
     #learningsGrid {
         grid-template-columns: 1fr;
-    }
-    .publish-blog-image-container,
-    .post-learnings-image-container {
-        max-height: none !important;
-        height: auto !important;
-    }
-    .publish-blog-image,
-    .post-learnings-image {
-        height: auto !important;
-        object-fit: contain !important;
     }
 }
 
